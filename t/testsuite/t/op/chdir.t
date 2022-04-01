@@ -3,7 +3,7 @@
 BEGIN {
     # We really want to know if chdir is working, as the build process will
     # all go wrong if it is not.  So avoid clearing @INC under miniperl.
-    #@INC = () if defined &DynaLoader::boot_DynaLoader;
+    @INC = () if defined &DynaLoader::boot_DynaLoader;
 
     # We're not going to chdir() into 't' because we don't know if
     # chdir() works!  Instead, we'll hedge our bets and put both
@@ -29,9 +29,7 @@ use File::Spec::Functions qw(:DEFAULT splitdir rel2abs splitpath);
 # Can't use Cwd::abs_path() because it has different ideas about
 # path separators than File::Spec.
 sub abs_path {
-    my $d = rel2abs(curdir);
-    $d = lc($d) if $^O =~ /^uwin/;
-    $d;
+    return rel2abs(curdir);
 }
 
 my $Cwd = abs_path;

@@ -3,8 +3,7 @@
 BEGIN {
     chdir 't' if -d 't';
     require './test.pl';
-    #set_up_inc('../lib');
-    unshift @INC, '../lib';
+    set_up_inc('../lib');
 }
 
 use warnings;

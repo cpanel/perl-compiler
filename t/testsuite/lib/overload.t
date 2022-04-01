@@ -1390,7 +1390,8 @@ foreach my $op (qw(<=> == != < <= > >=)) {
 }
 
 {
-    use Scalar::Util 'weaken';
+    no warnings 'experimental::builtin';
+    use builtin 'weaken';
 
     package Shklitza;
     use overload '""' => sub {"CLiK KLAK"};

@@ -2,7 +2,7 @@
 
 BEGIN {
     chdir 't' if -d 't';
-    unshift @INC, '../lib';
+    @INC = '../lib';
     unless (defined &DynaLoader::boot_DynaLoader) {
       print "1..0 # Skip: no dynamic loading on miniperl, no Tie::Hash::NamedCapture\n";
       exit 0;

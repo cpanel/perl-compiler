@@ -66,7 +66,7 @@ BEGIN {
     }
 
     chdir 't' if -d 't';
-    unshift @INC, qw '../lib ../ext/re';
+    @INC = qw '../lib ../ext/re';
     if (!defined &DynaLoader::boot_DynaLoader) { # miniperl
 	print("1..0 # Skip Unicode tables not built yet\n"), exit
 	    unless eval 'require "unicore/UCD.pl"';
@@ -163,7 +163,7 @@ foreach (@tests) {
         die "Bad test definition on line $test_num: $_\n";
     }
     $reason = '' unless defined $reason;
-    my $input = join(':', map { defined $_ ? $_ : '' } ( $pat,$subject,$result,$repl,$expect ) );
+    my $input = join(':',$pat,$subject,$result,$repl,$expect);
 
     # the double '' below keeps simple syntax highlighters from going crazy
     $pat = "'$pat'" unless $pat =~ /^[:''\/]/;
@@ -180,7 +180,7 @@ foreach (@tests) {
     $subject = eval qq("$subject"); die $@ if $@;
 
     convert_from_ascii(\$expect);
-    $expect  = eval qq("$expect") if defined $expect; die $@ if $@;
+    $expect  = eval qq("$expect"); die $@ if $@;
     $expect = $repl = '-' if $skip_amp and $input =~ /\$[&\`\']/;
 
     my $todo_qr = $qr_embed_thr && ($result =~ s/t//);
@@ -430,7 +430,6 @@ foreach (@tests) {
 	$subject = XS::APItest::string_without_null($subject) if $no_null;
 	my $c = $iters;
 	my ($code, $match, $got);
-    $repl //= '';
         if ($repl eq 'pos') {
             my $patcode = defined $no_null_pat ? '/$no_null_pat/g'
                                                : "m${pat}g";
@@ -475,7 +474,7 @@ EOFCODE
                 \$got = "$repl";
 EOFCODE
         }
-        $code = "no warnings 'experimental::regex_sets';$code" if $regex_sets;
+        $code = "$code" if $regex_sets;
         #$code.=qq[\n\$expect="$expect";\n];
         #use Devel::Peek;
         #die Dump($code) if $pat=~/\\h/ and $subject=~/\x{A0}/;
@@ -487,7 +486,6 @@ EOFCODE
 	    eval $code;
 	}
 	chomp( my $err = $@ );
-    $expect //= '';
 	if ( $skip ) {
 	    print "ok $testname # skipped", length($reason) ? ".  $reason" : '', "\n";
 	    next TEST;

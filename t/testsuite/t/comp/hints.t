@@ -3,7 +3,7 @@
 # Tests the scoping of $^H and %^H
 
 BEGIN {
-    unshift @INC , qw(. ../lib ../ext/re);
+    @INC = qw(. ../lib ../ext/re);
     chdir 't' if -d 't';
 }
 

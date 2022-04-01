@@ -6,14 +6,14 @@
 
 BEGIN {
     chdir 't' if -d 't';
-    require "./test.pl"; require './charset_tools.pl';
+    require "./test.pl";
     set_up_inc( qw(. ../lib ../cpan/parent/lib) );
+	require './charset_tools.pl';
 }
 
 use strict;
 use utf8;
 use open qw( :utf8 :std );
-binmode STDOUT, ":utf8"; binmode STDERR, ":utf8";
 no warnings 'once';
 
 plan(tests => 62);
