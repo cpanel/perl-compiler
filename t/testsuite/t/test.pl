@@ -19,6 +19,10 @@
 # In this file, we use the latter "Baby Perl" approach, and increment
 # will be worked over by t/op/inc.t
 
+BEGIN {
+    unshift @INC, '..', './lib';
+}
+
 $| = 1;
 our $Level = 1;
 my $test = 1;
@@ -111,7 +115,7 @@ sub is_miniperl {
 
 sub set_up_inc {
     # Don’t clobber @INC under miniperl
-    @INC = () unless is_miniperl;
+    #@INC = () unless is_miniperl;
     unshift @INC, @_;
 }
 

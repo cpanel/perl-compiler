@@ -58,11 +58,11 @@ my $prog =    q~
      BEGIN {
          unless (-d 'blib') {
              chdir 't' if -d 't';
-             @INC = '../lib';
+             unshift @INC,  '../lib';
          }
      }
      use utf8;
-     use open qw( :utf8 :std );
+     binmode STDOUT, ":utf8"; binmode STDERR, ":utf8";
 
      @숩cਲꩋ::ISA = "ｌㅔf";
      @ｌㅔf::ISA = "톺ĺФț";
@@ -120,11 +120,11 @@ for(
      BEGIN {
          unless (-d 'blib') {
              chdir 't' if -d 't';
-             @INC = '../lib';
+             unshift @INC,  '../lib';
          }
      }
      use utf8;
-     use open qw( :utf8 :std );
+     binmode STDOUT, ":utf8"; binmode STDERR, ":utf8";
      @숩cਲꩋ::ISA = "ｌㅔf::Side";
      @ｌㅔf::Side::ISA = "톺ĺФț";
 
@@ -185,11 +185,11 @@ for(
      BEGIN {
          unless (-d 'blib') {
              chdir 't' if -d 't';
-             @INC = '../lib';
+             unshift @INC,  '../lib';
          }
      }
       use utf8;
-      use open qw( :utf8 :std );
+      binmode STDOUT, ":utf8"; binmode STDERR, ":utf8";
       use Encode ();
 
       if (grep /\P{ASCII}/, @ARGV) {
@@ -221,11 +221,11 @@ for(
       BEGIN {
          unless (-d 'blib') {
              chdir 't' if -d 't';
-             @INC = '../lib';
+             unshift @INC,  '../lib';
          }
       }
       use utf8;
-      use open qw( :utf8 :std );
+      binmode STDOUT, ":utf8"; binmode STDERR, ":utf8";
       use Encode ();
 
       if (grep /\P{ASCII}/, @ARGV) {
@@ -305,11 +305,11 @@ my $prog =    q~#!perl -w
      BEGIN {
          unless (-d 'blib') {
              chdir 't' if -d 't';
-             @INC = '../lib';
+             unshift @INC,  '../lib';
          }
      }
      use utf8;
-     use open qw( :utf8 :std );
+     binmode STDOUT, ":utf8"; binmode STDERR, ":utf8";
      @펱ᑦ::ISA = "T잌ዕ";
      @T잌ዕ::ISA = "Bᛆヶṝ";
      

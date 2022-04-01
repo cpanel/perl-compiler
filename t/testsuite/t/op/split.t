@@ -559,7 +559,8 @@ is "@a", '1 2 3', 'assignment to split-to-array (stacked)';
 
 # check that re-evals work
 
-{
+SKIP: {
+    skip q[BC GH#75 reports the issue here with $c being incorrect once compiled], 4;
     my $c = 0;
     @a = split /-(?{ $c++ })/, "a-b-c";
     is "@a", "a b c", "compile-time re-eval";

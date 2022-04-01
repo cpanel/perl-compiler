@@ -1,4 +1,7 @@
 #!./perl
+
+# BC_SKIP_ON_AUTOMATED_TESTING very slow test.... disabled on CI
+
 #
 # This is a home for regular expression tests that don't fit into
 # the format supported by re/regexp.t.  If you want to add a test

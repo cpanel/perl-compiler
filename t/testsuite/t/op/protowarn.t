@@ -11,6 +11,8 @@ use warnings;
 
 plan( tests => 12 );
 
+my @tests; # posptone tests to INIT time
+
 our (@warnings, $sub, $warn);
 
 BEGIN {
@@ -18,13 +20,13 @@ BEGIN {
 }
 
 sub one_warning_ok {
-    cmp_ok(scalar(@warnings), '==', 1, 'One warning');
-    cmp_ok(substr($warnings[0],0,length($warn)),'eq',$warn,'warning message');
+    push @tests, [ \&cmp_ok, [ scalar(@warnings), '==', 1, 'One warning' ] ];
+    push @tests, [ \&cmp_ok, [ substr($warnings[0],0,length($warn)), 'eq', $warn, 'warning message' ] ];
     @warnings = ();
 }
 
 sub no_warnings_ok {
-    cmp_ok(scalar(@warnings), '==', 0, 'No warnings');
+    push @tests, [ \&cmp_ok, [ scalar(@warnings), '==', 0, 'No warnings' ] ];
     @warnings = ();
 }
 
@@ -105,4 +107,9 @@ BEGIN {
 
 BEGIN {
     one_warning_ok;
+}
+
+foreach my $t ( @tests ) {
+    my ( $f, $args ) = @$t;
+    $f->( @$args );
 }
