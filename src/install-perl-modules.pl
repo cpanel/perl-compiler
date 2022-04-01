@@ -14,8 +14,6 @@ BEGIN {
 
 # list of tarballs to install
 my @TARBALLS = qw{
-
-    inc-latest-0.500.tar.gz
 };
 
 # force to install some modules
@@ -24,6 +22,8 @@ my $FORCE = { map { $_ => 1 } qw{} };
 # list of modules installed using cpanm
 # should move them to a cpanfile
 my @Modules = qw{
+
+    Module::Build
 
     XML::Parser
     TAP::Formatter::JUnit
@@ -38,7 +38,6 @@ my @Modules = qw{
     Capture::Tiny
     Template::Toolkit
 
-
     Class::Accessor
     DBD::SQLite
     DBI
@@ -52,6 +51,8 @@ my @Modules = qw{
     Net::LibIDN
     Net::SSLeay
 
+    TAP::Formatter::JUnit::Session
+
     Moo
 };
 
@@ -59,17 +60,19 @@ run() unless caller;
 
 sub run {
 
-    # make sure we are run using the perl532
-    if ( $] < 5.032 ) {
-        note "Using perl532 to rerun this script";
-        exec '/usr/local/cpanel/3rdparty/perl/532/bin/perl', $0;
+    # make sure we are run using the perl535+
+    if ( $] < 5.035 ) {
+        die q[Cannot find a recent version of perl] if $ENV{CHECK_CPANEL_PERL_VERSION};
+        local $ENV{CHECK_CPANEL_PERL_VERSION} = 1;
+        note "Using perl535 to rerun this script";
+        exec '/usr/local/cpanel/3rdparty/perl/536/bin/perl', $0;
     }
 
     # setup env
-    delete $ENV{PERL5LIB};
+    local $ENV{PERL5LIB} = '';
 
-    $ENV{PATH}
-        = '/usr/local/cpanel/3rdparty/perl/532/bin/:/opt/cpanel/perl5/532/bin:'
+    local $ENV{PATH}
+        = '/usr/local/cpanel/3rdparty/perl/536/bin/:/opt/cpanel/perl5/536/bin:'
         . $ENV{PATH};
 
     note "== START == $0 at ", scalar localtime();
@@ -82,19 +85,32 @@ sub run {
 sub install_perl_modules {
 
     _install_tarballs();
-    _install_using_cpanm();
+    _install_using_cpm();
 
     patch_modules();
 
     return;
 }
 
-sub _install_using_cpanm {
+sub _get_cpanm {
+    my $cpanm = qq[$CWD/../tools/cpanm];
 
-    my $cpanm = qx{which cpanm};
+    die q[Missing cpanm] unless -e $cpanm;
 
-    chomp $cpanm if $cpanm;
-    die unless $cpanm && -x $cpanm;
+    return $cpanm;
+}
+
+sub _get_cpm {
+    my $bin = qq[$CWD/../tools/cpm];
+
+    die q[Missing cpm] unless -e $bin;
+
+    return $bin;
+}
+
+sub _install_using_cpm {
+
+    my $cpm = _get_cpm();
 
     foreach my $module (@Modules) {
         my $out;
@@ -103,15 +119,16 @@ sub _install_using_cpanm {
             note "==> module $module is already available";
             next;
         }
-
-        note "==> installing $module via cpanm",
+        
+        note "==> installing $module via cpm",
             $FORCE->{$module} ? ' [force]' : '';
-        my $cmd = "$^X $cpanm -v --notest $module 2>&1";
+        my $cmd = "$^X $cpm install -v -g --no-test $module 2>&1";
 
+        note "   $cmd";        
         $out = qx{$cmd};
 
         #next if $module eq 'Test2::Bundle::Extended';
-        do { diag "*** cpanm failure for $module\n$out\n**********"; next }
+        do { diag "*** cpm failure for $module\n$out\n**********"; die }
             unless $? == 0;
 
         next if $module =~ qr{^\.};
@@ -119,11 +136,11 @@ sub _install_using_cpanm {
         $out = qx{$^X -M$module -e1 2>&1};
 
         if ( $? == 0 ) {
-            note "module $module installed via cpanm...";
+            note "module $module installed via cpm...";
         }
         else {
             diag "installation failed for module module: :", $module,
-                " using cpanm # $^X -M$module -e1", "\n", $out;
+                " using cpm # $^X -M$module -e1", "\n", $out;
         }
     }
 
