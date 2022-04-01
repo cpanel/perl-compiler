@@ -5,7 +5,7 @@
 
 ARG="$1" # --debug
 PERL=$(which perl)
-BINPERL="/usr/local/cpanel/3rdparty/perl/532/bin"
+BINPERL="/usr/local/cpanel/3rdparty/perl/536/bin"
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     echo "You need to source that file: 'source $0'"
