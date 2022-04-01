@@ -53,6 +53,8 @@ my @Modules = qw{
 
     TAP::Formatter::JUnit::Session
 
+    CBOR::Free
+
     Moo
 };
 
