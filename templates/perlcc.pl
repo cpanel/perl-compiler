@@ -999,7 +999,7 @@ END {
         vprint 4, "Unlinking $cfile";
         unlink $cfile;
     }
-    if ( !opt('S') ) {
+    if ( defined $cfile && !opt('S') ) {
         vprint 4, "Unlinking $cfile.lst";
         unlink "$cfile.lst";
     }
