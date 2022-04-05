@@ -1389,6 +1389,7 @@ void bc_parse_body(char **env)
     /* Setup built in Perl XS symbols */
     boot_core_PerlIO();
     boot_core_UNIVERSAL();
+    boot_core_builtin();
     boot_core_mro();
 
     /* run our local B::C xs_init */
