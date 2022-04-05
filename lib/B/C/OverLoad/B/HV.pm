@@ -4,8 +4,28 @@ use strict;
 
 use B qw/svref_2object SVf_READONLY SVf_PROTECT SVf_OOK SVf_AMAGIC/;
 use B::C::Debug qw/debug WARN/;
-use B::C::File qw/init xpvhvsect svsect decl init init2 init_stash init_static_assignments/;
+use B::C::File qw/init xpvhvsect xpvhv_with_auxsect svsect decl init init2 init_stash init_static_assignments/;
 use B::C::Save::Hek qw/save_shared_he get_sHe_HEK/;
+
+=pod
+
+v5.35.5 introduces XPVHV_WITH_AUX by 94ee6ed79dbca73d0345b745534477e4017fb990
+
+    struct xpvhv_with_aux {
+        HV         *xmg_stash;      /* class package */
+        union _xmgu xmg_u;
+        STRLEN      xhv_keys;       /* total keys, including placeholders */
+        STRLEN      xhv_max;        /* subscript of last element of xhv_array */
+        struct xpvhv_aux xhv_aux;
+    };
+
+    typedef struct xpvhv_with_aux XPVHV_WITH_AUX;
+
+-#define HvAUX(hv)       ((struct xpvhv_aux*)&(HvARRAY(hv)[HvMAX(hv)+1]))
++#define HvAUX(hv)       (&(((struct xpvhv_with_aux*)  SvANY(hv))->xhv_aux))
+
+=cut
+
 
 sub can_save_stash {
     my $stash_name = shift;
@@ -128,28 +148,46 @@ sub do_save {
 
     my $hv_total_keys = scalar(@hash_content_to_save);
     my $max           = get_max_hash_from_keys($hv_total_keys);
-    xpvhvsect()->comment("xmg_stash, xmg_u, xhv_keys, xhv_max");
-    xpvhvsect()->saddl(
-        '%s'   => $hv->save_magic_stash,                                                           # xmg_stash
-        '{%s}' => $hv->save_magic( length $stash_name ? '%' . $stash_name . '::' : $fullname ),    # mgu
-        '%d'   => $hv_total_keys,                                                                  # xhv_keys
-        '%d'   => $max                                                                             # xhv_max
-    );
 
     my $flags = $hv->FLAGS & ~SVf_READONLY & ~SVf_PROTECT;
+    my $has_ook = $flags & SVf_OOK ? q{TRUE} : q{FALSE};    # only need one AUX when OOK is set
+
+    my $xpvh_sym;
+
+    if ( $has_ook eq q{TRUE} ) {
+        xpvhv_with_auxsect()->comment("xmg_stash, xmg_u, xhv_keys, xhv_max, struct xpvhv_aux");
+        xpvhv_with_auxsect()->saddl(
+            '%s'   => $hv->save_magic_stash,                                                           # xmg_stash
+            '{%s}' => $hv->save_magic( length $stash_name ? '%' . $stash_name . '::' : $fullname ),    # mgu
+            '%d'   => $hv_total_keys,                                                                  # xhv_keys
+            '%d'   => $max,                                                                            # xhv_max
+            '%s'   => 'NULL',                                                                          # struct xpvhv_aux
+        );
+
+        $xpvh_sym = sprintf( "xpvhv_with_aux_list[%d]", xpvhv_with_auxsect()->index );
+    } else {
+        xpvhvsect()->comment("xmg_stash, xmg_u, xhv_keys, xhv_max");
+        xpvhvsect()->saddl(
+            '%s'   => $hv->save_magic_stash,                                                           # xmg_stash
+            '{%s}' => $hv->save_magic( length $stash_name ? '%' . $stash_name . '::' : $fullname ),    # mgu
+            '%d'   => $hv_total_keys,                                                                  # xhv_keys
+            '%d'   => $max                                                                             # xhv_max
+        );
+
+        $xpvh_sym = sprintf( "xpvhv_list[%d]", xpvhvsect()->index );
+    }
 
     # replace the previously saved svsect with some accurate content
     svsect()->update(
         $ix,
         sprintf(
-            "&xpvhv_list[%d], %Lu, 0x%x, {0}",
-            xpvhvsect()->index, $hv->REFCNT, $flags
+            "&%s, %Lu, 0x%x, {0}",
+            $xpvh_sym, $hv->REFCNT, $flags
         )
     );
 
     my $init = $stash_name ? init_stash() : init_static_assignments();
 
-    my $has_ook = $flags & SVf_OOK ? q{TRUE} : q{FALSE};    # only need one AUX when OOK is set
     my $backrefs_sym = 0;
     if ( my $backrefs = $hv->BACKREFS ) {
 
