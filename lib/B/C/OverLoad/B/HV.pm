@@ -128,7 +128,7 @@ sub do_save {
 
     my $hv_total_keys = scalar(@hash_content_to_save);
     my $max           = get_max_hash_from_keys($hv_total_keys);
-    xpvhvsect()->comment("xmg_stash, xmg_u, xpv_cur, xpv_len_u, xhv_keys, xhv_max");
+    xpvhvsect()->comment("xmg_stash, xmg_u, xhv_keys, xhv_max");
     xpvhvsect()->saddl(
         '%s'   => $hv->save_magic_stash,                                                           # xmg_stash
         '{%s}' => $hv->save_magic( length $stash_name ? '%' . $stash_name . '::' : $fullname ),    # mgu
