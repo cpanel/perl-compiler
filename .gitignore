@@ -60,6 +60,7 @@ ramblings/yapceu2010/
 script/perlcc
 Stash/Stash.c
 status.1*
+*.swp
 TAGS
 t/*/*/*/*.bin
 t/*/*/*/*.c
