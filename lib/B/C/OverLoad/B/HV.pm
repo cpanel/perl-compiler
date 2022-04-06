@@ -161,7 +161,7 @@ sub do_save {
             '{%s}' => $hv->save_magic( length $stash_name ? '%' . $stash_name . '::' : $fullname ),    # mgu
             '%d'   => $hv_total_keys,                                                                  # xhv_keys
             '%d'   => $max,                                                                            # xhv_max
-            '%s'   => '{ 0 }',                                                                         # struct xpvhv_aux
+            '%s'   => '{0}',                                                                           # struct xpvhv_aux
         );
     
         $xpvh_sym = sprintf( "xpvhv_with_aux_list[%d]", xpvhv_with_auxsect()->index );

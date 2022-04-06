@@ -455,7 +455,8 @@ static void HvSETUP(HV* hv, U32 size, bool has_ook, SV* backref) {
     char *array;
     MEM_SIZE alloc_size = PERL_HV_ARRAY_ALLOC_BYTES(size);
 
-    /* malloc the hash array */
+    /* malloc the hash array + the xpvhv_aux which is part of it */
+    if ( has_ook ) alloc_size += sizeof(struct xpvhv_aux);
     do_Newxz(array, alloc_size, char);
 
     /* setting the hash array to the HV (in sv_list) in sv_any */
@@ -470,7 +471,11 @@ static void HvSETUP(HV* hv, U32 size, bool has_ook, SV* backref) {
         iter->xhv_riter = -1;
 
         /* change the PL_hash_rand_bits */
+        /* standard perturbation */
         MAYBE_UPDATE_HASH_RAND_BITS();
+        /* BC custom perturbation */
+        PL_hash_rand_bits += bc_S_ptr_hash((PTRV)array);
+        PL_hash_rand_bits = ROTL_UV(PL_hash_rand_bits, 1);
 
         /* randomize our hash */
         iter->xhv_last_rand = iter->xhv_rand = PL_hash_rand_bits;
