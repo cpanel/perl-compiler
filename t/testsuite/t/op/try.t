@@ -11,6 +11,10 @@ use strict;
 use warnings;
 use feature 'try';
 
+# some tests are run at compile time
+my $DOLLAR_0;
+BEGIN { $DOLLAR_0 = $0 }
+
 {
     my $warnings;
     BEGIN { $SIG{__WARN__} = sub { $warnings .= shift; }; }
@@ -25,8 +29,8 @@ use feature 'try';
     }
     is($x, "try", 'successful try/catch runs try but not catch');
 
-    is($warnings, "try/catch is experimental at $0 line $ltry.\n" .
-                  "try/catch is experimental at $0 line $lcatch.\n",
+    is($warnings, "try/catch is experimental at $DOLLAR_0 line $ltry.\n" .
+                  "try/catch is experimental at $DOLLAR_0 line $lcatch.\n",
         'compiletime warnings');
     BEGIN { undef $SIG{__WARN__}; }
 }
@@ -278,7 +282,7 @@ no warnings 'experimental::try';
     my $LINE = __LINE__+1;
     B();
 
-    is($caller, "main::B ($0 line $LINE)", 'try {} block is invisible to caller()');
+    is($caller, "main::B ($DOLLAR_0 line $LINE)", 'try {} block is invisible to caller()');
 }
 
 # try/catch/finally
