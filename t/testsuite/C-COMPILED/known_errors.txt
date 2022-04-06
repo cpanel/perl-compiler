@@ -76,14 +76,6 @@ re/regexp_nonull.t                               COMPAT    uses XS::APItest - fo
 re/regexp_unicode_prop.t                         COMPAT    trigger some regexp errors at compile time
 re/rxcode.t                                      TESTS     BC issue #295 - (?{}) should have its own lexical scope
 re/subst_amp.t                                   TESTS     BC issue #295 - (?{}) should have its own lexical scope
-re/uniprops01.t                                  EXIT      perl v5.30.0 - Exit code is 255
-re/uniprops02.t                                  EXIT      perl v5.32.0 - Exit code is 255
-re/uniprops03.t                                  EXIT      perl v5.30.0 - Exit code is 255
-re/uniprops04.t                                  EXIT      perl v5.30.0 - Exit code is 255
-re/uniprops06.t                                  TESTS     perl v5.32.0 - Fail uncompiled need investigation
-re/uniprops07.t                                  TESTS     perl v5.32.0 - Fail uncompiled need investigation
-re/uniprops08.t                                  TESTS     perl v5.32.0 - Fail uncompiled need investigation
-re/uniprops09.t                                  TESTS     perl v5.32.0 - Fail uncompiled need investigation
 uni/cache.t                                      TESTS     GH #66 - We are explicitly clearing Cache to get B::C to work for now.
 uni/chr.t                                        COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/greek.t                                      COMPAT    BC issue #283 - deprecated "encoding" pragma
