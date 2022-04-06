@@ -2,6 +2,8 @@
 #
 # Contributed by Graham Barr <Graham.Barr@tiuk.ti.com>
 
+eval q|
+
 BEGIN {
     $warn = "";
     $SIG{__WARN__} = sub { $warn .= join("",@_) }
@@ -84,3 +86,5 @@ ok 20, $warn eq '';
 
 # If we got any errors that we were not expecting, then print them
 print $warn if length $warn;
+
+|;
