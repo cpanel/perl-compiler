@@ -12,7 +12,7 @@ use utf8;
 
 my @have;
 
-{
+if (0) { # need to be adjusted for BC this is happening at compile time
     my @warnings;
     BEGIN { $SIG{__WARN__} = sub { push @warnings, shift; }; }
 
