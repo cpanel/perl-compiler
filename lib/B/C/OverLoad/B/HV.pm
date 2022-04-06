@@ -148,22 +148,22 @@ sub do_save {
 
     my $hv_total_keys = scalar(@hash_content_to_save);
     my $max           = get_max_hash_from_keys($hv_total_keys);
-
+    
     my $flags = $hv->FLAGS & ~SVf_READONLY & ~SVf_PROTECT;
     my $has_ook = $flags & SVf_OOK ? q{TRUE} : q{FALSE};    # only need one AUX when OOK is set
-
+    
     my $xpvh_sym;
 
     if ( $has_ook eq q{TRUE} ) {
         xpvhv_with_auxsect()->comment("xmg_stash, xmg_u, xhv_keys, xhv_max, struct xpvhv_aux");
-        xpvhv_with_auxsect()->saddl(
+        xpvhv_with_auxsect()->saddl( 
             '%s'   => $hv->save_magic_stash,                                                           # xmg_stash
             '{%s}' => $hv->save_magic( length $stash_name ? '%' . $stash_name . '::' : $fullname ),    # mgu
             '%d'   => $hv_total_keys,                                                                  # xhv_keys
             '%d'   => $max,                                                                            # xhv_max
-            '%s'   => 'NULL',                                                                          # struct xpvhv_aux
+            '%s'   => '{ 0 }',                                                                         # struct xpvhv_aux
         );
-
+    
         $xpvh_sym = sprintf( "xpvhv_with_aux_list[%d]", xpvhv_with_auxsect()->index );
     } else {
         xpvhvsect()->comment("xmg_stash, xmg_u, xhv_keys, xhv_max");
@@ -173,10 +173,10 @@ sub do_save {
             '%d'   => $hv_total_keys,                                                                  # xhv_keys
             '%d'   => $max                                                                             # xhv_max
         );
-
+    
         $xpvh_sym = sprintf( "xpvhv_list[%d]", xpvhvsect()->index );
     }
-
+    
     # replace the previously saved svsect with some accurate content
     svsect()->update(
         $ix,
@@ -187,7 +187,7 @@ sub do_save {
     );
 
     my $init = $stash_name ? init_stash() : init_static_assignments();
-
+    
     my $backrefs_sym = 0;
     if ( my $backrefs = $hv->BACKREFS ) {
 
