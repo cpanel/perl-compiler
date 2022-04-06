@@ -93,7 +93,7 @@ static const char* const opclassnames[] = {
 
 typedef struct {
     int		x_walkoptree_debug;	/* Flag for walkoptree debug hook */
-    SV *	x_specialsv_list[8];
+    SV *	x_specialsv_list[9];
 } my_cxt_t;
 
 START_MY_CXT
@@ -1010,5 +1010,6 @@ BOOT:
       specialsv_list[5] = (SV *) pWARN_ALL;
       specialsv_list[6] = (SV *) pWARN_NONE;
       specialsv_list[7] = (SV *) pWARN_STD;
+      specialsv_list[8] = &PL_padname_undef;
     }
 }

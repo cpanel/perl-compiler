@@ -54,6 +54,18 @@ sub do_save {
 
     padnamesect()->debug( $fullname . " " . $pv, $pn->flagspv ) if debug('flags');
 
+    # FIXME need to check for PL_padname_undef in a better way
+    #   we probably want to also move it earlier
+    if ( $xpadn_pv eq 'NULL'
+        && $pn->OURSTASH->save($fullname) eq 'Nullsv'
+        && $pn->COP_SEQ_RANGE_LOW == 0
+        && $pn->COP_SEQ_RANGE_HIGH == 0
+        && ( $pn->FLAGS & 0xff ) == 0
+        && $xpadn_str eq '{0}'
+    ) {
+        return q[&PL_padname_undef];
+    }
+
     return $sym;
 }
 
