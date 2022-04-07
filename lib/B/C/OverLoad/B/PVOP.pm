@@ -1,12 +1,11 @@
 package B::PVOP;
 
-use strict;
+use B::C::Std;
 
 use B::C::File qw/pvopsect/;
 use B::C::Save qw/savecowpv/;
 
-sub do_save {
-    my ($op) = @_;
+sub do_save($op, @) {
 
     my ( $cow_sym, $cur, $len ) = savecowpv( $op->pv );
 
