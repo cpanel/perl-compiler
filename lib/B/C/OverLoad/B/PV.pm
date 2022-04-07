@@ -1,6 +1,6 @@
 package B::PV;
 
-use strict;
+use B::C::Std;
 
 use B qw/SVf_IsCOW SVf_ROK SVf_POK SVp_POK SVs_GMG SVt_PVGV SVf_READONLY SVf_FAKE/;
 use B::C::Debug qw/debug/;
@@ -12,8 +12,7 @@ use B::C::Helpers qw/is_shared_hek/;
 sub SVpbm_VALID { 0x40000000 }
 sub SVp_SCREAM  { 0x00008000 }    # method name is DOES
 
-sub do_save {
-    my ( $sv, $fullname, $custom ) = @_;
+sub do_save( $sv, $fullname=undef, $custom=undef ) {
 
     #if ( !length $fullname ) {
     #    print STDERR B::C::Save::stack_flat();
@@ -65,8 +64,7 @@ sub do_save {
     return $sym;
 }
 
-sub save_svu {
-    my ( $sv, $sym, $fullname ) = @_;
+sub save_svu( $sv, $sym, $fullname, @ ) {
 
     my $flags = $sv->FLAGS;
 
