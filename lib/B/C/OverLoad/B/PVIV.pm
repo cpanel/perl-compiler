@@ -1,13 +1,12 @@
 package B::PVIV;
 
-use strict;
+use B::C::Std;
 
 use B::C::File qw/xpvivsect svsect/;
 use B::C::Decimal qw/get_integer_value/;
 use B::C::Optimizer::DowngradePVXV qw/downgrade_pviv/;
 
-sub do_save {
-    my ( $sv, $fullname ) = @_;
+sub do_save( $sv, $fullname=undef) {
 
     my $downgraded = downgrade_pviv( $sv, $fullname );
     return $downgraded if defined $downgraded;
