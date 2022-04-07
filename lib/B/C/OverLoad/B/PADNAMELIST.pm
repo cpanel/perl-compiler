@@ -1,6 +1,7 @@
 package B::PADNAMELIST;
 
-use strict;
+use B::C::Std;
+
 our @ISA = qw(B::AV);
 
 use B::C::File qw/padnamelistsect/;
@@ -9,8 +10,7 @@ sub section_sv {
     return padnamelistsect();
 }
 
-sub update_sv {
-    my ( $av, $ix, $fullname ) = @_;
+sub update_sv( $av, $ix, $fullname, @ ) {
 
     my $section = $av->section_sv();
     $section->comment("xpadnl_fill, xpadnl_alloc, xpadnl_max, xpadnl_max_named, xpadnl_refcnt");
@@ -25,11 +25,12 @@ sub update_sv {
     return;
 }
 
-sub add_malloc_line_for_array_init {
-    my ( $av, $deferred_init, $sym ) = @_;    # Ignores $fill passed in.
+sub add_malloc_line_for_array_init( $av, $deferred_init, $sym, @ ) {
 
     my $fill = $av->MAX + 1;
     $deferred_init->sadd( "PADNAME **svp = %s;", B::C::Memory::INITPADNAME( $deferred_init, $sym, $fill ) );
+
+    return;
 }
 
 sub cast_sv {
@@ -40,6 +41,6 @@ sub cast_section {                            ### Stupid move it to section !!! 
     return "PADNAMELIST*";
 }
 
-sub fill { return shift->MAX }
+sub fill($av) { return $av->MAX }
 
 1;
