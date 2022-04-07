@@ -1,6 +1,6 @@
 package B::PVMG;
 
-use strict;
+use B::C::Std;
 
 use B::C::Debug qw/debug verbose WARN/;
 use B qw/SVf_IsCOW SVf_READONLY cchar SVp_POK svref_2object/;
@@ -13,8 +13,7 @@ use B::C::File qw/init init_static_assignments svsect xpvmgsect magicsect init_v
 # called mapped_base on linux (usually 0xa38000)
 sub LOWEST_IMAGEBASE() { 0x10000 }
 
-sub do_save {
-    my ( $sv, $fullname ) = @_;
+sub do_save( $sv, $fullname=undef) {
 
     my ( $ix, $sym ) = svsect()->reserve($sv);
     svsect()->debug( $fullname, $sv );
@@ -119,8 +118,8 @@ my $perl_magic_vtable_map = {
     ']'    => 'checkcall',        # Inlining/mutation of call to this CV
 };
 
-sub save_magic {
-    my ( $sv, $fullname ) = @_;
+sub save_magic( $sv, $fullname ) {
+
     my $sv_flags = $sv->FLAGS;
     my $pkg;
 
@@ -238,8 +237,8 @@ sub save_magic_stash {
 
 # TODO: This was added to PVMG because we thought it was only used in this op but
 # as of 5.18, it's used in B::CV::save
-sub _patch_dlsym {
-    my ( $sv, $fullname, $ivx ) = @_;
+sub _patch_dlsym( $sv, $fullname, $ivx ) {
+
     my $pkg = '';
     if ( ref($sv) eq 'B::PVMG' ) {
         my $stash = $sv->SvSTASH;
