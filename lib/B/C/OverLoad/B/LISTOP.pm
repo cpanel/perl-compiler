@@ -1,6 +1,6 @@
 package B::LISTOP;
 
-use strict;
+use B::C::Std;
 
 use B::C::File qw/listopsect/;
 
