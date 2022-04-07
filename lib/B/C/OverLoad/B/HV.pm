@@ -1,6 +1,6 @@
 package B::HV;
 
-use strict;
+use B::C::Std;
 
 use B qw/svref_2object SVf_READONLY SVf_PROTECT SVf_OOK SVf_AMAGIC/;
 use B::C::Debug qw/debug WARN/;
@@ -27,8 +27,7 @@ v5.35.5 introduces XPVHV_WITH_AUX by 94ee6ed79dbca73d0345b745534477e4017fb990
 =cut
 
 
-sub can_save_stash {
-    my $stash_name = shift;
+sub can_save_stash($stash_name) {
 
     #return get_current_stash_position_in_starting_stash ( $stash_name ) ? 1 : 0;
 
@@ -43,8 +42,7 @@ sub can_save_stash {
     return $starting_flat_stashes->{$stash_name} ? 1 : 0;    # need to skip properly ( maybe just a protection there
 }
 
-sub key_was_missing_from_stash_at_compile {
-    my ( $stash_name, $key, $curstash ) = @_;
+sub key_was_missing_from_stash_at_compile( $stash_name, $key, $curstash ) {
 
     ### STATIC_HV need improvement there - using a more generic method for whitelisting
     if ( !$stash_name && $key && $key =~ qr{^B::C::} ) {
@@ -64,8 +62,7 @@ sub key_was_missing_from_stash_at_compile {
 }
 
 # our only goal here is to get the curstash position in starting_stash if it exists
-sub get_current_stash_position_in_starting_stash {
-    my ($stash_name) = @_;
+sub get_current_stash_position_in_starting_stash($stash_name) {
 
     return unless $stash_name;    # <---- we want to save all *keys*
 
@@ -84,8 +81,7 @@ sub get_current_stash_position_in_starting_stash {
     return $curstash;
 }
 
-sub do_save {
-    my ( $hv, $fullname ) = @_;
+sub do_save( $hv, $fullname=undef) {
 
     $fullname ||= '';
     my $stash_name = $hv->NAME;
@@ -272,8 +268,7 @@ sub do_save {
     return $sym;
 }
 
-sub nextPowerOf2 {
-    my ($n) = @_;
+sub nextPowerOf2($n) {
 
     my $count = 0;
 
@@ -285,18 +280,15 @@ sub nextPowerOf2 {
     return 1 << $count;
 }
 
-sub get_max_hash_from_keys {
-    my ( $keys, $minimum ) = @_;    # 6, undef
-
-    $minimum ||= 7;                 # 7
+sub get_max_hash_from_keys( $keys, $minimum=7) {
 
     my $keys_max = nextPowerOf2( $keys + $keys >> 1 ) - 1;    # 15
 
     return $keys_max < $minimum ? $minimum : $keys_max;
 }
 
-sub savestashpv {                                             # save a stash from a string (pv)
-    my $name = shift;
+sub savestashpv($name) {                                             # save a stash from a string (pv)
+
     no strict 'refs';
     return svref_2object( \%{ $name . '::' } )->save;
 }
