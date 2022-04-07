@@ -1,13 +1,12 @@
 package B::IO;
 
-use strict;
+use B::C::Std;
 
 use B qw/cchar svref_2object/;
 use B::C::Save qw/savecowpv/;
 use B::C::File qw/init init2 svsect xpviosect/;
 
-sub save_io_and_data {
-    my ( $io, $globname, $is_utf8, $data ) = @_;
+sub save_io_and_data( $io, $globname, $is_utf8, $data ) {
 
     my $ref = svref_2object( \$data )->save;
 
@@ -21,8 +20,7 @@ sub save_io_and_data {
     return ( q{NULL}, $ref );
 }
 
-sub do_save {
-    my ( $io, $fullname ) = @_;
+sub do_save( $io, $fullname=undef ) {
 
     $io->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $io );
     my ( $ix, $sym ) = svsect()->reserve($io);
