@@ -13,15 +13,17 @@ our $MAX_PADNAME_LENGTH = 1;
 sub do_save {
     my ( $pn, $fullname ) = @_;
 
+    return q[&PL_padname_undef] if $pn->IsUndef;
+
     my ( $ix, $sym ) = padnamesect()->reserve($pn);
     padnamesect()->debug( $fullname, $pn );
 
     my $refcnt = $pn->REFCNT;
+    my $pv     = $pn->PVX;
 
-    my $pv = $pn->PVX;
     my $xpadn_str = cstring($pv) || '{0}';
 
-    my $xpadn_pv = $ix ? sprintf( "((char*)%s)+STRUCT_OFFSET(struct padname_with_str, xpadn_str[0])", $sym ) : 'NULL';
+    my $xpadn_pv = sprintf( "((char*)%s)+STRUCT_OFFSET(struct padname_with_str, xpadn_str[0])", $sym );
 
     # Track the largest padname length to determine the size of the struct.
     my $xpadn_len = $pn->LEN;
@@ -53,18 +55,6 @@ sub do_save {
     );
 
     padnamesect()->debug( $fullname . " " . $pv, $pn->flagspv ) if debug('flags');
-
-    # FIXME need to check for PL_padname_undef in a better way
-    #   we probably want to also move it earlier
-    if ( $xpadn_pv eq 'NULL'
-        && $pn->OURSTASH->save($fullname) eq 'Nullsv'
-        && $pn->COP_SEQ_RANGE_LOW == 0
-        && $pn->COP_SEQ_RANGE_HIGH == 0
-        && ( $pn->FLAGS & 0xff ) == 0
-        && $xpadn_str eq '{0}'
-    ) {
-        return q[&PL_padname_undef];
-    }
 
     return $sym;
 }
