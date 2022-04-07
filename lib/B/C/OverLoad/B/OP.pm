@@ -1,6 +1,6 @@
 package B::OP;
 
-use strict;
+use B::C::Std;
 
 use B qw/opnumber ppname/;
 
@@ -19,7 +19,7 @@ debug( cops => %OP_COP );
 
 our @DO_UPDATE_ARGS;    # avoid a local on @_ which bloat the binary
 
-sub do_save {
+sub do_save { # cannot use function signature with goto
     my ($op) = @_;
 
     my $type = $op->type;
@@ -46,8 +46,8 @@ sub do_update {
 # OpTYPE; init_op_ppaddr iterates over the ops and sets
 # op_ppaddr to PL_ppaddr[op_ppaddr]; this avoids an explicit assignment
 # in perl_init ( ~10 bytes/op with GCC/i386 )
-sub B::OP::fake_ppaddr {
-    my $op = shift;
+sub fake_ppaddr($op) {
+
     return "NULL" unless $op->can('name');
 
     my $type = $op->type;
@@ -82,8 +82,7 @@ sub basop_comment {
 
 my %_id2enum;
 
-sub optype_id2enum {
-    my ($id) = @_;
+sub optype_id2enum($id) {
 
     return unless defined $id;
 
@@ -109,8 +108,7 @@ sub optype_id2enum {
     return $_id2enum{$id};
 }
 
-sub save_baseop {
-    my $op = shift;
+sub save_baseop($op) {
 
     my $op_type = optype_id2enum( $op->type );
 
