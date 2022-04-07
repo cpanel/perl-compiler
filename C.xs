@@ -674,6 +674,14 @@ PadnameGEN(padn)
     OUTPUT:
        RETVAL
 
+bool
+PadnameIsUndef(padn)
+       B::PADNAME      padn
+    CODE:
+        RETVAL = padn == &PL_padname_undef ? TRUE : FALSE;
+    OUTPUT:
+       RETVAL
+
 MODULE = B  PACKAGE = B::INVLIST    PREFIX = Invlist
 
 int
