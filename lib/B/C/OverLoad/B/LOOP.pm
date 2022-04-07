@@ -1,11 +1,10 @@
 package B::LOOP;
 
-use strict;
+use B::C::Std;
 
 use B::C::File qw/loopsect/;
 
-sub do_save {
-    my ($op) = @_;
+sub do_save($op, $=undef) {
 
     loopsect()->comment_for_op("first, last, redoop, nextop, lastop");
     my ( $ix, $sym ) = loopsect()->reserve( $op, "OP*" );
