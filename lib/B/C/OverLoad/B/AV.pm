@@ -1,6 +1,6 @@
 package B::AV;
 
-use strict;
+use B::C::Std;
 
 use B::C::Flags ();
 
@@ -12,8 +12,7 @@ use B::C::Helpers qw/key_was_in_starting_stash/;
 my ( $use_av_undef_speedup, $use_svpop_speedup ) = ( 1, 1 );
 my $MYMALLOC = $B::C::Flags::Config{usemymalloc} eq 'define';
 
-sub fill {
-    my $av = shift;
+sub fill($av) {
 
     my $fill = eval { $av->FILL };    # cornercase: tied array without FETCHSIZE
     $fill = -1 if $@;                 # catch error in tie magic
@@ -21,20 +20,19 @@ sub fill {
     return $fill;
 }
 
-sub cast_sv {
+sub cast_sv($av) {
     return "(SV*)";
 }
 
-sub cast_section {                    ### Stupid move it to section !!! a section know its type
+sub cast_section($av) {                    ### Stupid move it to section !!! a section know its type
     return "AV*";
 }
 
-sub section_sv {
+sub section_sv($av) {
     return svsect();
 }
 
-sub update_sv {
-    my ( $av, $ix, $fullname, $args ) = @_;
+sub update_sv( $av, $ix, $fullname, $args ) {
 
     my $fill = $args->{fill};
     my $max  = $args->{fill};         # for AVs optimization ?
@@ -54,8 +52,7 @@ sub update_sv {
 }
 
 # helper to skip backref SV
-sub skip_backref_sv {
-    my ($sv) = @_;
+sub skip_backref_sv($sv) {
 
     return 0 unless $sv->can('FULLNAME');
 
@@ -70,8 +67,7 @@ sub skip_backref_sv {
     return;
 }
 
-sub do_save {
-    my ( $av, $fullname, $cv, $is_backref ) = @_;
+sub do_save( $av, $fullname=undef, $cv=undef, $is_backref=0) {
 
     $av->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $av );
     $fullname ||= '';
@@ -209,8 +205,7 @@ sub do_save {
 # calloc, only malloc. wmemset'ting the pointer to PL_sv_undef
 # might be faster also.
 
-sub add_to_init {
-    my ( $av, $sym, $acc, $fill, $fullname ) = @_;
+sub add_to_init( $av, $sym, $acc, $fill, $fullname ) {
 
     my $deferred_init = $acc =~ qr{BOOTSTRAP_XS_}m ? init_bootstraplink() : init_static_assignments();
 
@@ -231,8 +226,8 @@ sub add_to_init {
     $deferred_init->close_block();
 }
 
-sub add_malloc_line_for_array_init {
-    my ( $av, $deferred_init, $sym, $fill, $fullname ) = @_;
+sub add_malloc_line_for_array_init( $av, $deferred_init, $sym, $fill, $fullname ) {
+
     return if !defined $fill;
 
     $fill = $fill < 3 ? 3 : $fill + 1;
