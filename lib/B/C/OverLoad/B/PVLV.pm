@@ -1,6 +1,6 @@
 package B::PVLV;
 
-use strict;
+use B::C::Std;
 
 use B q/cchar/;
 
@@ -10,11 +10,17 @@ use B::C::Decimal qw/get_double_value/;
 # Warning not covered by the (cpanel)core test suite...
 # FIXME... add some test coverage for PVLV
 
-sub do_save {
-    my ( $sv, $fullname ) = @_;
+sub do_save( $sv, $fullname=undef) {
 
     die("We know of no code that produces a PVLV. Please contact the busy camels immediately.");
 
+}
+
+1;
+
+__END__
+
+{
     my ( $ix, $sym ) = svsect()->reserve($sv);
     svsect()->debug( $fullname, $sv );
 
