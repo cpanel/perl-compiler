@@ -1,6 +1,6 @@
 package B::GV;
 
-use strict;
+use B::C::Std;
 
 use B qw/svref_2object SVf_UTF8/;
 use B::C::Debug qw/debug verbose/;
@@ -20,8 +20,7 @@ my $CORE_SYMS = {
 our $under = '';
 our @under = ();
 
-sub do_save {
-    my ( $gv, $name ) = @_;
+sub do_save( $gv, $name=undef ) {
 
     $gv->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $gv );
 
@@ -84,21 +83,18 @@ sub do_save {
     return $sym;
 }
 
-sub get_package {
-    my $gv = shift;
+sub get_package($gv) {
 
     return '__ANON__' if ref( $gv->STASH ) eq 'B::SPECIAL';
     return $gv->STASH->NAME;
 }
 
-sub is_coresym {
-    my $gv = shift;
+sub is_coresym($gv) {
 
     return $CORE_SYMS->{ $gv->get_fullname() } ? 1 : 0;
 }
 
-sub get_fullname {
-    my $gv = shift;
+sub get_fullname($gv) {
 
     return $gv->get_package() . "::" . $gv->NAME();
 }
@@ -121,8 +117,7 @@ sub GP_IX_FLAGS()  { 10 }
 sub GP_IX_HEK()    { 11 }
 
 # FIXME todo and move later to B/GP.pm ?
-sub savegp_from_gv {
-    my ($gv) = @_;
+sub savegp_from_gv($gv) {
 
     # no GP to save there...
     return 'NULL' unless $gv->isGV_with_GP and $gv->GP;
@@ -226,8 +221,7 @@ sub savegp_from_gv {
     return $saved_gps{$gp};
 }
 
-sub get_stash_symbol {
-    my ($gv) = @_;
+sub get_stash_symbol($gv) {
 
     my @namespace = split( '::', $gv->get_fullname() );
     pop @namespace;
@@ -238,8 +232,7 @@ sub get_stash_symbol {
     return svref_2object( \%{$stash_name} )->save($stash_name);
 }
 
-sub save_egv {
-    my ($gv) = @_;
+sub save_egv($gv) {
 
     return q{NULL} if $gv->is_empty;
 
@@ -254,8 +247,7 @@ sub save_egv {
     return $egv->save;
 }
 
-sub save_gv_sv {
-    my ( $gv, $fullname ) = @_;
+sub save_gv_sv($gv, $fullname) {
 
     my $gvsv = $gv->SV;
     return 'NULL' unless $$gvsv;
@@ -267,8 +259,7 @@ sub save_gv_sv {
     return $gvsv->save($fullname);
 }
 
-sub save_gv_av {    # new function to be renamed later..
-    my ( $gv, $fullname ) = @_;
+sub save_gv_av( $gv, $fullname ) {    # new function to be renamed later..
 
     my $gvav = $gv->AV;
     return 'NULL' unless $gvav && $$gvav;
@@ -286,8 +277,7 @@ sub save_gv_av {    # new function to be renamed later..
     return $svsym;
 }
 
-sub save_gv_hv {                       # new function to be renamed later..
-    my ( $gv, $fullname ) = @_;
+sub save_gv_hv( $gv, $fullname ) {                       # new function to be renamed later..
 
     my $gvhv = $gv->HV;
     return 'NULL' unless $gvhv && $$gvhv;
@@ -316,8 +306,7 @@ sub save_gv_hv {                       # new function to be renamed later..
     return $gvhv->save($fullname);
 }
 
-sub save_gv_cv {
-    my ( $gv, $fullname, $gp_ix ) = @_;
+sub save_gv_cv( $gv, $fullname, $gp_ix ) {
 
     debug( gv => ".... save_gv_cv $fullname" );
 
@@ -361,8 +350,7 @@ sub save_gv_cv {
     return $cvsym;
 }
 
-sub cv_needs_import_after_bootstrap {
-    my ( $gv, $cvsym, $fullname ) = @_;
+sub cv_needs_import_after_bootstrap( $gv, $cvsym, $fullname ) {
 
     return 0 unless $cvsym && $cvsym =~ m{BOOTSTRAP_XS_\Q[[\E(.+?)\Q]]\E_XS_BOOTSTRAP};
     my $bootstrapped_xs_sub = $1;
@@ -378,8 +366,7 @@ sub cv_needs_import_after_bootstrap {
     return $ret;
 }
 
-sub save_gv_format {
-    my ( $gv, $fullname ) = @_;
+sub save_gv_format( $gv, $fullname ) {
 
     my $gvform = $gv->FORM;
     return 'NULL' unless $gvform && $$gvform;
@@ -387,9 +374,8 @@ sub save_gv_format {
     return $gvform->save($fullname);
 }
 
-sub save_gv_io {
-    my ( $gv, $fullname ) = @_;    # TODO: this one needs sym for now
-
+sub save_gv_io( $gv, $fullname ) { # TODO: this one needs sym for now
+    
     my $gvio = $gv->IO;
     return 'NULL' unless $$gvio;
 
@@ -412,8 +398,8 @@ sub save_gv_io {
     return ( $gvio->save($fullname), undef );
 }
 
-sub savecv {
-    my $gv      = shift;
+sub savecv($gv) {
+
     my $package = $gv->STASH->NAME;
     my $name    = $gv->NAME;
     my $cv      = $gv->CV;
@@ -454,8 +440,7 @@ sub savecv {
     $gv->save($fullname);
 }
 
-sub FULLNAME {
-    my ($gv) = @_;
+sub FULLNAME($gv) {
 
     my $stash = $gv->STASH;
 
