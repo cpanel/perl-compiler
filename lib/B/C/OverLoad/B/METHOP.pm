@@ -1,11 +1,10 @@
 package B::METHOP;
 
-use strict;
+use B::C::Std;
 
 use B::C::File qw/methopsect/;
 
-sub do_save {
-    my ($op) = @_;
+sub do_save($op, @) {
 
     my $name    = $op->name || '';
     my $flagspv = $op->flagspv;
