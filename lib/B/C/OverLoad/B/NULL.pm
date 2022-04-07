@@ -1,11 +1,11 @@
 package B::NULL;
 
-use strict;
+use B::C::Std;
+
 use B::C::Debug qw/debug verbose/;
 use B::C::File qw/svsect/;
 
-sub do_save {
-    my ( $sv, $fullname ) = @_;
+sub do_save( $sv, @ ) {
 
     # debug
     if ( $$sv == 0 ) {
