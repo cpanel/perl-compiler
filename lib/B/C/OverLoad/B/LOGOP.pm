@@ -1,11 +1,10 @@
 package B::LOGOP;
 
-use strict;
+use B::C::Std;
 
 use B::C::File qw/logopsect/;
 
-sub do_save {
-    my ($op) = @_;
+sub do_save($op, $=undef) {
 
     logopsect()->comment_for_op("first, other");
     my ( $ix, $sym ) = logopsect()->reserve( $op, "OP*" );
