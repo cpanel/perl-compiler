@@ -1,14 +1,13 @@
 package B::PVNV;
 
-use strict;
+use B::C::Std;
 
 use B qw{SVf_NOK SVp_NOK};
 use B::C::Decimal qw/get_integer_value get_double_value/;
 use B::C::File qw/xpvnvsect svsect/;
 use B::C::Optimizer::DowngradePVXV qw/downgrade_pvnv/;
 
-sub do_save {
-    my ( $sv, $fullname ) = @_;
+sub do_save( $sv, $fullname=undef ) {
 
     my $downgraded = downgrade_pvnv( $sv, $fullname );
     return $downgraded if defined $downgraded;
