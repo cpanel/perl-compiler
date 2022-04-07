@@ -143,8 +143,9 @@ sub downgrade_pviv {
     return if $iok && $pok && $sv->PV ne $sv->IVX;
 
     if ( $ppok && !$pok ) {
-        ddebug( "- PVIV downgrade skipped ", _sv_to_str($sv) );
-        return;
+        my $can_downgrade_to_iv = $sv->can_downgrade_to_iv;
+        ddebug( "- PVIV downgrade skipped - can downgrade %d", _sv_to_str($sv), $can_downgrade_to_iv );
+        return unless $can_downgrade_to_iv;
     }
 
 	#tidyoff
@@ -296,7 +297,7 @@ sub _sv_to_str {
     }
     $flags .= 'pPOK ' if $ppok;
 
-    return sprintf( "SV is %s ; %s ; Flags 0x%x ", $flags, $values, $sv->FLAGS );
+    return sprintf( "SV is %s ; %s ; Flags 0x%x ; SvCUR %d", $flags, $values, $sv->FLAGS, $sv->CUR );
 }
 
 1;

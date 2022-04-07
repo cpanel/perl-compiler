@@ -994,6 +994,27 @@ cv_get_xs_accessor_key(cv)
     OUTPUT:
         RETVAL
 
+MODULE = B__SV	PACKAGE = B::SV		PREFIX = sv_
+
+bool
+sv_can_downgrade_to_iv(sv)
+      B::SV sv;
+  CODE:
+        RETVAL = FALSE;
+        if ( SvIOK(sv) && SvPOKp(sv) && SvCUR(sv) && SvCUR(sv) < 10 ) {
+            char *str = SvPVX(sv);
+            RETVAL = TRUE;
+            for (int i = 0; i < SvCUR(sv); ++i ) {
+                if ( *str < '0' || *str > '9' ) {
+                    RETVAL = FALSE;
+                    break;
+                }
+                ++str;
+            }
+        }
+    OUTPUT:
+        RETVAL
+
 MODULE = B__C          PACKAGE = B::C
 
 BOOT:
