@@ -1,6 +1,6 @@
 package B::NV;
 
-use strict;
+use B::C::Std;
 
 use B q/SVf_IOK/;
 
@@ -9,8 +9,7 @@ use B::C::File qw/xpvnvsect svsect/;
 use B::C::Decimal qw/get_double_value/;
 
 # TODO NVs should/could be bodyless ? view IVs, UVs
-sub do_save {
-    my ( $sv, $fullname, $custom ) = @_;
+sub do_save( $sv, $fullname, $custom=undef) {
 
     my $svflags = $sv->FLAGS;
     my $refcnt  = $sv->REFCNT;
