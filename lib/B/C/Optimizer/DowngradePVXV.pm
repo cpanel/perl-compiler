@@ -1,6 +1,6 @@
 package B::C::Optimizer::DowngradePVXV;
 
-use strict;
+use B::C::Std;
 
 use B::C::Decimal qw/get_integer_value intmax/;
 use B qw{SVf_NOK SVp_NOK SVs_OBJECT SVf_IOK SVf_ROK SVf_POK SVp_POK SVp_IOK SVf_IsCOW SVf_READONLY SVs_PADSTALE SVs_PADTMP SVf_PROTECT};
@@ -24,9 +24,8 @@ my $DEBUG = 0;
 
 my $REGEXP_INTEGER = qr{^(?:[1-9][0-9]*|0)\z};
 
-sub ddebug {
+sub ddebug(@what) {
     return unless $DEBUG;
-    my (@what) = @_;
 
     local %ENV;         # avoid error with taint from op/taint.t
     my $msg = join ' ', map { defined $_ ? $_ : 'undef' } @what;
@@ -35,8 +34,7 @@ sub ddebug {
     return 1;
 }
 
-sub is_simple_pviv {
-    my $sv = shift;
+sub is_simple_pviv($sv) {
 
     my $flags = $sv->FLAGS;
 
@@ -59,8 +57,7 @@ sub is_simple_pviv {
     return $flags == 0;
 }
 
-sub is_simple_pvnv {    # should factorize this with the other is_simple funcion, once ready
-    my $sv = shift;
+sub is_simple_pvnv($sv) {    # should factorize this with the other is_simple funcion, once ready
 
     my $flags = $sv->FLAGS;
 
@@ -90,8 +87,7 @@ sub is_simple_pvnv {    # should factorize this with the other is_simple funcion
     return $flags == 0;
 }
 
-sub custom_flags {
-    my ( $sv, $type ) = @_;
+sub custom_flags( $sv, $type=0) {
 
     $type ||= 0;
 
@@ -131,8 +127,7 @@ sub custom_flags {
     return $flags;
 }
 
-sub downgrade_pviv {
-    my ( $sv, $fullname ) = @_;
+sub downgrade_pviv( $sv, $fullname ) {
 
     return unless is_simple_pviv($sv);
 
@@ -183,8 +178,7 @@ sub downgrade_pviv {
     return;
 }
 
-sub downgrade_pvnv {
-    my ( $sv, $fullname ) = @_;
+sub downgrade_pvnv( $sv, $fullname ) {
 
     return unless is_simple_pvnv($sv);
 
@@ -273,8 +267,7 @@ sub downgrade_pvnv {
 }
 
 # debug helper
-sub _sv_to_str {
-    my $sv = shift;
+sub _sv_to_str($sv) {
 
     my ( $flags, $values ) = ( '', '' );
 
