@@ -1,6 +1,7 @@
 package B::PADLIST;
 
-use strict;
+use B::C::Std;
+
 our @ISA = qw(B::AV);
 
 use B::C::File qw/padlistsect/;
@@ -9,8 +10,7 @@ sub section_sv {
     return padlistsect();
 }
 
-sub update_sv {    # id+outid as U32 (PL_padlist_generation++)
-    my ( $av, $ix, $fullname ) = @_;
+sub update_sv( $av, $ix, $fullname, @ ) {    # id+outid as U32 (PL_padlist_generation++)
 
     my $section = $av->section_sv();
     $section->comment("xpadl_max, xpadl_alloc, xpadl_id, xpadl_outid");
@@ -25,8 +25,7 @@ sub update_sv {    # id+outid as U32 (PL_padlist_generation++)
     return;
 }
 
-sub add_malloc_line_for_array_init {
-    my ( $av, $deferred_init, $sym ) = @_;    # Ignores $fill passed in.
+sub add_malloc_line_for_array_init( $av, $deferred_init, $sym, @ ) {
 
     my $fill = $av->MAX + 1;
     $deferred_init->sadd( "PAD **svp = %s;", B::C::Memory::INITPADLIST( $deferred_init, $sym, $fill ) );
@@ -40,6 +39,6 @@ sub cast_section {                            ### Stupid move it to section !!! 
     return "PADLIST*";
 }
 
-sub fill { return shift->MAX }
+sub fill($av) { return $av->MAX }
 
 1;
