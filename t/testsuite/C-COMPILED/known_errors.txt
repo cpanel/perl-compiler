@@ -39,6 +39,7 @@ comp/final_line_num.t                            COMPAT    This test is about BE
 comp/hints.t                                     COMPAT    tests are using BEGIN block, do not ready for B::C
 comp/parser.t                                    COMPAT    We're not going to support ' as a package separator until we need to: https://github.com/rurban/perl-compiler/issues/217
 comp/parser_run.t                                COMPAT    no need to check this in BC
+extra/pviv.t                                     TESTS     v5.36 - https://github.com/Perl/perl5/issues/19595
 extra/xs-accessor-array.t                        BC        extra/xs-accessor-array.c is generated (-v,)
 io/bom.t                                         COMPAT    BC issue 312 - BOM seems to be rejected by perlcc but really, who needs this?
 japh/abigail.t                                   SKIP      skip
