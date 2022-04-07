@@ -1,6 +1,6 @@
 package B::CV;
 
-use strict;
+use B::C::Std;
 
 use B qw/CVf_CONST main_cv SVf_IsCOW CVf_NAMED/;
 use B::C::Debug qw/verbose/;
@@ -22,8 +22,7 @@ my $xs_accessor_constructor;
 # from B.xs maybe we need to save more than just the RMG ones
 #define MAGICAL_FLAG_BITS (SVs_GMG|SVs_SMG|SVs_RMG)
 
-sub do_save {
-    my ( $cv, $origname ) = @_;
+sub do_save( $cv, $origname=undef) {
 
     my $fullname = $cv->FULLNAME();
 
@@ -136,8 +135,8 @@ sub do_save {
 {
     my %_const_sv_function = map { $_ => 'bc_const_sv_xsub' } qw{B::IV B::UV B::PV B::PVIV B::PVUV};
 
-    sub can_do_const_sv {
-        my ($cv) = @_;
+    sub can_do_const_sv($cv) {
+
         die unless $cv;
         return unless $cv->CONST && $cv->XSUB;
         my $xsubany = $cv->XSUBANY;
@@ -151,8 +150,7 @@ sub do_save {
     }
 }
 
-sub is_xs_accessor_constructor {
-    my ( $cv, $xpvcv_ix ) = @_;
+sub is_xs_accessor_constructor( $cv ) {
 
     return unless $INC{'Class/XSAccessor.pm'};
     my $name = $cv->FULLNAME;
@@ -165,8 +163,7 @@ sub is_xs_accessor_constructor {
     return 1;
 }
 
-sub save_xs_accessor {
-    my $cv = shift;
+sub save_xs_accessor($cv, $=undef) {
 
     return unless $INC{'Class/XSAccessor.pm'};
     my $name = $cv->FULLNAME;
@@ -195,8 +192,7 @@ sub save_xs_accessor {
     return ( "&xsaccessor_list[$xsa_ix]", "Class::XSAccessor::$method_found", $key, $key_cur );
 }
 
-sub save_stash {
-    my $cv = shift;
+sub save_stash($cv) {
 
     $cv->STASH or return 'Nullhv';
 
@@ -207,8 +203,7 @@ sub save_stash {
     return $symbol;
 }
 
-sub get_cv_outside {
-    my ($cv) = @_;
+sub get_cv_outside($cv) {
 
     my $ref = ref( $cv->OUTSIDE );
 
@@ -225,15 +220,13 @@ sub get_cv_outside {
     return $cv->OUTSIDE->save;
 }
 
-sub is_format {
-    my $cv = shift;
+sub is_format($cv) {
 
     my $format_mask = SVt_PVFM() | SVs_RMG();
     return ( $cv->FLAGS & $format_mask ) == $format_mask ? 1 : 0;
 }
 
-sub cv_save_padlist {
-    my ( $cv, $origname ) = @_;
+sub cv_save_padlist( $cv, $origname ) {
 
     my $padlist = $cv->PADLIST;
 
@@ -243,8 +236,7 @@ sub cv_save_padlist {
     return $padlist->save( $fullname . ' :pad', $cv );
 }
 
-sub get_full_name {
-    my ( $cv, $origname ) = @_;
+sub get_full_name( $cv, $origname ) {
 
     my $fullname = $cv->NAME_HEK || '';
     return $fullname if $fullname;
@@ -291,8 +283,7 @@ sub get_full_name {
 
 }
 
-sub get_xcv_gv_u {
-    my ($cv) = @_;
+sub get_xcv_gv_u($cv) {
 
     # $cv->CvFLAGS & CVf_NAMED
     if ( my $pv = $cv->NAME_HEK ) {
@@ -309,15 +300,13 @@ sub get_xcv_gv_u {
     return sprintf( "{.xcv_gv=%s}", $xcv_gv_u );
 }
 
-sub get_ROOT {
-    my ($cv) = @_;
+sub get_ROOT($cv) {
 
     my $root = $cv->ROOT;
     return ref $root eq 'B::NULL' ? undef : $root;
 }
 
-sub save_optree {
-    my ($cv) = @_;
+sub save_optree($cv) {
 
     my $root = $cv->get_ROOT;
 
@@ -332,19 +321,17 @@ sub save_optree {
     return $startfield;
 }
 
-sub is_lexsub {
-    my ( $cv, $gv ) = @_;
+sub is_lexsub($cv, $gv) {
 
     # logical shortcut perl5 bug since ~ 5.19: testcc.sh 42
     return ( ( !$gv or ref($gv) eq 'B::SPECIAL' ) and $cv->can('NAME_HEK') ) ? 1 : 0;
 }
 
-sub is_phase_name {
-    $_[0] =~ /^(BEGIN|INIT|UNITCHECK|CHECK|END)$/ ? 1 : 0;
+sub is_phase_name($phase) {
+    return $phase =~ /^(BEGIN|INIT|UNITCHECK|CHECK|END)$/ ? 1 : 0;
 }
 
-sub FULLNAME {
-    my ($cv) = @_;
+sub FULLNAME($cv) {
 
     #return q{PL_main_cv} if $cv eq ${ main_cv() };
     # Do not coerce a RV into a GV during compile by calling $cv->GV on something with a NAME_HEK (RV)
