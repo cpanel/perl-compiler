@@ -1,13 +1,12 @@
 package B::INVLIST;
 
-use strict;
+use B::C::Std;
 
 use B qw/SVf_IsCOW SVf_ROK SVf_POK SVp_POK SVs_GMG SVt_PVGV SVf_READONLY SVf_FAKE/;
 use B::C::Debug qw/debug/;
 use B::C::File qw/svsect xinvlistsect invlistarray/;
 
-sub do_save {
-    my ( $sv, $fullname, $custom ) = @_;
+sub do_save( $sv, $fullname=undef, $custom=undef ) {
 
     my ( $ix, $sym ) = svsect()->reserve($sv);
     svsect()->debug( $fullname, $sv );
@@ -78,8 +77,7 @@ Detect duplicate lists and return the index to the previously cached one
 
 our %CACHE;
 
-sub _get_invlist_array_index {
-    my ( $sv, $sym ) = @_;
+sub _get_invlist_array_index( $sv, $sym ) {
 
     $sym =~ s{^&}{};    # strip the pointer to the symbol (only used by comments)
 
