@@ -1,6 +1,6 @@
 package B::COP;
 
-use strict;
+use B::C::Std;
 
 use B qw/cstring svref_2object/;
 use B::C::Debug qw/debug/;
@@ -12,8 +12,7 @@ use B::C::Save::Hek qw/save_shared_he get_sHe_HEK/;
 my %COPHHTABLE;
 my %copgvtable;
 
-sub do_save {
-    my ($op) = @_;
+sub do_save($op, @) {
 
     # TODO: if it is a nullified COP we must save it with all cop fields!
     debug( cops => "COP: line %d file %s\n", $op->line, $op->file );
@@ -67,8 +66,7 @@ sub do_save {
     return $sym;
 }
 
-sub save_hints {
-    my ( $op, $sym ) = @_;
+sub save_hints( $op, $sym='' ) {
 
     $sym =~ s/^\(OP\*\)//;
 
@@ -113,8 +111,8 @@ sub save_hints {
 # We use the same symbol for ALL warnings with the same value.
 my %lexwarnsym_cache;
 
-sub save_warnings {
-    my $op = shift or die;
+sub save_warnings($op) {
+    die unless $op;
 
     my $warnings = $op->warnings;
     if ( ref($warnings) eq 'B::SPECIAL' ) {
