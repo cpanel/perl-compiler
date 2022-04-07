@@ -1,6 +1,6 @@
 package B::PMOP;
 
-use strict;
+use B::C::Std;
 
 use B qw/RXf_EVAL_SEEN PMf_EVAL PMf_KEEP SVf_UTF8 svref_2object/;
 use B::C::Debug qw/debug/;
@@ -15,8 +15,7 @@ my %CACHE_SAVED_RX;    # all previously saved RegExp
 
 use constant IX_PPADDR => 2;    # where is stored ppaddr in the PMOP struct
 
-sub do_save {
-    my ($op) = @_;
+sub do_save($op, @) {
 
     pmopsect()->comment_for_op("first, last, pmregexp, pmflags, pmreplroot, pmreplstart");
 
@@ -184,8 +183,7 @@ sub do_save {
     return "(OP*)" . $sym;
 }
 
-sub _regex_has_capture {
-    my ($re) = @_;
+sub _regex_has_capture($re) {
 
     # No ()s .. has no capture - pre optimization
     return 0 if $re !~ tr{()}{};
