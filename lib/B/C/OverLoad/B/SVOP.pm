@@ -1,13 +1,12 @@
 package B::SVOP;
 
-use strict;
+use B::C::Std;
 
 use B qw/SVf_ROK/;
 use B::C::File qw/svopsect init/;
 use B::C::Debug qw/debug WARN/;
 
-sub do_save {
-    my ($op) = @_;
+sub do_save($op, @) {
 
     svopsect()->comment_for_op("sv");
     my ( $ix, $sym ) = svopsect()->reserve( $op, "OP*" );
