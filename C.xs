@@ -666,6 +666,7 @@ aux_list_thr(o)
 
 MODULE = B	PACKAGE = B::PADNAME	PREFIX = Padname
 
+/* submitted to 5.36 - https://github.com/Perl/perl5/pull/19599 */
 int
 PadnameGEN(padn)
        B::PADNAME      padn
@@ -674,6 +675,7 @@ PadnameGEN(padn)
     OUTPUT:
        RETVAL
 
+/* submitted to 5.36 - https://github.com/Perl/perl5/pull/19599 */
 bool
 PadnameIsUndef(padn)
        B::PADNAME      padn
