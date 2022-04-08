@@ -1,9 +1,8 @@
 package SV;
 
-use strict;
+use B::C::Std;
 
-sub save {
-    my $sv = shift;
+sub save($sv, @) {
 
     # This is where we catch an honest-to-goodness Nullsv (which gets
     # blessed into B::SV explicitly) and any stray erroneous SVs.
