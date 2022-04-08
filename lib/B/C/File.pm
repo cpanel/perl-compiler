@@ -19,7 +19,7 @@ combined with B::C::Section objects which it initializes and tree walkers update
 
 =cut
 
-use strict;
+use B::C::Std;
 use warnings;
 
 use Exporter ();
@@ -39,7 +39,7 @@ our @ISA = qw(Exporter);
 # singleton
 my $self;
 
-sub singleton {
+sub singleton($self) {
     $self or die "Singleton not initialized";
     return $self;
 }
@@ -93,8 +93,7 @@ BEGIN {
 
 }
 
-sub new {
-    my ( $class, $outfile ) = @_;
+sub new( $class, $outfile=undef) {
 
     $self and die "Singleton: should only be called once !";
 
@@ -121,8 +120,7 @@ sub new {
     return $self;
 }
 
-sub get_sect {
-    my $section = shift;
+sub get_sect($section) {
     return $self->{$section};
 }
 
@@ -191,9 +189,9 @@ sub replace_xs_bootstrap_to_init {
     return;
 }
 
-sub write {
-    my $c_file_stash = shift or die;
-    my $template_name_short = shift || 'base.c.tt2';
+sub write($c_file_stash, $template_name_short=undef) {
+    die unless $c_file_stash;
+    $template_name_short ||= 'base.c.tt2';
 
     # TODO: refactor move section group logic outside of the 'write' which is the main purpose of File
     # Controls the rendering order of the sections.
