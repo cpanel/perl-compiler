@@ -744,6 +744,30 @@ SvHAS_ANY(sv)
     OUTPUT:
         RETVAL
 
+bool
+SvIsBool(sv)
+    B::SV   sv
+    CODE:
+	RETVAL = SvIsBOOL(sv) ? TRUE : FALSE;
+    OUTPUT:
+        RETVAL
+
+bool
+SvIsBoolYes(sv)
+    B::SV   sv
+    CODE:
+	RETVAL = SvIsBOOL(sv) && SvPVX_const(sv) == PL_Yes ? TRUE : FALSE;
+    OUTPUT:
+        RETVAL
+
+bool
+SvIsBoolNo(sv)
+    B::SV   sv
+    CODE:
+	RETVAL = SvIsBOOL(sv) && SvPVX_const(sv) == PL_No ? TRUE : FALSE;
+    OUTPUT:
+        RETVAL
+
 #/*
 #* Perl_sv_get_backrefs returns the point to the backrefs AV*
 #* - for HV (with OOK) it's stored in the AUX.xhv_backreferences

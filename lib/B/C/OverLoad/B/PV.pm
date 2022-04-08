@@ -85,6 +85,12 @@ sub save_svu( $sv, $sym, $fullname, @ ) {
         return ( $savesym, $cur, $len, $pv, $flags );
     }
 
+    if ( $sv->IsBool ) {
+        # bool values are only sharing the PVX at this point
+        my $pv = $sv->IsBoolYes ? 'PL_Yes' : 'PL_No';
+        return ( ".svu_pv=(char*) $pv", $sv->CUR, $sv->LEN, $pv, $sv->FLAGS );
+    }
+
     my $pok = $flags & ( SVf_POK | SVp_POK );
     my $gmg = $flags & SVs_GMG;
 
