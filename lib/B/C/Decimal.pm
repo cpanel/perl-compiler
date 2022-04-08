@@ -1,6 +1,6 @@
 package B::C::Decimal;
 
-use strict;
+use B::C::Std;
 
 use B::C::Flags ();
 
@@ -24,8 +24,7 @@ sub intmax {
 }
 
 # previously known as 'sub ivx'
-sub get_integer_value ($) {
-    my $ivx = shift;
+sub get_integer_value ($ivx) {
 
     # UL if > INT32_MAX = 2147483647
     my $sval = sprintf( "%${IVDFORMAT}%s", $ivx, $ivx > $INTMAX ? $UL : "" );
@@ -57,8 +56,7 @@ my $NVGFORMAT = _nvgformat();
 
 my $LL = $B::C::Flags::Config{d_longdbl} ? "LL" : "L";
 
-sub get_double_value ($) {
-    my $nvx = shift;
+sub get_double_value ($nvx) {
 
     # Handle infinite and NaN values
     if ( defined $nvx ) {
@@ -95,7 +93,7 @@ sub _ivdformat {
     return $format;
 }
 
-sub _nvgformat {
+sub _nvgformat() {
     my $format = $B::C::Flags::Config{nvgformat};
 
     # QUESTION : is it still really required ?
@@ -109,7 +107,7 @@ sub _nvgformat {
 
 }
 
-sub _ull {
+sub _ull() {
     return $B::C::Flags::Config{ivsize} == 2 * $B::C::Flags::Config{ptrsize} ? 'ULL' : 'UL';
 }
 
