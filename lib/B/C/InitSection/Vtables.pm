@@ -1,6 +1,6 @@
 package B::C::InitSection::Vtables;
 
-use strict;
+use B::C::Std;
 use warnings;
 
 use base 'B::C::InitSection';
@@ -18,8 +18,7 @@ The idea is to use a for loop for the following pattern
 
 =cut
 
-sub add_pvmg {
-    my ( $self, $ix, $vtable ) = @_;
+sub add_pvmg( $self, $ix, $vtable) {
 
     return unless $vtable;
 
@@ -63,8 +62,7 @@ from all previous calls to 'add_pvmg'
 
 =cut
 
-sub _add_pvmg_group {
-    my ($self) = @_;
+sub _add_pvmg_group($self) {
 
     my $group = $self->{group};
     return unless ref $group && defined $group->{vtable};
@@ -88,8 +86,7 @@ EOS
 }
 
 # flush the last group
-sub flush {
-    my ($self) = @_;
+sub flush($self) {
 
     # only flush once
     return $self if $self->{_flushed};
