@@ -1,6 +1,6 @@
 #!./perl
 
-print "1..10\n";
+print "1..11\n";
 
 eval q{use Devel::Peek};
 
@@ -36,7 +36,14 @@ eval q{use Devel::Peek};
     # doesn't get corrupted by inplace mutations
     note( "Checking COW string buffer" );
     my $truevar;
-    BEGIN { $truevar = ( 1 == 1 ) }
+    my $another;
+    BEGIN {
+        $truevar = ( 1 == 1 );
+        $another = $truevar;
+    }
+
+    $another =~ s{1}{aa};
+    ok($another eq 'aa', "another eq 'aa'");
 
     my $x = $truevar;
     $x =~ s/1/t/;
