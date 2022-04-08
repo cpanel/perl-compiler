@@ -744,6 +744,11 @@ SvHAS_ANY(sv)
     OUTPUT:
         RETVAL
 
+#/*
+#* SvIsBool, SvIsBoolYes, SvIsBoolNo submitted to 5.36
+#* - view https://github.com/Perl/perl5/pull/19600
+#*/
+
 bool
 SvIsBool(sv)
     B::SV   sv
