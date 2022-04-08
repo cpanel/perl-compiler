@@ -1,12 +1,12 @@
 package B::UNOP;
 
-use strict;
+use B::C::Std;
 
 use B::C::File qw/unopsect/;
 
 our @DO_UPDATE_ARGS;    # avoid a local on @_ which bloat the binary
 
-sub do_save {
+sub do_save { # cannot use function signature here - goto
     my ($op) = @_;
 
     unopsect()->comment_for_op("first");
