@@ -1,19 +1,17 @@
 package B::C::Section::Assign;
-use strict;
+
+use B::C::Std;
 use warnings;
 
 # avoid use vars
 our @ISA = qw/B::C::Section/;
 
-sub new {
-    my $class = shift;
-    my $self  = $class->SUPER::new(@_);
+sub new($class, @args) {
+    my $self  = $class->SUPER::new(@args);
     return $self;
 }
 
-sub add {    # for now simply perform a single add
-    my ( $self, @args ) = @_;
-
+sub add( $self, @args ) {    # for now simply perform a single add
     my $line = join ', ', @args;
     return $self->SUPER::add($line);
 }

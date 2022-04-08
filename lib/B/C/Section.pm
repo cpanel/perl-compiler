@@ -1,5 +1,6 @@
 package B::C::Section;
-use strict;
+
+use B::C::Std;
 
 # use warnings
 use B qw/SVf_FAKE/;
@@ -11,8 +12,7 @@ sub BOOTSTRAP_marker {
     return q{BOOTSTRAP_XS_};
 }
 
-sub new {
-    my ( $class, $section, $symtable, $default ) = @_;
+sub new( $class, $section, $symtable, $default ) {
 
     my $self = bless {
         'name'     => $section,
@@ -32,15 +32,13 @@ sub new {
     return $self;
 }
 
-sub has_values {
-    my ( $self ) = @_;
+sub has_values($self) {
 
     return scalar @{$self->{values}} >= 1 ? 1 : 0;
 }
 
-sub add {
-    my $self      = shift;
-    my @list      = @_;
+sub add($self, @list) {
+
     my $add_stack = 'B::C::Save'->can('_caller_comment');
     if ( $list[-1] && ref $add_stack ) {
         my $add = $add_stack->();
@@ -52,9 +50,8 @@ sub add {
     return $self->index();
 }
 
-sub reserve {
-    my ( $self, $sv, $type ) = @_;
-    $self or die("This is a method call");
+sub reserve( $self, $sv, $type=undef) {
+
     $sv   or die("Need a symbol");
     my $type_cast = $type ? "($type)" : '';
 
@@ -73,8 +70,7 @@ sub reserve {
     return ( $ix, $sym );
 }
 
-sub _convert_list_to_sprintf {
-    my (@list) = @_;
+sub _convert_list_to_sprintf(@list) {
 
     my @patterns;
     my @args;
@@ -94,8 +90,7 @@ sub _convert_list_to_sprintf {
     return sprintf( $pattern, @args );
 }
 
-sub sort {    # used by shared_HE
-    my $self = shift;
+sub sort($self) {    # used by shared_HE
 
     my %line_to_int;
     foreach my $l ( @{ $self->{'values'} } ) {
@@ -112,36 +107,30 @@ sub sort {    # used by shared_HE
 
 # simple add using sprintf: avoid boilerplates
 # ex: sadd( "%d, %s", 1234, q{abcd} )
-sub sadd {
-    my ( $self, $pattern, @args ) = @_;
+sub sadd( $self, $pattern, @args ) {
     return $self->add( sprintf( $pattern, @args ) );
 }
 
 # simple add using sprintf using input formatted as a list
 # ex: saddl( "%d" => 1234, "%s" => q{abcd} )
-sub saddl {
-    my ( $self, @list ) = @_;
-
+sub saddl( $self, @list ) {
     return $self->add( _convert_list_to_sprintf(@list) );
 }
 
 # simple update using sprintf: avoid boilerplates
 # ex: supdate( 1, "%d, %s", 1234, q{str} )
-sub supdate {
-    my ( $self, $row, $pattern, @args ) = @_;
+sub supdate( $self, $row, $pattern, @args ) {
     return $self->update( $row, sprintf( $pattern, @args ) );
 }
 
 # simple update using sprintf using input formatted as a list
 # ex: supdatel( 1, "%d" => 1234, "%s" => q{str} )
-sub supdatel {
-    my ( $self, $row, @list ) = @_;
+sub supdatel( $self, $row, @list ) {
     return $self->update( $row, _convert_list_to_sprintf(@list) );
 }
 
-sub update {
-    my ( $self, $row, $value, $void ) = @_;
-    die "Can only update one single entry" if defined $void;
+sub update( $self, $row, $value) {
+
     die "Element does not exists" if $row > $self->index;
 
     $self->{'values'}->[$row] = $value;
@@ -149,8 +138,7 @@ sub update {
     return;
 }
 
-sub supdate_field {
-    my ( $self, $row, $field, $pattern, @args ) = @_;
+sub supdate_field( $self, $row, $field, $pattern, @args ) {
     return $self->update_field( $row, $field, sprintf( $pattern, @args ) );
 }
 
@@ -160,10 +148,9 @@ update_field: update a single value from an existing line
 
 =cut
 
-sub update_field {
-    my ( $self, $row, $field, $value, $void ) = @_;
+sub update_field( $self, $row, $field, $value) {
+
     die "Need to call with row, field, value" unless defined $value;
-    die "Extra argument after value" if defined $void;
 
     my $line   = $self->get($row);
     my @fields = _field_split($line);    # does not handle comma in comments
@@ -175,8 +162,8 @@ sub update_field {
     return $self->update( $row, $line );
 }
 
-sub _field_split {
-    my $to_split = shift;
+sub _field_split($to_split) {
+
     my @list = split( ',', $to_split );
     my @ok;
     my ( $count_open, $count_close );
@@ -202,16 +189,14 @@ sub _field_split {
     return @ok;
 }
 
-sub get {
-    my ( $self, $row ) = @_;
+sub get( $self, $row=undef) {
 
-    $row = $self->index if !defined $row;    # get the last entry if not precised
+    $row = $self->index if !defined $row;    # get the last entry if not set
 
     return $self->{'values'}->[$row];
 }
 
-sub get_bootstrapsub_rows {
-    my ($self) = @_;
+sub get_bootstrapsub_rows($self) {
 
     my $bs_rows = {};
 
@@ -228,11 +213,9 @@ sub get_bootstrapsub_rows {
     return $bs_rows;
 }
 
-sub get_field {
-    my ( $self, $row, $field, $void ) = @_;
+sub get_field( $self, $row, $field ) {
 
     die "Need to call with row, field" unless defined $field;
-    die "Extra argument after value" if defined $void;
 
     my $line   = $self->get($row);
     my @fields = _field_split($line);    # does not handle comma in comments
@@ -242,37 +225,35 @@ sub get_field {
     return $fields[$field];
 }
 
-sub get_fields {
-    my ( $self, $row ) = @_;
+sub get_fields( $self, $row=undef) {
 
     my $line = $self->get($row);
     return split( qr/\s*,\s*/, $line );
 }
 
-sub remove {    # should be rename pop or remove last
-    my $self = shift;
-    pop @{ $self->{'values'} };
+sub remove($self) {    # should be rename pop or remove last
+    return pop @{ $self->{'values'} };
 }
 
-sub name {
-    return shift->{'name'};
+sub name($self) {
+    return $self->{'name'};
 }
 
-sub symtable {
-    return shift->{'symtable'};
+sub symtable($self) {
+    return $self->{'symtable'};
 }
 
-sub default {
-    return shift->{'default'};
+sub default($self) {
+    return $self->{'default'};
 }
 
-sub index {
-    my $self = shift;
+sub index($self) {
+
     return scalar( @{ $self->{'values'} } ) - 1;
 }
 
-sub typename {
-    my $self     = shift;
+sub typename($self) {
+
     my $name     = $self->name;
     my $typename = uc($name);
     $typename = 'UNOP_AUX'           if $typename eq 'UNOPAUX';
@@ -283,15 +264,14 @@ sub typename {
     return $typename;
 }
 
-sub comment_for_op {
-    my $self = shift;
-    return $self->comment( B::OP::basop_comment(), ', ', @_ );
+sub comment_for_op($self, @comments) {
+
+    return $self->comment( B::OP::basop_comment(), ', ', @comments );
 }
 
-sub comment {
-    my $self = shift;
+sub comment($self, @comments) {
 
-    my @comments = grep { defined $_ } @_;
+    @comments = grep { defined $_ } @comments;
     $self->{'comment'} = join( "", @comments ) if @comments;
 
     return $self->{'comment'};
@@ -306,8 +286,7 @@ sub add_extra_comments {
                  #return $ENV{BC_DEVELOPING};
 }
 
-sub debug {
-    my ( $self, @what ) = @_;
+sub debug( $self, @what )  {
 
     # disable the sub when unused
     if ( !$self->add_extra_comments ) {
@@ -343,13 +322,12 @@ sub debug {
     return $self->{'dbg'}->[$ix];
 }
 
-sub add_c_header {
-    my $self = shift;
-    push @{ $self->{'c_header'} }, @_;
+sub add_c_header($self, @headers) {
+    push @{ $self->{'c_header'} }, @headers;
+    return;
 }
 
-sub output {
-    my ( $self, $format ) = @_;
+sub output( $self, $format ) {
 
     # weird things would occur if we call the output more than once
     die ref($self)." output should only be called once" if $self->{_output_called};
