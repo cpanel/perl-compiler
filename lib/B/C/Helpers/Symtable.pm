@@ -1,6 +1,6 @@
 package B::C::Helpers::Symtable;
 
-use strict;
+use B::C::Std;
 
 use Exporter ();
 
@@ -15,48 +15,47 @@ sub get_symtable_ref {
 }
 
 # todo move all the sym to helper
-sub savesym {
-    my ( $obj, $value ) = @_;
+sub savesym( $obj, $value ) {
     no strict 'refs';
     my $sym = sprintf( "s\\_%x", $$obj );
     $SYMTABLE{$sym} = $value;
     return $value;
 }
 
-sub objsym {
-    my $obj = shift;
+sub objsym($obj) {
     no strict 'refs';
     return $SYMTABLE{ sprintf( "s\\_%x", $$obj ) };
 }
 
-sub getsym {
-    my $sym = shift;
+sub getsym($sym) {
+
     my $value;
 
     return 0 if $sym eq "sym_0";    # special case
     $value = $SYMTABLE{$sym};
-    if ( defined($value) ) {
-        return $value;
-    }
-    else {
-        warn "warning: undefined symbol $sym\n" if $B::C::settings->{'warn_undefined_syms'};
-        return "UNUSED";
-    }
+    return $value if defined($value);
+    
+    warn "warning: undefined symbol $sym\n" if $B::C::settings->{'warn_undefined_syms'};
+    return "UNUSED";
 }
 
-sub delsym {
-    my ($obj) = @_;
+sub delsym($obj) {
     my $sym = sprintf( "s\\_%x", $$obj );
 
     # fixme move the variable here with accessor
     delete $SYMTABLE{$sym};
+
+    return;
 }
 
-sub clearsym {    #unit test helper
+sub clearsym() {    #unit test helper
+    
     %SYMTABLE = ();
+
+    return;
 }
 
-sub dump_symtable {
+sub dump_symtable() {
 
     # For debugging
     my ( $sym, $val );
