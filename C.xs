@@ -309,7 +309,9 @@ my_runops(pTHX)
     return 0;
 }
 
+#/* ************************************************************ */
 MODULE = B__MAGIC	PACKAGE = B::MAGIC
+#/* ************************************************************ */
 
 # This is a modified version of B::MAGIC::PTR. The B version isn't aware of when mg_ptr is
 # actually pointing to a perl structure so it can't provide the right B object back to the caller.
@@ -334,7 +336,9 @@ PPCODE:
     else
         PUSHs(sv_newmortal());
 
+#/* ************************************************************ */
 MODULE = B      PACKAGE = B::HV
+#/* ************************************************************ */
 
 # returns a single or multiple ENAME(s), since 5.14
 void
@@ -384,8 +388,9 @@ Gv_AMG(stash)
 CODE:
     XSRETURN_IV((!SvREADONLY(stash) && Gv_AMG(stash)) ? 1 : 0);
 
-
+#/* ************************************************************ */
 MODULE = B	PACKAGE = B::UNOP_AUX
+#/* ************************************************************ */
 
 SV*
 aux(o)
@@ -664,7 +669,9 @@ aux_list_thr(o)
 #endif
         } /* switch */
 
+#/* ************************************************************ */
 MODULE = B	PACKAGE = B::PADNAME	PREFIX = Padname
+#/* ************************************************************ */
 
 #/*
 #* PadnameGEN submitted to 5.36
@@ -692,13 +699,17 @@ PadnameIsUndef(padn)
     OUTPUT:
        RETVAL
 
+#/* ************************************************************ */
 MODULE = B     PACKAGE = B::PADNAMELIST        PREFIX = Padnamelist
+#/* ************************************************************ */
 
 size_t
 PadnamelistMAXNAMED(padnl)
        B::PADNAMELIST  padnl
 
+#/* ************************************************************ */
 MODULE = B	PACKAGE = B::REGEXP	PREFIX = RX_
+#/* ************************************************************ */
 
 U32
 RX_EXTFLAGS(rx)
@@ -711,7 +722,9 @@ U32 RX_NPARENS(rx)
     OUTPUT:
        RETVAL
 
+#/* ************************************************************ */
 MODULE = B  PACKAGE = B::MAGIC PREFIX = MG_
+#/* ************************************************************ */
 
 void
 MG_OBJ_PTR(mg)
@@ -719,7 +732,9 @@ MG_OBJ_PTR(mg)
     PPCODE:
         PUSHs(sv_2mortal(newSVuv( mg ? PTR2UV(mg->mg_obj) : 0 )));
 
+#/* ************************************************************ */
 MODULE = B     PACKAGE = B::SV        PREFIX = Sv
+#/* ************************************************************ */
 
 bool
 SvHAS_ANY(sv)
@@ -749,8 +764,9 @@ PPCODE:
         XSRETURN_UNDEF;
     }
 
-
+#/* ************************************************************ */
 MODULE = B__CC	PACKAGE = B::CC
+#/* ************************************************************ */
 
 PROTOTYPES: DISABLE
 
@@ -783,8 +799,9 @@ CODE:
 OUTPUT:
   RETVAL
 
-
+#/* ************************************************************ */
 MODULE = B__OP	PACKAGE = B::OP		PREFIX = op_
+#/* ************************************************************ */
 
 #ifdef need_op_slabbed
 
@@ -845,7 +862,9 @@ op_bc_next(op)
 PPCODE:
      PUSHs(make_op_object(aTHX_ op->op_next ));
 
+#/* ************************************************************ */
 MODULE = B__C          PACKAGE = B::C
+#/* ************************************************************ */
 
 SV*
 get_linear_isa(classname)
@@ -932,7 +951,9 @@ custom_op_descs()
     OUTPUT:
         RETVAL
 
+#/* ************************************************************ */
 MODULE = B__CV	PACKAGE = B::CV		PREFIX = cv_
+#/* ************************************************************ */
 
 SV*
 cv_get_xs_accessor_key(cv)
@@ -950,7 +971,9 @@ cv_get_xs_accessor_key(cv)
     OUTPUT:
         RETVAL
 
+#/* ************************************************************ */
 MODULE = B__SV	PACKAGE = B::SV		PREFIX = sv_
+#/* ************************************************************ */
 
 bool
 sv_can_downgrade_to_iv(sv)
@@ -971,7 +994,9 @@ sv_can_downgrade_to_iv(sv)
     OUTPUT:
         RETVAL
 
+#/* ************************************************************ */
 MODULE = B__C          PACKAGE = B::C
+#/* ************************************************************ */
 
 BOOT:
 {
