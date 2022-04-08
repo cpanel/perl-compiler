@@ -72,9 +72,6 @@ sub save_svu( $sv, $sym, $fullname, @ ) {
     if ( $flags & SVf_ROK ) {
         my $savesym = B::RV::save_rv( $sv, $sym, $fullname );
 
-        my $cur = $sv->CUR;
-        my $len = $sv->LEN;
-
         my $flags = $sv->FLAGS;
 
         # GV should never have an ROK flag. that's just wierd.
@@ -82,7 +79,7 @@ sub save_svu( $sv, $sym, $fullname, @ ) {
 
         my $pv = "RV DEBUG ONLY STRING";
         $savesym = ".svu_rv=$savesym";
-        return ( $savesym, $cur, $len, $pv, $flags );
+        return ( $savesym, $sv->CUR, $sv->LEN, $pv, $flags );
     }
 
     if ( $sv->IsBool ) {
