@@ -1,6 +1,6 @@
 package B::C::Save::Hek;
 
-use strict;
+use B::C::Std;
 
 use B::C::File qw(sharedhe sharedhestructs);
 use B::C::Helpers qw/strlen_flags/;
@@ -12,8 +12,7 @@ our @EXPORT_OK = qw/save_shared_he get_sHe_HEK/;
 
 my %saved_shared_hash;
 
-sub save_shared_he {
-    my $key = shift;
+sub save_shared_he($key) {
 
     return ( 'NULL', 0 ) unless defined $key;
     return @{ $saved_shared_hash{$key} } if $saved_shared_hash{$key};
@@ -36,8 +35,7 @@ sub save_shared_he {
     return @{ $saved_shared_hash{$key} };
 }
 
-sub _define_once {
-    my $len = shift;
+sub _define_once($len) {
 
     sharedhestructs()->{_defined_once} //= {};
 
@@ -47,8 +45,7 @@ sub _define_once {
     sharedhestructs()->{_defined_once}->{$len} = 1;
 }
 
-sub try_latin1 {
-    my ($pv) = @_;
+sub try_latin1($pv) {
 
     my @chars = map { ord $_ } split( '', $pv );
 
@@ -68,8 +65,7 @@ sub try_latin1 {
     return ( scalar @chars, qq{"$cstring"} );
 }
 
-sub get_sHe_HEK {
-    my ($shared_he) = @_;
+sub get_sHe_HEK($shared_he) {
 
     return q{NULL} if !defined $shared_he or $shared_he eq 'NULL';
 
