@@ -1,6 +1,6 @@
 package B::C::InitSection::XSAccessor;
 
-use strict;
+use B::C::Std;
 use warnings;
 
 use B qw/cstring/;
@@ -9,16 +9,14 @@ use B::C::Save qw/savecowpv/;
 # avoid use vars
 use base 'B::C::InitSection';
 
-sub has_values {
-    my ($self) = @_;
+sub has_values($self) {
 
     return 1 if defined $self->{methods} && scalar keys %{ $self->{methods} };
 
     return $self->SUPER::has_values();
 }
 
-sub setup_method_for {
-    my ( $self, %opts ) = @_;
+sub setup_method_for( $self, %opts ) {
 
     $self->{methods} //= {};
 
@@ -38,8 +36,7 @@ sub setup_method_for {
 }
 
 # flush the last group
-sub flush {
-    my ($self) = @_;
+sub flush($self) {
 
     # only flush once
     return $self if $self->{_flushed};

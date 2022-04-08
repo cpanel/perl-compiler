@@ -1,6 +1,6 @@
 package B::C::InitSection::XOPs;
 
-use strict;
+use B::C::Std;
 use warnings;
 
 use B qw/cstring/;
@@ -29,8 +29,7 @@ example:
     $xops->xop_used_by( 'is_yourmum',  '(OP*)&unop_list[11]' );
 
 =cut
-sub xop_used_by {
-    my ( $self, $xop_name, $opsym ) = @_;
+sub xop_used_by( $self, $xop_name, $opsym ) {
 
     $self->{xops} //= {};
     my $xops = $self->{xops};
@@ -59,8 +58,7 @@ sub xop_used_by {
 }
 
 # flush the last group
-sub flush {
-    my ($self) = @_;
+sub flush($self) {
 
     # only flush once
     return $self if $self->{_flushed};
