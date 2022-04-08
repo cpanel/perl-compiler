@@ -1,6 +1,6 @@
 package B::C::Save;
 
-use strict;
+use B::C::Std;
 
 use B::C::Debug qw/debug/;
 use B::C::File qw( xpvmgsect decl init const cowpv );
@@ -14,8 +14,7 @@ our @EXPORT_OK = qw/savecowpv/;
 my %strtable;
 my %cowtable;
 
-sub savecowpv {
-    my $pv = shift;
+sub savecowpv($pv) {
 
     my ( $cstring, $cur, $len, $utf8 ) = cow_strlen_flags($pv);
     return @{ $cowtable{$cstring} } if defined $cowtable{$cstring};
@@ -81,8 +80,7 @@ sub stack {
     return \@stack;
 }
 
-sub stack_flat {
-    my $remove = shift || 0;    # number of stack levels to remove
+sub stack_flat($remove=0) {
     $remove += 2;
     my @stack = @{ stack() };
     splice( @stack, 0, $remove );    # shift the first X elements
