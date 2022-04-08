@@ -1,10 +1,9 @@
 package B::SPECIAL;
 
-use strict;
+use B::C::Std;
 use B qw( @specialsv_name);
 
-sub save {
-    my ( $sv, $fullname ) = @_;
+sub save( $sv, $fullname=undef ) {
 
     # Nullsv &PL_sv_undef &PL_sv_yes &PL_sv_no &PL_sv_zero (SV*)pWARN_ALL (SV*)pWARN_NONE (SV*)pWARN_STD
     my $sym = $specialsv_name[$$sv];
