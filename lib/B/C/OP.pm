@@ -1,6 +1,6 @@
 package B::C::OP;
 
-use strict;
+use B::C::Std;
 
 use B qw/SVf_ROK/;
 use B::C::Helpers::Symtable qw/savesym objsym/;
@@ -15,14 +15,13 @@ my $_stack;
 
 our @SAVED_OPS;
 
-sub save_constructor {
+sub save_constructor($for) {
 
     # we cannot trust the OP passed to know which call we should call
     #   we are hardcoding it using a constructor for save
-    my $for = shift or die;
+    die unless $for;
 
-    return sub {
-        my ( $op, @args ) = @_;
+    return sub( $op, @args ) {
 
         # cache lookup
         {
