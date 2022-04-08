@@ -18,8 +18,8 @@ sub update_sv( $av, $ix, $fullname, @ ) {    # id+outid as U32 (PL_padlist_gener
         $ix,
         '%s' => $av->MAX,     # xpadl_max
         '%s' => '{NULL}',     # xpadl_alloc
-        '%s' => $av->ID,      # xpadl_id
-        '%s' => $av->OUTID    # xpadl_outid
+        '%s' => $av->id,      # xpadl_id
+        '%s' => $av->outid,    # xpadl_outid
     );
 
     return;
