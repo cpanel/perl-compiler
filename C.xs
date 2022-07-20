@@ -1008,11 +1008,12 @@ bool
 sv_can_downgrade_to_iv(sv)
       B::SV sv;
   CODE:
+        unsigned int i;
         RETVAL = FALSE;
         if ( SvIOK(sv) && SvPOKp(sv) && SvCUR(sv) && SvCUR(sv) < 10 ) {
             char *str = SvPVX(sv);
             RETVAL = TRUE;
-            for (int i = 0; i < SvCUR(sv); ++i ) {
+            for ( i = 0; i < SvCUR(sv); ++i ) {
                 if ( *str < '0' || *str > '9' ) {
                     RETVAL = FALSE;
                     break;
