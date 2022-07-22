@@ -60,6 +60,7 @@ lib/B/C/Save/Hek.pm
 lib/B/C/Section.pm
 lib/B/C/Section/Assign.pm
 lib/B/C/Section/Meta.pm
+lib/B/C/Std.pm
 lib/B/C/Templates/base.c.tt2
 lib/B/C/XS.pm
 lib/B/C_heavy.pl
