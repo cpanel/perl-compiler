@@ -872,11 +872,6 @@ my_curse( pTHX_ SV* const sv ) {
 
 static int fast_perl_destruct( PerlInterpreter *my_perl ) {
     dVAR;
-#ifdef DEBUGGING
-    VOL signed char destruct_level;  /* see possible values in intrpvar.h */
-#endif
-
-    PL_phase = PERL_PHASE_DESTRUCT;
 
     PERL_UNUSED_ARG(my_perl);
 
@@ -885,27 +880,13 @@ static int fast_perl_destruct( PerlInterpreter *my_perl ) {
     /* wait for all pseudo-forked children to finish */
     PERL_WAIT_FOR_CHILDREN;
 
-#ifdef DEBUGGING
-    destruct_level = PL_perl_destruct_level;
-    {
-	const char * const s = PerlEnv_getenv("PERL_DESTRUCT_LEVEL");
-	if (s) {
-            const int i = atoi(s);
-	    if (destruct_level < i) destruct_level = i;
-#ifdef PERL_TRACK_MEMPOOL
-            /* RT #114496, for perl_free */
-            PL_perl_destruct_level = i;
-#endif
-	}
-    }
-#endif
-
+    /* Run all the END blocks here. */
     if (PL_exit_flags & PERL_EXIT_DESTRUCT_END) {
         dJMPENV;
-        int x;
+        int x = 0;
         JMPENV_PUSH(x);
         if (PL_endav && !PL_minus_c) {
-            PL_phase = PERL_PHASE_END;
+            PERL_SET_PHASE(PERL_PHASE_END);
             call_list(PL_scopestack_ix, PL_endav);
         }
         PERL_UNUSED_ARG(x);
@@ -916,7 +897,7 @@ static int fast_perl_destruct( PerlInterpreter *my_perl ) {
     PL_main_cv = NULL;
     PL_curcop = &PL_compiling;
 
-    PL_phase = PERL_PHASE_DESTRUCT;
+    PERL_SET_PHASE(PERL_PHASE_DESTRUCT);
 
     LEAVE;
     FREETMPS;
@@ -925,16 +906,16 @@ static int fast_perl_destruct( PerlInterpreter *my_perl ) {
     /* Need to flush since END blocks can produce output */
     my_fflush_all();
 
-    if (PL_threadhook(aTHX)) {
-        /* Threads hook has vetoed further cleanup */
-	PL_veto_cleanup = TRUE;
-        return STATUS_EXIT;
-    }
     PerlIO_destruct(aTHX);
 
-    /* B::C -O3 specific: first curse (i.e. call DESTROY) all our static SVs */
     if (PL_sv_objcount) {
         int i = 1;
+        PL_in_clean_all = 1;
+        /* at this point the cache might point to some non existing GVs */
+        /* clear the cache, as it's going to be rebuilt if needed */
+        hv_clear(PL_stashcache);
+
+    /* B::C -O3 specific: first curse (i.e. call DESTROY) all our static SVs */
         DEBUG_D(PerlIO_printf(Perl_debug_log, "\nCursing named global static sv_arena:\n"));
         PL_in_clean_all = 1;
         for (; i < SvREFCNT(&sv_list[0]); i++) { /* loop on all our SVs: probably want to use the value from TT section.sv_sect.index + 1 */
@@ -952,29 +933,16 @@ static int fast_perl_destruct( PerlInterpreter *my_perl ) {
                 }
             }
         }
-    }
-    if (DEBUG_D_TEST) {
-        SV* sva;
-        PerlIO_printf(Perl_debug_log, "\n");
-        for (sva = PL_sv_arenaroot; sva; sva = (SV*)SvANY(sva)) {
-            PerlIO_printf(Perl_debug_log, "sv_arena: 0x%p - 0x%p (%lu)\n",
-              sva, sva+SvREFCNT(sva), (long unsigned int) 0+SvREFCNT(sva));
-        }
-    }
 
-    if (PL_sv_objcount) {
-        PL_in_clean_all = 1;
-        /* at this point the cache might point to some non existing GVs */
-        /* clear the cache, as it's going to be rebuilt if needed */
-        hv_clear(PL_stashcache);
         sv_clean_objs(); /* and now curse the rest */
         PL_sv_objcount = 0;
     }
+
     PL_warnhook = NULL;
     PL_diehook = NULL;
     /* call exit list functions */
     while (PL_exitlistlen-- > 0)
-	PL_exitlist[PL_exitlistlen].fn(aTHX_ PL_exitlist[PL_exitlistlen].ptr);
+	    PL_exitlist[PL_exitlistlen].fn(aTHX_ PL_exitlist[PL_exitlistlen].ptr);
     PL_exitlist = NULL;
 
 #if defined(PERLIO_LAYERS)
