@@ -38,7 +38,7 @@ v536=`$PERL -e'print (($] < 5.037)?0:1)'`
 
 PERLV=$(perl -e 'print $^V')
 
-TESTSUITEV='v5.35.10'
+TESTSUITEV='v5.36.0'
 #TESTSUITEV=$(cat t/testsuite/version)
 [ "$PERLV" != "$TESTSUITEV" ] && ( echo "Using an incorrect version of perl '$PERLV' [ expecting '$TESTSUITEV' ]"; exit 1 )
 
@@ -454,7 +454,7 @@ tests[91]='# issue59
 use strict;
 use warnings;
 use IO::Socket;
-my $remote = IO::Socket::INET->new( Proto => "tcp", PeerAddr => "www.cpanel.com", PeerPort => "80" );
+my $remote = IO::Socket::INET->new( Proto => "tcp", PeerAddr => "cpanel.net", PeerPort => "80" );
 print $remote "GET / HTTP/1.0" . "\r\n\r\n";
 my $result = <$remote>;
 $result =~ m|HTTP/1.1 200 OK| ? print "ok" : print $result;
@@ -824,7 +824,7 @@ result[199]='21end'
 tests[200]='use Encode::Byte; use Encode::KR; print "ok\n"'
 tests[2000]='%u=("\x{123}"=>"fo"); print "ok" if $u{"\x{123}"} eq "fo"'
 tests[2001]='BEGIN{%u=("\x{123}"=>"fo");} print "ok" if $u{"\x{123}"} eq "fo";'
-tests[201]='use Storable;*Storable::CAN_FLOCK=sub{1};print qq{ok\n}'
+tests[201]='use Storable;no warnings "redefine";*Storable::CAN_FLOCK=sub{1};print qq{ok\n}'
 tests[2011]='sub can {require Config; import Config;return $Config{d_flock}}
 use IO::File;
 can();

@@ -48,14 +48,12 @@ op/caller.t                                      PLAN      v5.36 - needs investi
 op/closure.t                                     TESTS     BC issue #278 - destruction issue
 op/coreamp.t                                     COMPAT    unsupported experimental::lexical_topic
 op/coresubs.t                                    COMPAT    uses B::walkoptree
-op/defins.t                                      TESTS     v5.36 - needs investigation
 op/glob.t                                        SKIP      Flaps because it's surprised to see perlcc files during its run.
 op/goto_xs.t                                     COMPAT    needs XS::APItest
 op/hash.t                                        SIG       v5.36 - needs investigation
 op/heredoc.t                                     SKIP      this test can be compiled with B::C but uses more than 100s subtest - 10 min to run
 op/lex.t                                         COMPAT    Tests trigger errors at compilation time
 op/lexsub.t                                      BC        GH #60 - SEGV at compile time from B
-op/magic-27839.t                                 BC        v5.36 - needs investigation - op/magic-27839.c is generated (-v,)
 op/magic.t                                       TESTS     v5.36 - needs investigation
 op/method.t                                      TESTS     HV_STATIC: plan no longer fails in statch branch. Need to determine the cause of the tests now.
 op/override.t                                    COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
