@@ -41,6 +41,9 @@ sub is_simple_pviv($sv) {
     return if ( $flags & SVf_ROK ) == SVf_ROK;
     return if ( $flags & SVt_MASK ) != SVt_PVIV();
 
+    # downgrade to IV if private_POK is set without having the public POK set
+    return 1 if ( $flags & SVp_POK && !($flags & SVf_POK));
+
     # remove insignificant flags for us as a PVIV
     $flags &= ~SVf_IsCOW if $flags & SVp_POK;
     $flags &= ~SVf_IOK;
@@ -48,6 +51,7 @@ sub is_simple_pviv($sv) {
     $flags &= ~SVp_IOK;
     $flags &= ~SVp_POK;
     $flags &= ~SVf_READONLY;
+    $flags &= ~SVf_PROTECT;
 
     # remove the type
     $flags &= ~SVt_MASK();
