@@ -14,6 +14,8 @@ our @EXPORT_OK = qw/savecowpv/;
 my %strtable;
 my %cowtable;
 
+my %COW_map;
+
 sub savecowpv ($pv) {
 
     my ( $cstring, $cur, $len, $utf8 ) = cow_strlen_flags($pv);
@@ -23,7 +25,6 @@ sub savecowpv ($pv) {
 
         # the 0 entry is special
         cowpv->add(qq{Static const char allCOWPVs[] = "";\n});    # ";\n -> 3
-        cowpv()->{_total_len} = 0;
     }
 
     {                                                             # append our string to the declaration of strings
@@ -41,22 +42,50 @@ sub savecowpv ($pv) {
         cowpv->update( 0, $declaration );
     }
 
-    my $ix = cowpv->index();    # not really exact
-    cowpv->sadd( q{#define COWPV%d (char*) allCOWPVs+%d /* %s */}, $ix, cowpv()->{_total_len}, _comment_str($cstring) );
-
-    # increase the total length of our master string (only after having use it)
-    cowpv()->{_total_len} += $len;
+    my $ix = cowpv->add(qq[/* fill later */]);
 
     my $pvsym = sprintf( q{COWPV%d}, $ix );
+    $COW_map{$pvsym} = [ $ix, $len, $cstring ];
+
+    # local cache for this function
     $cowtable{$cstring} = [ $pvsym, $cur, $len, $utf8 ];
 
     return ( $pvsym, $cur, $len, $utf8 );    # NOTE: $cur is total size of the perl string. len would be the length of the C string.
 }
 
+#
+# Run later when all our COWPV strings are setup
+#
+sub cowpv_setup() {
+
+    my $total_len = 0;
+
+    foreach my $pvsym (
+        sort { $COW_map{$a}->[0] <=> $COW_map{$b}->[0] }    # FIXME to remove
+        keys %COW_map
+      ) {                                                   # shuffle the list
+        my ( $ix, $len, $cstring ) = $COW_map{$pvsym}->@*;
+
+        cowpv->supdate(
+            $ix,
+            q{#define %s (char*) allCOWPVs+%d /* %s */},
+            $pvsym,
+            $total_len,
+            _comment_str($cstring)
+        );
+
+        $total_len += $len;
+    }
+
+    cowpv()->{_total_len} = $total_len;
+
+    return;
+}
+
 sub _comment_str ($str) {
     $str =~ s{\Q/*\E}{??}g;
     $str =~ s{\Q*/\E}{??}g;
-    $str =~ s{\Q\000\377\E"$}{"};            # remove the cow part
+    $str =~ s{\Q\000\377\E"$}{"};    # remove the cow part
 
     return $str;
 }
