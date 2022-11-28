@@ -45,10 +45,13 @@ sub cowpv_setup() {
 
     my $total_len = 0;
 
-    foreach my $pvsym (
-        sort { $COW_map{$a}->[0] <=> $COW_map{$b}->[0] }    # FIXME to remove
-        keys %COW_map
-      ) {                                                   # shuffle the list
+    my @all_syms = keys %COW_map;    # shuffle the list
+    if ( defined $ENV{BC_COWPV_SHUFFLE} && $ENV{BC_COWPV_SHUFFLE} eq 0 ) {
+        print STDERR "### WARNING: BC_COWPV_SHUFFLE=0\n";
+        @all_syms = sort { $COW_map{$a}->[0] <=> $COW_map{$b}->[0] } @all_syms;
+    }
+
+    foreach my $pvsym (@all_syms) {
         my ( $ix, $len, $cstring ) = $COW_map{$pvsym}->@*;
 
         _append_str_to_allCOWPV($cstring);
