@@ -42,23 +42,23 @@ sub savecowpv ($pv) {
     }
 
     my $ix = cowpv->index();    # not really exact
-
-    {
-        my $comment_str = $cstring;
-        $comment_str =~ s{\Q/*\E}{??}g;
-        $comment_str =~ s{\Q*/\E}{??}g;
-        $comment_str =~ s{\Q\000\377\E"$}{"};    # remove the cow part
-        cowpv->sadd( q{#define COWPV%d (char*) allCOWPVs+%d /* %s */}, $ix, cowpv()->{_total_len}, $comment_str );
-    }
+    cowpv->sadd( q{#define COWPV%d (char*) allCOWPVs+%d /* %s */}, $ix, cowpv()->{_total_len}, _comment_str($cstring) );
 
     # increase the total length of our master string (only after having use it)
     cowpv()->{_total_len} += $len;
 
     my $pvsym = sprintf( q{COWPV%d}, $ix );
-
     $cowtable{$cstring} = [ $pvsym, $cur, $len, $utf8 ];
 
     return ( $pvsym, $cur, $len, $utf8 );    # NOTE: $cur is total size of the perl string. len would be the length of the C string.
+}
+
+sub _comment_str ($str) {
+    $str =~ s{\Q/*\E}{??}g;
+    $str =~ s{\Q*/\E}{??}g;
+    $str =~ s{\Q\000\377\E"$}{"};            # remove the cow part
+
+    return $str;
 }
 
 sub _caller_comment {
