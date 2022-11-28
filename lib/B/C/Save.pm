@@ -27,21 +27,6 @@ sub savecowpv ($pv) {
         cowpv->add(qq{Static const char allCOWPVs[] = "";\n});    # ";\n -> 3
     }
 
-    {                                                             # append our string to the declaration of strings
-        my $declaration    = cowpv->get(0);
-        my $noquotecstring = $cstring;
-        $noquotecstring =~ s{^"}{};
-        $noquotecstring =~ s{"$}{};
-
-        my $end = qq{";\n};
-
-        # we are playing here with the limits with very long strings
-        #   but we can easily split them as part of a next iteration
-        #   by having multiple allCOWPVs strings
-        $declaration =~ s[^(.+)(\Q$end\E)$][$1${noquotecstring}$2]m;
-        cowpv->update( 0, $declaration );
-    }
-
     my $ix = cowpv->add(qq[/* fill later */]);
 
     my $pvsym = sprintf( q{COWPV%d}, $ix );
@@ -66,6 +51,8 @@ sub cowpv_setup() {
       ) {                                                   # shuffle the list
         my ( $ix, $len, $cstring ) = $COW_map{$pvsym}->@*;
 
+        _append_str_to_allCOWPV($cstring);
+
         cowpv->supdate(
             $ix,
             q{#define %s (char*) allCOWPVs+%d /* %s */},
@@ -78,6 +65,26 @@ sub cowpv_setup() {
     }
 
     cowpv()->{_total_len} = $total_len;
+
+    return;
+}
+
+sub _append_str_to_allCOWPV ($str) {
+
+    # append our string to the declaration of strings
+
+    my $declaration = cowpv->get(0);
+
+    $str =~ s{^"}{};
+    $str =~ s{"$}{};
+
+    my $end = qq{";\n};
+
+    # we are playing here with the limits with very long strings
+    #   but we can easily split them as part of a next iteration
+    #   by having multiple allCOWPVs strings
+    $declaration =~ s[^(.+)(\Q$end\E)$][$1${str}$2]m;
+    cowpv->update( 0, $declaration );
 
     return;
 }
