@@ -20,6 +20,7 @@ jobs:
       VERBOSE: 0
       BC_DEVELOPING: 0
       WARNINGS: 0
+      PERL_SKIP_TTY_TEST: 1
 
     runs-on: ubuntu-latest
 
