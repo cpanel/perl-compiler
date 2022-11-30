@@ -3,20 +3,20 @@ package B::C::InitSection::XSAccessor;
 use B::C::Std;
 use warnings;
 
-use B qw/cstring/;
+use B          qw/cstring/;
 use B::C::Save qw/savecowpv/;
 
 # avoid use vars
 use base 'B::C::InitSection';
 
-sub has_values($self) {
+sub has_values ($self) {
 
     return 1 if defined $self->{methods} && scalar keys %{ $self->{methods} };
 
     return $self->SUPER::has_values();
 }
 
-sub setup_method_for( $self, %opts ) {
+sub setup_method_for ( $self, %opts ) {
 
     $self->{methods} //= {};
 
@@ -36,7 +36,7 @@ sub setup_method_for( $self, %opts ) {
 }
 
 # flush the last group
-sub flush($self) {
+sub flush ($self) {
 
     # only flush once
     return $self if $self->{_flushed};
@@ -66,7 +66,7 @@ sub flush($self) {
 
         # assignment
         foreach my $xa ( sort { $a->{fullname} cmp $b->{fullname} } @{ $self->{methods}->{$method} } ) {
-            my @path = split qr/::/, $xa->{fullname};
+            my @path      = split qr/::/, $xa->{fullname};
             my $shortname = $path[-1];
 
             # now plug the xsub to our XPVCV

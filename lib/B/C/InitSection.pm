@@ -5,8 +5,8 @@ use warnings;
 
 use base 'B::C::Section';
 
-use B qw(cstring);
-use B::C::Debug qw(debug);
+use B             qw(cstring);
+use B::C::Debug   qw(debug);
 use B::C::Helpers qw/gv_fetchpv_to_fetchpvn_flags/;
 
 # All objects inject into this shared variable.
@@ -38,13 +38,13 @@ sub CREATE {    # ~factory
     my ( $pkg, $name, @args ) = @_;
 
     my $custom_sections = {
-        init_vtables => q[B::C::InitSection::Vtables],
-        init_xops    => q[B::C::InitSection::XOPs],
+        init_vtables    => q[B::C::InitSection::Vtables],
+        init_xops       => q[B::C::InitSection::XOPs],
         init_xsaccessor => q[B::C::InitSection::XSAccessor]
     };
 
-    if ( $name && $custom_sections->{ $name } ) {
-        my $pkg = $custom_sections->{ $name };
+    if ( $name && $custom_sections->{$name} ) {
+        my $pkg = $custom_sections->{$name};
         eval qq/require $pkg; 1/ or die $@;
         return $pkg->can('new')->( $pkg, $name, @args );
     }
@@ -237,7 +237,7 @@ sub add_eval {
 sub pre_destruct {
     my $self = shift;
 
-    return $self->{'pre_destruct'} if ( !@_ );       # Return the array to the template if nothing is passed in.
+    return $self->{'pre_destruct'} if ( !@_ );    # Return the array to the template if nothing is passed in.
 
     push @{ $self->{'pre_destruct'} }, @_;
 }
@@ -270,12 +270,12 @@ sub flush {    # by default do nothing
 sub output {
     my ( $self, $format, $init_name ) = @_;
 
-    $format //= "    %s\n";
+    $format    //= "    %s\n";
     $init_name //= 'perl_' . $self->name;
 
     $self->flush();    # autoflush
 
-    my $sym = $self->symtable || {};
+    my $sym     = $self->symtable || {};
     my $default = $self->default;
 
     push @{ $self->{'chunks'} }, $self->{'current'};

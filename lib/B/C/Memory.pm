@@ -98,7 +98,7 @@ sub get_malloc_size {    # in char unit
 sub populate_malloc_section {
     return if malloc()->index >= 0;    # only run it once
 
-    my $position = 1;
+    my $position        = 1;
     my $ordered_section = { map { $_ => $position++ } @SECTION_ORDER };
 
     # check that all section are known

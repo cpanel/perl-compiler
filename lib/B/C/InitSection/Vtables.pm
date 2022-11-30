@@ -18,12 +18,13 @@ The idea is to use a for loop for the following pattern
 
 =cut
 
-sub add_pvmg( $self, $ix, $vtable) {
+sub add_pvmg ( $self, $ix, $vtable ) {
 
     return unless $vtable;
 
     if ( !defined $self->{group} ) {
         $self->{group} = {};
+
         # only declar the variable once per function
         $self->add_c_header('register int i;');
     }
@@ -62,7 +63,7 @@ from all previous calls to 'add_pvmg'
 
 =cut
 
-sub _add_pvmg_group($self) {
+sub _add_pvmg_group ($self) {
 
     my $group = $self->{group};
     return unless ref $group && defined $group->{vtable};
@@ -86,7 +87,7 @@ EOS
 }
 
 # flush the last group
-sub flush($self) {
+sub flush ($self) {
 
     # only flush once
     return $self if $self->{_flushed};

@@ -172,7 +172,7 @@ sub cleanup_stashes {
             $to_skip =~ s{::$}{};    # remove the trailing :: if client provide it
 
             my @namespace = split( qr{::}, $to_skip );
-            my $cursor = $stashes;
+            my $cursor    = $stashes;
             while ( my $ns = shift @namespace ) {
                 $ns .= q{::};
 
@@ -200,14 +200,14 @@ sub cleanup_stashes {
 
     # cleanup sepcial stashes
     delete $stashes->{'O::'};
-    delete $stashes->{'B::'} if skip_B();
+    delete $stashes->{'B::'}        if skip_B();
     delete $stashes->{'B::'}{'C::'} if exists $stashes->{'B::'};    # always purge B::C::*
 
     # depends on LANG and LC_CTYPE, LC_ALL, ...
     delete $stashes->{'POSIX::'}->{'MB_CUR_MAX'} if exists $stashes->{'POSIX::'};
 
     foreach my $st ( sort keys %$stashes ) {
-        next unless ref $stashes->{$st} eq 'HASH';    # only stashes are hash ref
+        next unless ref $stashes->{$st} eq 'HASH';                  # only stashes are hash ref
         next if $st eq 'DB::';
 
         #delete $stashes->{$st} if !scalar keys %{ $stashes->{$st} };
@@ -329,11 +329,11 @@ sub flatten_stashes {
 sub set_stashes_enames {
     my ( $stash, $name ) = @_;
 
-    return unless ref $stash;
+    return     unless ref $stash;
     $name = '' unless defined $name;
     foreach my $k ( keys %$stash ) {
         next unless $k =~ qr{::$};
-        my $stn = $name . $k;
+        my $stn   = $name . $k;
         my $ename = eval { B::svref_2object( \*{"${stn}"} )->EGV->NAME };
         if ( $ename && $k ne $ename ) {
 
@@ -352,14 +352,14 @@ sub set_stashes_enames {
 }
 
 sub save_xsloader_so {
-    my @DL = eval '@DynaLoader::dl_shared_objects';                    # Quoted eval gets rid of no warnings once issue.
+    my @DL    = eval '@DynaLoader::dl_shared_objects';    # Quoted eval gets rid of no warnings once issue.
     my @short = grep { $_ !~ qr{\QPerlIO/scalar/scalar.so\E$} } @DL;
     @short = grep { $_ !~ m{/B/B\.so$} } @short if skip_B();
     return [@short];
 }
 
 sub save_xsloader_modules {
-    my @DL = eval '@DynaLoader::dl_modules';                             # Quoted eval gets rid of no warnings once issue.
+    my @DL    = eval '@DynaLoader::dl_modules';           # Quoted eval gets rid of no warnings once issue.
     my @short = grep { $_ !~ m{^B::C} && $_ ne 'PerlIO::scalar' } @DL;
     @short = grep { $_ !~ m{^B$} } @short if skip_B();
     return [@short];

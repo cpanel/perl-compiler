@@ -2,17 +2,17 @@ package B::COP;
 
 use B::C::Std;
 
-use B qw/cstring svref_2object/;
-use B::C::Debug qw/debug/;
-use B::C::File qw/init copsect decl lexwarnsect refcounted_hesect/;
-use B::C::Decimal qw/get_integer_value/;
-use B::C::Helpers qw/strlen_flags/;
+use B               qw/cstring svref_2object/;
+use B::C::Debug     qw/debug/;
+use B::C::File      qw/init copsect decl lexwarnsect refcounted_hesect/;
+use B::C::Decimal   qw/get_integer_value/;
+use B::C::Helpers   qw/strlen_flags/;
 use B::C::Save::Hek qw/save_shared_he get_sHe_HEK/;
 
 my %COPHHTABLE;
 my %copgvtable;
 
-sub do_save($op, @) {
+sub do_save ( $op, @ ) {
 
     # TODO: if it is a nullified COP we must save it with all cop fields!
     debug( cops => "COP: line %d file %s\n", $op->line, $op->file );
@@ -66,7 +66,7 @@ sub do_save($op, @) {
     return $sym;
 }
 
-sub save_hints( $op, $sym='' ) {
+sub save_hints ( $op, $sym = '' ) {
 
     $sym =~ s/^\(OP\*\)//;
 
@@ -111,7 +111,7 @@ sub save_hints( $op, $sym='' ) {
 # We use the same symbol for ALL warnings with the same value.
 my %lexwarnsym_cache;
 
-sub save_warnings($op) {
+sub save_warnings ($op) {
     die unless $op;
 
     my $warnings = $op->warnings;

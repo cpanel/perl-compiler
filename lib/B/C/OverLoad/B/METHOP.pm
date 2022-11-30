@@ -4,7 +4,7 @@ use B::C::Std;
 
 use B::C::File qw/methopsect/;
 
-sub do_save($op, @) {
+sub do_save ( $op, @ ) {
 
     my $name    = $op->name || '';
     my $flagspv = $op->flagspv;
@@ -15,7 +15,7 @@ sub do_save($op, @) {
     methopsect()->debug( $name, $flagspv );
 
     my $rclass = $op->rclass->save("op_rclass_sv");
-    my $first = $name eq 'method' ? $op->first->save("methop first") : $op->meth_sv->save("methop meth_sv");
+    my $first  = $name eq 'method' ? $op->first->save("methop first") : $op->meth_sv->save("methop meth_sv");
 
     methopsect()->supdate( $ix, "%s, $union, (SV*)%s", $op->save_baseop, $first, $rclass );
 

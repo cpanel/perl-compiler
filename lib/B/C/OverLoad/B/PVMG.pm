@@ -2,18 +2,18 @@ package B::PVMG;
 
 use B::C::Std;
 
-use B::C::Debug qw/debug verbose WARN/;
-use B qw/SVf_IsCOW SVf_READONLY cchar SVp_POK svref_2object/;
-use B::C::Save qw/savecowpv/;
+use B::C::Debug   qw/debug verbose WARN/;
+use B             qw/SVf_IsCOW SVf_READONLY cchar SVp_POK svref_2object/;
+use B::C::Save    qw/savecowpv/;
 use B::C::Decimal qw/get_integer_value get_double_value/;
-use B::C::File qw/init init_static_assignments svsect xpvmgsect magicsect init_vtables/;
+use B::C::File    qw/init init_static_assignments svsect xpvmgsect magicsect init_vtables/;
 
 # usually 0x400000, but can be as low as 0x10000
 # http://docs.embarcadero.com/products/rad_studio/delphiAndcpp2009/HelpUpdate2/EN/html/devcommon/compdirsimagebaseaddress_xml.html
 # called mapped_base on linux (usually 0xa38000)
 sub LOWEST_IMAGEBASE() { 0x10000 }
 
-sub do_save( $sv, $fullname=undef) {
+sub do_save ( $sv, $fullname = undef ) {
 
     my ( $ix, $sym ) = svsect()->reserve($sv);
     svsect()->debug( $fullname, $sv );
@@ -30,8 +30,8 @@ sub do_save( $sv, $fullname=undef) {
         ( $sv_u, $cur, $len, $pv, $flags ) = $sv->save_svu( $sym, $sym, $fullname );
     }
 
-    my $ivx = get_integer_value( $sv->IVX );        # XXX How to detect HEK* namehek?
-    my $nvx = get_double_value( $sv->NVX );         # it cannot be xnv_u.xgv_stash ptr (BTW set by GvSTASH later)
+    my $ivx = get_integer_value( $sv->IVX );    # XXX How to detect HEK* namehek?
+    my $nvx = get_double_value( $sv->NVX );     # it cannot be xnv_u.xgv_stash ptr (BTW set by GvSTASH later)
 
     # See #305 Encode::XS: XS objects are often stored as SvIV(SvRV(obj)). The real
     # address needs to be patched after the XS object is initialized.
@@ -118,7 +118,7 @@ my $perl_magic_vtable_map = {
     ']'    => 'checkcall',        # Inlining/mutation of call to this CV
 };
 
-sub save_magic( $sv, $fullname ) {
+sub save_magic ( $sv, $fullname ) {
 
     my $sv_flags = $sv->FLAGS;
     my $pkg;
@@ -237,14 +237,14 @@ sub save_magic_stash {
 
 # TODO: This was added to PVMG because we thought it was only used in this op but
 # as of 5.18, it's used in B::CV::save
-sub _patch_dlsym( $sv, $fullname, $ivx ) {
+sub _patch_dlsym ( $sv, $fullname, $ivx ) {
 
     my $pkg = '';
     if ( ref($sv) eq 'B::PVMG' ) {
         my $stash = $sv->SvSTASH;
         $pkg = $stash->can('NAME') ? $stash->NAME : '';
     }
-    my $name = $sv->FLAGS & SVp_POK() ? $sv->PVX : "";
+    my $name   = $sv->FLAGS & SVp_POK() ? $sv->PVX : "";
     my $ivxhex = sprintf( "0x%x", $ivx );
 
     # lazy load encode after walking the optree

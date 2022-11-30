@@ -4,8 +4,8 @@ use B::C::Std;
 
 use B qw/opnumber ppname/;
 
-use B::C::Debug qw/debug verbose/;
-use B::C::File qw/opsect init_xops/;
+use B::C::Debug             qw/debug verbose/;
+use B::C::File              qw/opsect init_xops/;
 use B::C::Helpers::Symtable qw/objsym/;
 
 my $OP_CUSTOM = opnumber('custom');
@@ -19,7 +19,7 @@ debug( cops => %OP_COP );
 
 our @DO_UPDATE_ARGS;    # avoid a local on @_ which bloat the binary
 
-sub do_save { # cannot use function signature with goto
+sub do_save {    # cannot use function signature with goto
     my ($op) = @_;
 
     my $type = $op->type;
@@ -46,7 +46,7 @@ sub do_update {
 # OpTYPE; init_op_ppaddr iterates over the ops and sets
 # op_ppaddr to PL_ppaddr[op_ppaddr]; this avoids an explicit assignment
 # in perl_init ( ~10 bytes/op with GCC/i386 )
-sub fake_ppaddr($op) {
+sub fake_ppaddr ($op) {
 
     return "NULL" unless $op->can('name');
 
@@ -82,12 +82,12 @@ sub basop_comment {
 
 my %_id2enum;
 
-sub optype_id2enum($id) {
+sub optype_id2enum ($id) {
 
     return unless defined $id;
 
     if ( !exists $_id2enum{$id} ) {
-        $_id2enum{$id} = undef;    # preset it to undef
+        $_id2enum{$id} = undef;              # preset it to undef
         if ( my $ppname = ppname($id) ) {    # already checking we are in the range 0 <= B::OP::max()
             my $opname = uc("$ppname");
             $opname =~ s{^PP_}{OP_} or die "# ... Failed to replace pp_ for $ppname";
@@ -108,7 +108,7 @@ sub optype_id2enum($id) {
     return $_id2enum{$id};
 }
 
-sub save_baseop($op) {
+sub save_baseop ($op) {
 
     my $op_type = optype_id2enum( $op->type );
 
@@ -129,10 +129,10 @@ sub save_baseop($op) {
         '%u'   => 0,                       # $op->slabbed || 0,            # PERL_BITFIELD16 op_slabbed:1; -- was hardcoded to 0
         '%u'   => $op->savefree || 0,      # PERL_BITFIELD16 op_savefree:1; -- was hardcoded to 0
         '%u'   => 1,                       # PERL_BITFIELD16 op_static:1; -- is hardcoded to 1
-        '%u'   => $op->folded || 0,        # PERL_BITFIELD16 op_folded:1; -- was hardcoded to 0
+        '%u'   => $op->folded  || 0,       # PERL_BITFIELD16 op_folded:1; -- was hardcoded to 0
         '%u'   => $op->moresib || 0,       # PERL_BITFIELD16 op_moresib:1; -- was hardcoded to 0
         '%u'   => $spare,                  # PERL_BITFIELD16 op_spare:1;
-        '0x%x' => $op->flags || 0,         # U8      op_flags;
+        '0x%x' => $op->flags   || 0,       # U8      op_flags;
         '0x%x' => $op->private || 0        # U8      op_private;
     );
 
@@ -142,8 +142,8 @@ sub save_baseop($op) {
     my ( @keys, @values );
 
     while ( scalar @BASEOP ) {
-        push @keys,   shift @BASEOP;                                                # key
-        push @values, shift @BASEOP;                                                # value
+        push @keys,   shift @BASEOP;    # key
+        push @values, shift @BASEOP;    # value
     }
 
     my $template = join ', ', @keys;

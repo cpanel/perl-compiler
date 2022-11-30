@@ -152,7 +152,7 @@ sub key_was_in_starting_stash {    # Left::Side::
     $path =~ s/^main:://;
 
     my $curstash = $B::C::settings->{'starting_stash'} or die;
-    my @stashes = split( "::", $path );
+    my @stashes  = split( "::", $path );
 
     my $stash_key = pop @stashes;
     die qq{Key is null in key_was_in_starting_stash - $path} unless length $stash_key;
@@ -162,7 +162,7 @@ sub key_was_in_starting_stash {    # Left::Side::
 
     foreach my $stash_name (@stashes) {
         $curstash = $curstash->{"${stash_name}::"} or return 0;
-        ref $curstash eq 'HASH' or return 0;
+        ref $curstash eq 'HASH'                    or return 0;
     }
 
     return $curstash->{$stash_key} ? 1 : 0;

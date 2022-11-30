@@ -2,8 +2,8 @@ package B::C::Save;
 
 use B::C::Std;
 
-use B::C::Debug qw/debug/;
-use B::C::File qw( xpvmgsect decl init const cowpv );
+use B::C::Debug   qw/debug/;
+use B::C::File    qw( xpvmgsect decl init const cowpv );
 use B::C::Helpers qw/strlen_flags cstring_cow cow_strlen_flags/;
 
 use Exporter ();
@@ -14,7 +14,7 @@ our @EXPORT_OK = qw/savecowpv/;
 my %strtable;
 my %cowtable;
 
-sub savecowpv($pv) {
+sub savecowpv ($pv) {
 
     my ( $cstring, $cur, $len, $utf8 ) = cow_strlen_flags($pv);
     return @{ $cowtable{$cstring} } if defined $cowtable{$cstring};
@@ -58,7 +58,7 @@ sub savecowpv($pv) {
 
     $cowtable{$cstring} = [ $pvsym, $cur, $len, $utf8 ];
 
-    return ( $pvsym, $cur, $len, $utf8 );        # NOTE: $cur is total size of the perl string. len would be the length of the C string.
+    return ( $pvsym, $cur, $len, $utf8 );    # NOTE: $cur is total size of the perl string. len would be the length of the C string.
 }
 
 sub _caller_comment {
@@ -80,7 +80,7 @@ sub stack {
     return \@stack;
 }
 
-sub stack_flat($remove=0) {
+sub stack_flat ( $remove = 0 ) {
     $remove += 2;
     my @stack = @{ stack() };
     splice( @stack, 0, $remove );    # shift the first X elements

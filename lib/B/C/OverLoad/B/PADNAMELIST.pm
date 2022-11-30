@@ -10,7 +10,7 @@ sub section_sv {
     return padnamelistsect();
 }
 
-sub update_sv( $av, $ix, $fullname, @ ) {
+sub update_sv ( $av, $ix, $fullname, @ ) {
 
     my $section = $av->section_sv();
     $section->comment("xpadnl_fill, xpadnl_alloc, xpadnl_max, xpadnl_max_named, xpadnl_refcnt");
@@ -25,7 +25,7 @@ sub update_sv( $av, $ix, $fullname, @ ) {
     return;
 }
 
-sub add_malloc_line_for_array_init( $av, $deferred_init, $sym, @ ) {
+sub add_malloc_line_for_array_init ( $av, $deferred_init, $sym, @ ) {
 
     my $fill = $av->MAX + 1;
     $deferred_init->sadd( "PADNAME **svp = %s;", B::C::Memory::INITPADNAME( $deferred_init, $sym, $fill ) );
@@ -37,10 +37,10 @@ sub cast_sv {
     return "(PADNAME*)";
 }
 
-sub cast_section {                            ### Stupid move it to section !!! a section know its type
+sub cast_section {    ### Stupid move it to section !!! a section know its type
     return "PADNAMELIST*";
 }
 
-sub fill($av) { return $av->MAX }
+sub fill ($av) { return $av->MAX }
 
 1;

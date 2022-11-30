@@ -80,7 +80,7 @@ sub get_double_value ($nvx) {
         $sval = "DBL_MAX";
     }
 
-    $sval = '0' if $sval =~ /(NAN|inf)$/i;
+    $sval = '0'    if $sval =~ /(NAN|inf)$/i;
     $sval .= '.00' if $sval =~ /^-?\d+$/;
     return $sval;
 }
@@ -97,7 +97,7 @@ sub _nvgformat() {
     my $format = $B::C::Flags::Config{nvgformat};
 
     # QUESTION : is it still really required ?
-    $format =~ s/"//g;    #" poor editor
+    $format =~ s/"//g;         #" poor editor
     if ( $format eq 'g' ) {    # a very poor choice to keep precision
                                # on intel 17-18, on ppc 31, on sparc64/s390 34
                                # add one extra decimal for floating point precision ( uselongdouble should be larger than 17 but cannot check )

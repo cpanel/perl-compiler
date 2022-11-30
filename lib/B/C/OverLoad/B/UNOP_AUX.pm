@@ -2,11 +2,11 @@ package B::UNOP_AUX;
 
 use B::C::Std;
 
-use B qw/svref_2object/;
-use B::C::Debug qw/debug/;
-use B::C::File qw/unopauxsect init free meta_unopaux_item/;
+use B             qw/svref_2object/;
+use B::C::Debug   qw/debug/;
+use B::C::File    qw/unopauxsect init free meta_unopaux_item/;
 use B::C::Helpers qw/is_constant/;
-use B::C::Save qw/savecowpv/;
+use B::C::Save    qw/savecowpv/;
 
 sub _clear_stack() {
 
@@ -17,7 +17,7 @@ sub _clear_stack() {
 # hardcoded would require a check to detect this is going to the correct position
 sub OP_AUX_IX { 15 }
 
-sub do_save($op, @) {
+sub do_save ( $op, @ ) {
 
     _clear_stack();                 # avoid a weird B (or B::C) issue when calling aux_list_thr
 
@@ -26,6 +26,7 @@ sub do_save($op, @) {
     unopauxsect()->debug( $op->name, $op );
 
     my $first = $op->first->save;
+
     # cast to avoid warning
     if ( $first eq '(void*)Nullsv' ) {
         $first = '(OP*) 0';
@@ -68,7 +69,7 @@ sub do_save($op, @) {
 
     #### Saving the regular AUX LIST
 
-    my $auxlen = scalar @aux_list;
+    my $auxlen       = scalar @aux_list;
     my @to_be_filled = map { 0 } 1 .. $auxlen;    #
 
     my $list_size         = $auxlen + 1;
@@ -110,7 +111,7 @@ sub do_save($op, @) {
             }
             else {
                 #debug( hv => $op->name . " action $action $cmt" );
-                $field = sprintf( '{.uv=0x%x}', $item );     #  \t/* %s: %u */ , $cmt, $item
+                $field = sprintf( '{.uv=0x%x}', $item );    #  \t/* %s: %u */ , $cmt, $item
             }
 
         }
@@ -123,7 +124,7 @@ sub do_save($op, @) {
             # || SvROK(keysv)
             # || SvIsCOW_shared_hash(keysv));
             my $constkey = ( $action & 0x30 ) == 0x10 ? 1 : 0;
-            my $itemsym = $item->save( "$symat" . ( $constkey ? " const" : "" ) );
+            my $itemsym  = $item->save( "$symat" . ( $constkey ? " const" : "" ) );
             if ( is_constant($itemsym) ) {
                 if ( ref $item eq 'B::IV' ) {
                     my $iv = $item->IVX;
@@ -159,11 +160,11 @@ sub do_save($op, @) {
     return $sym;
 }
 
-sub get_action_name( $op, $item ) {
+sub get_action_name ( $op, $item ) {
 
     my $cmt = 'action';
     if ( $op->name eq 'multideref' ) {
-        my $act = $item & 0xf;    # MDEREF_ACTION_MASK
+        my $act = $item & 0xf;     # MDEREF_ACTION_MASK
         $cmt = 'AV_pop_rv2av_aelem'          if $act == 1;
         $cmt = 'AV_gvsv_vivify_rv2av_aelem'  if $act == 2;
         $cmt = 'AV_padsv_vivify_rv2av_aelem' if $act == 3;
@@ -199,7 +200,7 @@ sub get_action_name( $op, $item ) {
         $cmt = 'arg_default_op'    if $act == 12;
         $cmt = 'array'             if $act == 13;
         $cmt = 'hash'              if $act == 14;
-        my $idx = $item & 0x3F;    # SIGNATURE_MASK
+        my $idx = $item & 0x3F;             # SIGNATURE_MASK
         $cmt .= ''           if $idx == 0x0;
         $cmt .= ' flag skip' if $idx == 0x10;
         $cmt .= ' flag ref'  if $idx == 0x20;

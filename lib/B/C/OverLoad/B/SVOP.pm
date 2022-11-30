@@ -2,11 +2,11 @@ package B::SVOP;
 
 use B::C::Std;
 
-use B qw/SVf_ROK/;
-use B::C::File qw/svopsect init/;
+use B           qw/SVf_ROK/;
+use B::C::File  qw/svopsect init/;
 use B::C::Debug qw/debug WARN/;
 
-sub do_save($op, @) {
+sub do_save ( $op, @ ) {
 
     svopsect()->comment_for_op("sv");
     my ( $ix, $sym ) = svopsect()->reserve( $op, "OP*" );
@@ -23,7 +23,7 @@ sub do_save($op, @) {
     }
 
     # PL_envgv and PL_argvgv STATIC_HV: We're probably saving those wrong.
-    unless ( $svsym =~ m/[sg]v_list|Nullsv/ ) {               # PL_sv_yes, PL_sv_no, PL_sv_zero...
+    unless ( $svsym =~ m/[sg]v_list|Nullsv/ ) {    # PL_sv_yes, PL_sv_no, PL_sv_zero...
         init()->add("svop_list[$ix].op_sv = (SV*) $svsym;");
         $svsym = 'NULL';
     }

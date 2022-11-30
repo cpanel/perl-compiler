@@ -2,13 +2,13 @@ package B::RV;
 
 use B::C::Std;
 
-use B::C::Debug qw/debug/;
-use B qw/SVf_ROK SVt_PVGV SVf_READONLY/;
-use B::C::File qw/svsect init init2/;
+use B::C::Debug   qw/debug/;
+use B             qw/SVf_ROK SVt_PVGV SVf_READONLY/;
+use B::C::File    qw/svsect init init2/;
 use B::C::Helpers qw/is_constant/;
 
 # Since 5.11 also called by IV::save (SV -> IV)
-sub do_save( $sv, $fullname=undef) {
+sub do_save ( $sv, $fullname = undef ) {
 
     $fullname ||= "(Unknown RV)";
 
@@ -40,14 +40,14 @@ sub do_save( $sv, $fullname=undef) {
     return $sym;
 }
 
-sub try_save( $sv, $fullname ) {
+sub try_save ( $sv, $fullname ) {
 
     return unless $sv->FLAGS & SVf_ROK;
 
     return do_save( $sv, $fullname );
 }
 
-sub save_rv( $sv, $sym, $fullname ) {
+sub save_rv ( $sv, $sym, $fullname ) {
 
     $fullname ||= "(Unknown RV)";
 
