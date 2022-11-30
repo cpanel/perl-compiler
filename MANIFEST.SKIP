@@ -45,3 +45,5 @@ fullog.txt
 ccode194.pl
 pre-setup.sh
 ^tools/
+^pcc*
+^tmp*
