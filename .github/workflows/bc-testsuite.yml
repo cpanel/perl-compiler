@@ -26,26 +26,6 @@ jobs:
     strategy:
       fail-fast: false
 
-      # Limit: 20 total concurrent jobs for 'Free' GitHub plan
-      #   https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
-      matrix:
-        test_dir:
-          - "base/*.t"
-          - "bctestc/*.t"
-          - "comp/*.t"
-          - "extra/*.t"
-          - "io/*.t"
-          - "mro/*.t"
-          - "op/[0-9a-e]*.t"
-          - "op/[f-m]*.t"
-          - "op/[n-s]*.t"
-          - "op/[t-z]*.t"
-          - "re/[a-f]*.t"
-          - "re/[g-q]*.t"
-          - "re/r*.t"
-          - "re/[s-z]*.t"
-          - "uni/*.t"
-
     container:
       image: cpanelos/perl-compiler:perl-v5.35.10
 
@@ -66,5 +46,5 @@ jobs:
       - run: ls -l /usr/local/cpanel/3rdparty/perl/535/bin/perlcc
       - name: which perlcc
         run: which perlcc
-      - name: "running test ${{ matrix.test_dir }}"
-        run: ./cprove -j4 ${{ matrix.test_dir }}
+      - name: "running test"
+        run: ./cprove -v op/stat.t
