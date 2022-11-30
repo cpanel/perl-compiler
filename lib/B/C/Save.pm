@@ -16,6 +16,8 @@ my %cowtable;
 
 my %COW_map;
 
+use constant C_DECLARATION_FOR_COW_PV => q{Static const char allCOWPVs[]};
+
 sub savecowpv ($pv) {
 
     my ( $cstring, $cur, $len, $utf8 ) = cow_strlen_flags($pv);
@@ -24,18 +26,19 @@ sub savecowpv ($pv) {
     if ( cowpv->index <= 0 ) {
 
         # the 0 entry is special
-        cowpv->add(qq{Static const char allCOWPVs[] = "";\n});    # ";\n -> 3
+        cowpv->add( C_DECLARATION_FOR_COW_PV . qq{ = "";\n} );
     }
 
-    my $ix = cowpv->add(qq[/* fill later */]);
+    my $ix = cowpv->add(qq[/* placeholder: filled later */]);
 
     my $pvsym = sprintf( q{COWPV%d}, $ix );
-    $COW_map{$pvsym} = [ $ix, $len, $cstring ];
+    $COW_map{$pvsym} = [ $ix, $len, $cstring, $pv ];    # consider removing the cstring
 
     # local cache for this function
     $cowtable{$cstring} = [ $pvsym, $cur, $len, $utf8 ];
 
-    return ( $pvsym, $cur, $len, $utf8 );    # NOTE: $cur is total size of the perl string. len would be the length of the C string.
+    # NOTE: $cur is total size of the perl string. len would be the length of the C string.
+    return ( $pvsym, $cur, $len, $utf8 );
 }
 
 #
@@ -47,55 +50,81 @@ sub cowpv_setup() {
 
     my @all_syms = keys %COW_map;    # shuffle the list
     if ( defined $ENV{BC_COWPV_SHUFFLE} && $ENV{BC_COWPV_SHUFFLE} eq 0 ) {
-        print STDERR "### WARNING: BC_COWPV_SHUFFLE=0\n";
+        warn "### WARNING: BC_COWPV_SHUFFLE=0\n";
         @all_syms = sort { $COW_map{$a}->[0] <=> $COW_map{$b}->[0] } @all_syms;
     }
 
-    foreach my $pvsym (@all_syms) {
-        my ( $ix, $len, $cstring ) = $COW_map{$pvsym}->@*;
+    my @all_pvs;
 
-        _append_str_to_allCOWPV($cstring);
+    foreach my $pvsym (@all_syms) {
+        my ( $ix, $len, $cstring, $pv ) = $COW_map{$pvsym}->@*;
+
+        my $comment = _comment_str($cstring);
+        my @cchars  = cchars($pv);
+
+        # do not use the 'cstring' but split the char directly and encode it
+        push @all_pvs, [
+            cchars($pv), '0x00', '0xff',
+            "/* $pvsym=$comment */\n"
+        ];
 
         cowpv->supdate(
             $ix,
             q{#define %s (char*) allCOWPVs+%d /* %s */},
             $pvsym,
             $total_len,
-            _comment_str($cstring)
+            $comment
         );
 
         $total_len += $len;
     }
+
+    # update definition...
+    my $str = '';
+    foreach my $pv (@all_pvs) {
+        $str .= ( " " x 20 ) . join( ', ', @$pv );
+    }
+    my $declaration = sprintf(
+        C_DECLARATION_FOR_COW_PV . qq[ = {\n%s\n};\n],
+        $str
+    );
+    cowpv->update( 0, $declaration );
 
     cowpv()->{_total_len} = $total_len;
 
     return;
 }
 
-sub _append_str_to_allCOWPV ($str) {
+sub cchars ($pv) {
 
-    # append our string to the declaration of strings
+    # ensure to use a different PV
+    $pv = $pv . "_";
+    chop $pv;
 
-    my $declaration = cowpv->get(0);
+    # "\x{100}" becomes "\xc4\x80"
+    utf8::encode($pv) if utf8::is_utf8($pv);
 
-    $str =~ s{^"}{};
-    $str =~ s{"$}{};
+    my @chars  = split( '', $pv );
+    my @cchars = ( map { sprintf( q[0x%02x], ord($_) ) } @chars );
 
-    my $end = qq{";\n};
+    if ( grep { hex($_) > 255 } @cchars ) {
+        warn "PV: $pv";
+        warn "CCHARS: @cchars";
 
-    # we are playing here with the limits with very long strings
-    #   but we can easily split them as part of a next iteration
-    #   by having multiple allCOWPVs strings
-    $declaration =~ s[^(.+)(\Q$end\E)$][$1${str}$2]m;
-    cowpv->update( 0, $declaration );
+        require Devel::Peek;
+        Devel::Peek::Dump($pv);
 
-    return;
+        die qq[PV contains some unexpected characters];
+    }
+
+    return @cchars;
 }
 
 sub _comment_str ($str) {
     $str =~ s{\Q/*\E}{??}g;
     $str =~ s{\Q*/\E}{??}g;
     $str =~ s{\Q\000\377\E"$}{"};    # remove the cow part
+    $str =~ s{\n}{\\n}g;
 
     return $str;
 }
