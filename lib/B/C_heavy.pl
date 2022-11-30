@@ -33,8 +33,8 @@ use B::C::File qw( init2 init1 init0 init decl free
   lazyregex sharedhe init_stash init_COREbootstraplink init_bootstraplink init_xsaccessor
 );
 use B::C::Helpers::Symtable qw(objsym savesym);
-use Exporter ();
-use Errno    ();                                #needed since 5.14
+use Exporter                ();
+use Errno                   ();                   #needed since 5.14
 
 BEGIN {
     # always boot XS now that we have the heavy version
@@ -43,7 +43,7 @@ BEGIN {
     XSLoader::load('B::C');
 }
 
-use B::C::Memory ();                            # after loading C.xs
+use B::C::Memory ();                              # after loading C.xs
 
 # for 5.6.[01] better use the native B::C
 # but 5.6.2 works fine
@@ -98,8 +98,10 @@ sub start_heavy {
 
     {
         no warnings 'redefine';
+
         # do not store the patches
-        my ($bincompat, $non_bincompat, $date, @patches) = Internals::V();
+        my ( $bincompat, $non_bincompat, $date, @patches ) = Internals::V();
+
         # Config_heavy and other could require these internal informations
         #   use an eval to clear the references and convert the PVs to constant
         # examples:
@@ -406,9 +408,9 @@ sub build_template_stash {
             'initav'      => init_av()->save('INIT'),
             'main_root'   => main_root()->save,
             'main_start'  => main_start()->save,
-            'dowarn'      => $^W ? 'G_WARN_ON' : 'G_WARN_OFF',
-            'tainting'    => $^{TAINT} ? 'TRUE' : 'FALSE',
-            'taint_warn'  => ( $^{TAINT} // 0 ) < 1 ? 'FALSE' : 'TRUE',
+            'dowarn'      => $^W                    ? 'G_WARN_ON' : 'G_WARN_OFF',
+            'tainting'    => $^{TAINT}              ? 'TRUE'      : 'FALSE',
+            'taint_warn'  => ( $^{TAINT} // 0 ) < 1 ? 'FALSE'     : 'TRUE',
             'compad'      => ( comppadlist->ARRAY )[1]->save('curpad_syms') || 'NULL',
             'warnhook'    => save_sig('__WARN__'),
             'diehook'     => save_sig('__DIE__'),
@@ -438,7 +440,7 @@ sub build_template_stash {
             'PL_psig_ptr' => {},
             'ignore'      => [],
             'need_init'   => 0,
-          }
+        }
 
     };
     chomp $c_file_stash->{'compile_stats'};    # Injects a new line when you call compile_stats()
@@ -478,7 +480,7 @@ sub build_template_stash {
 
 sub save_sig {
     my $sig_name = shift or die;
-    my $sig = $SIG{$sig_name};
+    my $sig      = $SIG{$sig_name};
     return undef if !defined $sig;
 
     my $sv = svref_2object( \$sig );

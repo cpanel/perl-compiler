@@ -125,8 +125,8 @@ sub verbose {
 }
 
 # can be improved
-sub WARN { return verbose() && display_message( "[WARNING]", @_ ) }
-sub INFO { return verbose() && display_message( "[INFO]",    @_ ) }
+sub WARN  { return verbose() && display_message( "[WARNING]", @_ ) }
+sub INFO  { return verbose() && display_message( "[INFO]",    @_ ) }
 sub FATAL { die display_message( "[FATAL]", @_ ) }
 
 my $logfh;
@@ -174,7 +174,7 @@ sub debug {
     if ( $debug_on && scalar @msg ) {
         @msg = map { defined $_ ? $_ : 'undef' } @msg;
         my $header = '[level=' . join( ',', sort @levels ) . '] ';
-        my $cnt = @msg;
+        my $cnt    = @msg;
         my $warn;
         if ( $cnt == 1 ) {
             $warn = $msg[0];
@@ -210,7 +210,7 @@ sub debug {
 sub setup_debug {
     my ( $levels_str, $verbose, $debug ) = @_;
 
-    enable_verbose() if $verbose || $debug;
+    enable_verbose()      if $verbose || $debug;
     enable_global_debug() if $debug;
     return unless defined $levels_str && length $levels_str;
 

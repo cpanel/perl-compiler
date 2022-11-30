@@ -2,8 +2,8 @@ package B::BINOP;
 
 use strict;
 
-use B qw/opnumber/;
-use B::C::File qw/binopsect init/;
+use B           qw/opnumber/;
+use B::C::File  qw/binopsect init/;
 use B::C::Debug qw/verbose/;
 
 my $OP_CUSTOM;

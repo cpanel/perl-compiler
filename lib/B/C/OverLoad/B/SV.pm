@@ -2,7 +2,7 @@ package SV;
 
 use B::C::Std;
 
-sub save($sv, @) {
+sub save ( $sv, @ ) {
 
     # This is where we catch an honest-to-goodness Nullsv (which gets
     # blessed into B::SV explicitly) and any stray erroneous SVs.

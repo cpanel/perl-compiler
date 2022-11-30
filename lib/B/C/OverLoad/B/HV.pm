@@ -2,9 +2,9 @@ package B::HV;
 
 use B::C::Std;
 
-use B qw/svref_2object SVf_READONLY SVf_PROTECT SVf_OOK SVf_AMAGIC/;
-use B::C::Debug qw/debug WARN/;
-use B::C::File qw/init xpvhvsect xpvhv_with_auxsect svsect decl init init2 init_stash init_static_assignments/;
+use B               qw/svref_2object SVf_READONLY SVf_PROTECT SVf_OOK SVf_AMAGIC/;
+use B::C::Debug     qw/debug WARN/;
+use B::C::File      qw/init xpvhvsect xpvhv_with_auxsect svsect decl init init2 init_stash init_static_assignments/;
 use B::C::Save::Hek qw/save_shared_he get_sHe_HEK/;
 
 =pod
@@ -26,8 +26,7 @@ v5.35.5 introduces XPVHV_WITH_AUX by 94ee6ed79dbca73d0345b745534477e4017fb990
 
 =cut
 
-
-sub can_save_stash($stash_name) {
+sub can_save_stash ($stash_name) {
 
     #return get_current_stash_position_in_starting_stash ( $stash_name ) ? 1 : 0;
 
@@ -42,7 +41,7 @@ sub can_save_stash($stash_name) {
     return $starting_flat_stashes->{$stash_name} ? 1 : 0;    # need to skip properly ( maybe just a protection there
 }
 
-sub key_was_missing_from_stash_at_compile( $stash_name, $key, $curstash ) {
+sub key_was_missing_from_stash_at_compile ( $stash_name, $key, $curstash ) {
 
     ### STATIC_HV need improvement there - using a more generic method for whitelisting
     if ( !$stash_name && $key && $key =~ qr{^B::C::} ) {
@@ -62,7 +61,7 @@ sub key_was_missing_from_stash_at_compile( $stash_name, $key, $curstash ) {
 }
 
 # our only goal here is to get the curstash position in starting_stash if it exists
-sub get_current_stash_position_in_starting_stash($stash_name) {
+sub get_current_stash_position_in_starting_stash ($stash_name) {
 
     return unless $stash_name;    # <---- we want to save all *keys*
 
@@ -74,14 +73,14 @@ sub get_current_stash_position_in_starting_stash($stash_name) {
     if ( $stash_name ne 'main' ) {
         foreach my $sect ( split( '::', $stash_name ) ) {
             $curstash = $curstash->{ $sect . '::' } or return;    # Should never happen.
-            ref $curstash eq 'HASH' or return;
+            ref $curstash eq 'HASH'                 or return;
         }
     }
 
     return $curstash;
 }
 
-sub do_save( $hv, $fullname=undef) {
+sub do_save ( $hv, $fullname = undef ) {
 
     $fullname ||= '';
     my $stash_name = $hv->NAME;
@@ -144,24 +143,25 @@ sub do_save( $hv, $fullname=undef) {
 
     my $hv_total_keys = scalar(@hash_content_to_save);
     my $max           = get_max_hash_from_keys($hv_total_keys);
-    
-    my $flags = $hv->FLAGS & ~SVf_READONLY & ~SVf_PROTECT;
-    my $has_ook = $flags & SVf_OOK ? q{TRUE} : q{FALSE};    # only need one AUX when OOK is set
-    
+
+    my $flags   = $hv->FLAGS & ~SVf_READONLY & ~SVf_PROTECT;
+    my $has_ook = $flags & SVf_OOK ? q{TRUE} : q{FALSE};       # only need one AUX when OOK is set
+
     my $xpvh_sym;
 
     if ( $has_ook eq q{TRUE} ) {
         xpvhv_with_auxsect()->comment("xmg_stash, xmg_u, xhv_keys, xhv_max, struct xpvhv_aux");
-        xpvhv_with_auxsect()->saddl( 
+        xpvhv_with_auxsect()->saddl(
             '%s'   => $hv->save_magic_stash,                                                           # xmg_stash
             '{%s}' => $hv->save_magic( length $stash_name ? '%' . $stash_name . '::' : $fullname ),    # mgu
             '%d'   => $hv_total_keys,                                                                  # xhv_keys
             '%d'   => $max,                                                                            # xhv_max
             '%s'   => '{0}',                                                                           # struct xpvhv_aux
         );
-    
+
         $xpvh_sym = sprintf( "xpvhv_with_aux_list[%d]", xpvhv_with_auxsect()->index );
-    } else {
+    }
+    else {
         xpvhvsect()->comment("xmg_stash, xmg_u, xhv_keys, xhv_max");
         xpvhvsect()->saddl(
             '%s'   => $hv->save_magic_stash,                                                           # xmg_stash
@@ -169,10 +169,10 @@ sub do_save( $hv, $fullname=undef) {
             '%d'   => $hv_total_keys,                                                                  # xhv_keys
             '%d'   => $max                                                                             # xhv_max
         );
-    
+
         $xpvh_sym = sprintf( "xpvhv_list[%d]", xpvhvsect()->index );
     }
-    
+
     # replace the previously saved svsect with some accurate content
     svsect()->update(
         $ix,
@@ -183,7 +183,7 @@ sub do_save( $hv, $fullname=undef) {
     );
 
     my $init = $stash_name ? init_stash() : init_static_assignments();
-    
+
     my $backrefs_sym = 0;
     if ( my $backrefs = $hv->BACKREFS ) {
 
@@ -206,7 +206,7 @@ sub do_save( $hv, $fullname=undef) {
 
         my @hash_elements;
         {
-            my $i = 0;
+            my $i       = 0;
             my %hash_kv = ( map { $i++, $_ } @hash_content_to_save );
             @hash_elements = values %hash_kv;    # randomize the hash eleement order to the buckets [ when coliding ]
         }
@@ -268,7 +268,7 @@ sub do_save( $hv, $fullname=undef) {
     return $sym;
 }
 
-sub nextPowerOf2($n) {
+sub nextPowerOf2 ($n) {
 
     my $count = 0;
 
@@ -280,14 +280,14 @@ sub nextPowerOf2($n) {
     return 1 << $count;
 }
 
-sub get_max_hash_from_keys( $keys, $minimum=7) {
+sub get_max_hash_from_keys ( $keys, $minimum = 7 ) {
 
     my $keys_max = nextPowerOf2( $keys + $keys >> 1 ) - 1;    # 15
 
     return $keys_max < $minimum ? $minimum : $keys_max;
 }
 
-sub savestashpv($name) {                                             # save a stash from a string (pv)
+sub savestashpv ($name) {    # save a stash from a string (pv)
 
     no strict 'refs';
     return svref_2object( \%{ $name . '::' } )->save;

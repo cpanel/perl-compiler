@@ -24,13 +24,13 @@ use warnings;
 
 use Exporter ();
 
-use B::C::Debug qw/debug WARN INFO verbose/;
+use B::C::Debug             qw/debug WARN INFO verbose/;
 use B::C::Helpers::Symtable qw(get_symtable_ref);
-use B::C::Helpers qw/gv_fetchpv_to_fetchpvn_flags/;
-use B::C::Section         ();
-use B::C::Section::Meta   ();
-use B::C::InitSection     ();
-use B::C::Section::Assign ();
+use B::C::Helpers           qw/gv_fetchpv_to_fetchpvn_flags/;
+use B::C::Section           ();
+use B::C::Section::Meta     ();
+use B::C::InitSection       ();
+use B::C::Section::Assign   ();
 
 use B qw(cstring comppadlist);
 
@@ -39,7 +39,7 @@ our @ISA = qw(Exporter);
 # singleton
 my $self;
 
-sub singleton($self) {
+sub singleton ($self) {
     $self or die "Singleton not initialized";
     return $self;
 }
@@ -93,7 +93,7 @@ BEGIN {
 
 }
 
-sub new( $class, $outfile=undef) {
+sub new ( $class, $outfile = undef ) {
 
     $self and die "Singleton: should only be called once !";
 
@@ -120,7 +120,7 @@ sub new( $class, $outfile=undef) {
     return $self;
 }
 
-sub get_sect($section) {
+sub get_sect ($section) {
     return $self->{$section};
 }
 
@@ -189,7 +189,7 @@ sub replace_xs_bootstrap_to_init {
     return;
 }
 
-sub write($c_file_stash, $template_name_short=undef) {
+sub write ( $c_file_stash, $template_name_short = undef ) {
     die unless $c_file_stash;
     $template_name_short ||= 'base.c.tt2';
 

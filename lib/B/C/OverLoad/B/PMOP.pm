@@ -2,11 +2,11 @@ package B::PMOP;
 
 use B::C::Std;
 
-use B qw/RXf_EVAL_SEEN PMf_EVAL PMf_KEEP SVf_UTF8 svref_2object/;
-use B::C::Debug qw/debug/;
-use B::C::File qw/pmopsect pmopauxsect init init1 init2 lazyregex/;
+use B             qw/RXf_EVAL_SEEN PMf_EVAL PMf_KEEP SVf_UTF8 svref_2object/;
+use B::C::Debug   qw/debug/;
+use B::C::File    qw/pmopsect pmopauxsect init init1 init2 lazyregex/;
 use B::C::Helpers qw/strlen_flags/;
-use B::C::Save qw/savecowpv/;
+use B::C::Save    qw/savecowpv/;
 
 # Global to this space?
 my ($swash_init);
@@ -15,7 +15,7 @@ my %CACHE_SAVED_RX;    # all previously saved RegExp
 
 use constant IX_PPADDR => 2;    # where is stored ppaddr in the PMOP struct
 
-sub do_save($op, @) {
+sub do_save ( $op, @ ) {
 
     pmopsect()->comment_for_op("first, last, pmregexp, pmflags, pmreplroot, pmreplstart");
 
@@ -36,7 +36,7 @@ sub do_save($op, @) {
     my $replrootfield      = 'NULL';
     my $replrootfield_cast = '';
     if ( defined $replroot && ref $replroot ) {
-        $replrootfield = $replroot->save || 'NULL';
+        $replrootfield      = $replroot->save || 'NULL';
         $replrootfield_cast = '.op_pmtargetgv=' if $replrootfield =~ qr{gv_list};
     }
     elsif ( $replroot =~ qr{^[0-9]+$} ) {
@@ -128,31 +128,31 @@ sub do_save($op, @) {
 
         # not a /o regexp and regexp was already seen at compile time [bind_match]
         elsif ( !( $pmflags & PMf_KEEP ) && ref $op->last eq 'B::LOGOP' ) {
-            1;                                            # ignored
+            1;    # ignored
         }
         else {
-            my $key = sprintf( "((%s, %s, SVs_TEMP|%s), 0x%x, 0x%x)", $qre, $relen, $utf8 ? 'SVf_UTF8' : '0', $pmflags, $op->reflags );
+            my $key      = sprintf( "((%s, %s, SVs_TEMP|%s), 0x%x, 0x%x)", $qre, $relen, $utf8 ? 'SVf_UTF8' : '0', $pmflags, $op->reflags );
             my $saved_rx = $CACHE_SAVED_RX{$key};
 
-            my $ix_bcrx;                                  # point to one index in rx_list
+            my $ix_bcrx;    # point to one index in rx_list
 
             my $comment = $qre;
             $comment =~ s{\Q/*\E}{??}g;
             $comment =~ s{\Q*/\E}{??}g;
 
             if (
-                $saved_rx                                 # If we have already seen this regex
-                && !_regex_has_capture($re)               # and it does not have a capture
-              ) {                                         # we can just use the reference.
+                $saved_rx                      # If we have already seen this regex
+                && !_regex_has_capture($re)    # and it does not have a capture
+              ) {                              # we can just use the reference.
                 $ix_bcrx = $saved_rx->{ix};
-                ++$saved_rx->{refcnt};                    # increase the refcnt
+                ++$saved_rx->{refcnt};         # increase the refcnt
 
-                my $IX_REFCNT = 6;                        # where is stored our RefCNT in the struct
+                my $IX_REFCNT = 6;             # where is stored our RefCNT in the struct
                 lazyregex()->supdate_field( $ix_bcrx, $IX_REFCNT, ' %u', $saved_rx->{refcnt} );
             }
             else {
                 # ix where we store all informations in the rx_list
-                $ix_bcrx = lazyregex()->sadd(             #
+                $ix_bcrx = lazyregex()->sadd(    #
                     "%s, %s, %s, SVs_TEMP|%s, 0x%x, 0x%x, %d /* RefCNT */",    #
                     'NULL', $qre, $relen, $utf8 ? 'SVf_UTF8' : '0', $pmflags, $op->reflags
                 );
@@ -183,7 +183,7 @@ sub do_save($op, @) {
     return "(OP*)" . $sym;
 }
 
-sub _regex_has_capture($re) {
+sub _regex_has_capture ($re) {
 
     # No ()s .. has no capture - pre optimization
     return 0 if $re !~ tr{()}{};

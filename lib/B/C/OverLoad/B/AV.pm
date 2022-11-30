@@ -4,15 +4,15 @@ use B::C::Std;
 
 use B::C::Flags ();
 
-use B::C::Debug qw/debug/;
-use B::C::File qw/init xpvavsect svsect init_static_assignments init_bootstraplink/;
+use B::C::Debug   qw/debug/;
+use B::C::File    qw/init xpvavsect svsect init_static_assignments init_bootstraplink/;
 use B::C::Helpers qw/key_was_in_starting_stash/;
 
 # maybe need to move to setup/config
 my ( $use_av_undef_speedup, $use_svpop_speedup ) = ( 1, 1 );
 my $MYMALLOC = $B::C::Flags::Config{usemymalloc} eq 'define';
 
-sub fill($av) {
+sub fill ($av) {
 
     my $fill = eval { $av->FILL };    # cornercase: tied array without FETCHSIZE
     $fill = -1 if $@;                 # catch error in tie magic
@@ -20,22 +20,22 @@ sub fill($av) {
     return $fill;
 }
 
-sub cast_sv($av) {
+sub cast_sv ($av) {
     return "(SV*)";
 }
 
-sub cast_section($av) {                    ### Stupid move it to section !!! a section know its type
+sub cast_section ($av) {    ### Stupid move it to section !!! a section know its type
     return "AV*";
 }
 
-sub section_sv($av) {
+sub section_sv ($av) {
     return svsect();
 }
 
-sub update_sv( $av, $ix, $fullname, $args ) {
+sub update_sv ( $av, $ix, $fullname, $args ) {
 
     my $fill = $args->{fill};
-    my $max  = $args->{fill};         # for AVs optimization ?
+    my $max  = $args->{fill};    # for AVs optimization ?
 
     xpvavsect()->comment('xmg_stash, xmg_u, xav_fill, xav_max, xav_alloc');
     my $xpv_ix = xpvavsect()->saddl(
@@ -52,7 +52,7 @@ sub update_sv( $av, $ix, $fullname, $args ) {
 }
 
 # helper to skip backref SV
-sub skip_backref_sv($sv) {
+sub skip_backref_sv ($sv) {
 
     return 0 unless $sv->can('FULLNAME');
 
@@ -67,7 +67,7 @@ sub skip_backref_sv($sv) {
     return;
 }
 
-sub do_save( $av, $fullname=undef, $cv=undef, $is_backref=0) {
+sub do_save ( $av, $fullname = undef, $cv = undef, $is_backref = 0 ) {
 
     $av->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $av );
     $fullname ||= '';
@@ -83,7 +83,7 @@ sub do_save( $av, $fullname=undef, $cv=undef, $is_backref=0) {
 
     debug( av => "saving AV %s 0x%x [%s] FILL=%d", $fullname, $$av, ref($av), $fill );
 
-    $section->debug( "AV for $fullname" );
+    $section->debug("AV for $fullname");
 
     # XXX AVf_REAL is wrong test: need to save comppadlist but not stack
     # We used to block save on @- and @+ by checking for magic of type D. save_magic doesn't advertize this now so we don't have the "same" blocker.
@@ -138,7 +138,7 @@ sub do_save( $av, $fullname=undef, $cv=undef, $is_backref=0) {
             }
 
             @values = map { $_->save( $fullname . "[" . $count++ . "]" ) || () } @array;
-            $fill = scalar(@values) if $is_backref;
+            $fill   = scalar(@values) if $is_backref;
         }
 
         # Init optimization by Nick Koston
@@ -167,7 +167,7 @@ sub do_save( $av, $fullname=undef, $cv=undef, $is_backref=0) {
                 && defined $values[$i]
                 && defined $values[ $i + 1 ]
                 && defined $values[ $i + 2 ]
-                && $values[$i] =~ /^ptr_undef|&PL_sv_undef$/
+                && $values[$i]       =~ /^ptr_undef|&PL_sv_undef$/
                 && $values[ $i + 1 ] =~ /^ptr_undef|&PL_sv_undef$/
                 && $values[ $i + 2 ] =~ /^ptr_undef|&PL_sv_undef$/ ) {
                 $count = 0;
@@ -205,7 +205,7 @@ sub do_save( $av, $fullname=undef, $cv=undef, $is_backref=0) {
 # calloc, only malloc. wmemset'ting the pointer to PL_sv_undef
 # might be faster also.
 
-sub add_to_init( $av, $sym, $acc, $fill, $fullname ) {
+sub add_to_init ( $av, $sym, $acc, $fill, $fullname ) {
 
     my $deferred_init = $acc =~ qr{BOOTSTRAP_XS_}m ? init_bootstraplink() : init_static_assignments();
 
@@ -226,7 +226,7 @@ sub add_to_init( $av, $sym, $acc, $fill, $fullname ) {
     $deferred_init->close_block();
 }
 
-sub add_malloc_line_for_array_init( $av, $deferred_init, $sym, $fill, $fullname ) {
+sub add_malloc_line_for_array_init ( $av, $deferred_init, $sym, $fill, $fullname ) {
 
     return if !defined $fill;
 

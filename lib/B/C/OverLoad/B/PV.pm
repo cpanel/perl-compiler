@@ -2,17 +2,17 @@ package B::PV;
 
 use B::C::Std;
 
-use B qw/SVf_IsCOW SVf_ROK SVf_POK SVp_POK SVs_GMG SVt_PVGV SVf_READONLY SVf_FAKE/;
-use B::C::Debug qw/debug/;
-use B::C::Save qw/savecowpv/;
+use B               qw/SVf_IsCOW SVf_ROK SVf_POK SVp_POK SVs_GMG SVt_PVGV SVf_READONLY SVf_FAKE/;
+use B::C::Debug     qw/debug/;
+use B::C::Save      qw/savecowpv/;
 use B::C::Save::Hek qw/save_shared_he get_sHe_HEK/;
-use B::C::File qw/xpvsect svsect free/;
-use B::C::Helpers qw/is_shared_hek/;
+use B::C::File      qw/xpvsect svsect free/;
+use B::C::Helpers   qw/is_shared_hek/;
 
 sub SVpbm_VALID { 0x40000000 }
 sub SVp_SCREAM  { 0x00008000 }    # method name is DOES
 
-sub do_save( $sv, $fullname=undef, $custom=undef ) {
+sub do_save ( $sv, $fullname = undef, $custom = undef ) {
 
     #if ( !length $fullname ) {
     #    print STDERR B::C::Save::stack_flat();
@@ -40,7 +40,7 @@ sub do_save( $sv, $fullname=undef, $custom=undef ) {
 
     # static pv, do not destruct. test 13 with pv0 "3".
     if ( !$shared_hek and $flags & SVf_READONLY and !$len ) {
-        $flags ^= SVf_FAKE; # turn off SVf_FAKE
+        $flags ^= SVf_FAKE;    # turn off SVf_FAKE
         debug( pv => "turn off SVf_FAKE %s %s\n", $pv, $fullname );
     }
 
@@ -64,7 +64,7 @@ sub do_save( $sv, $fullname=undef, $custom=undef ) {
     return $sym;
 }
 
-sub save_svu( $sv, $sym, $fullname, @ ) {
+sub save_svu ( $sv, $sym, $fullname, @ ) {
 
     my $flags = $sv->FLAGS;
 
@@ -83,6 +83,7 @@ sub save_svu( $sv, $sym, $fullname, @ ) {
     }
 
     if ( $sv->IsBool ) {
+
         # bool values are only sharing the PVX at this point
         my $pv = $sv->IsBoolYes ? 'PL_Yes' : 'PL_No';
         return ( ".svu_pv=(char*) $pv", $sv->CUR, $sv->LEN, $pv, $sv->FLAGS );
@@ -108,13 +109,13 @@ sub save_svu( $sv, $sym, $fullname, @ ) {
     # overloaded VERSION symbols fail to xs boot: ExtUtils::CBuilder with Fcntl::VERSION (i91)
     # 5.6: Can't locate object method "RV" via package "B::PV" Carp::Clan
     if ($pok) {
-        $pv = pack "a*", $sv->PV;    # XXX!
+        $pv  = pack "a*", $sv->PV;    # XXX!
         $cur = ( $sv and $sv->can('CUR') and ref($sv) ne 'B::GV' ) ? $sv->CUR : length($pv);
     }
     else {
         if ( $gmg && $fullname ) {
             no strict 'refs';
-            $pv = ( $fullname and ref($fullname) ) ? "${$fullname}" : '';
+            $pv  = ( $fullname and ref($fullname) ) ? "${$fullname}" : '';
             $cur = length( pack "a*", $pv );
             $pok = 1;
         }
@@ -132,14 +133,15 @@ sub save_svu( $sv, $sym, $fullname, @ ) {
 
     if ( $fullname =~ m{^(.+)::AUTOLOAD$} ) {
         my $pkg = $1;
-        if ( $pkg->can( 'AUTOLOAD' ) ) {
+        if ( $pkg->can('AUTOLOAD') ) {
+
             # clear AUTOLOAD PV when used at compile time
             #print STDERR "## $fullname has AUTOLOAD sub\n";
             $savesym = 'NULL';
-            $cur = 0;
-            $len = 0;
-            $pv  = '';
-            $flags = 0;
+            $cur     = 0;
+            $len     = 0;
+            $pv      = '';
+            $flags   = 0;
         }
     }
 

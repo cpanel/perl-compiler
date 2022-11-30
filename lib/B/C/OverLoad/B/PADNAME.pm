@@ -2,13 +2,13 @@ package B::PADNAME;
 
 use B::C::Std;
 
-use B qw/cstring/;
+use B           qw/cstring/;
 use B::C::Debug qw/debug/;
-use B::C::File qw/padnamesect/;
+use B::C::File  qw/padnamesect/;
 
 our $MAX_PADNAME_LENGTH = 1;
 
-sub do_save( $pn, $fullname ) {
+sub do_save ( $pn, $fullname ) {
 
     return q[&PL_padname_undef] if $pn->IsUndef;
 

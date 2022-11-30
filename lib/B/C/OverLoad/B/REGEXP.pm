@@ -2,13 +2,13 @@ package B::REGEXP;
 
 use B::C::Std;
 
-use B qw/RXf_EVAL_SEEN/;
+use B           qw/RXf_EVAL_SEEN/;
 use B::C::Debug qw/debug/;
-use B::C::File qw/init1 init2 svsect xpvsect/;
-use B::C::Save qw/savecowpv/;
+use B::C::File  qw/init1 init2 svsect xpvsect/;
+use B::C::Save  qw/savecowpv/;
 
 # post 5.11: When called from B::RV::save not from PMOP::save precomp
-sub do_save( $sv, $fullname=undef ) {
+sub do_save ( $sv, $fullname = undef ) {
 
     $sv->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $sv );
 

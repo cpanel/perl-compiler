@@ -2,12 +2,12 @@ package B::CV;
 
 use B::C::Std;
 
-use B qw/CVf_CONST main_cv SVf_IsCOW CVf_NAMED/;
-use B::C::Debug qw/verbose/;
-use B::C::Decimal qw/get_integer_value/;
-use B::C::Save qw/savecowpv/;
-use B::C::Save::Hek qw/save_shared_he get_sHe_HEK/;
-use B::C::File qw/svsect xpvcvsect xsaccessorsect init_xsaccessor init/;
+use B                       qw/CVf_CONST main_cv SVf_IsCOW CVf_NAMED/;
+use B::C::Debug             qw/verbose/;
+use B::C::Decimal           qw/get_integer_value/;
+use B::C::Save              qw/savecowpv/;
+use B::C::Save::Hek         qw/save_shared_he get_sHe_HEK/;
+use B::C::File              qw/svsect xpvcvsect xsaccessorsect init_xsaccessor init/;
 use B::C::Helpers::Symtable qw/objsym/;
 
 my $initsub_index = 0;
@@ -22,7 +22,7 @@ my $xs_accessor_constructor;
 # from B.xs maybe we need to save more than just the RMG ones
 #define MAGICAL_FLAG_BITS (SVs_GMG|SVs_SMG|SVs_RMG)
 
-sub do_save( $cv, $origname=undef) {
+sub do_save ( $cv, $origname = undef ) {
 
     my $fullname = $cv->FULLNAME();
 
@@ -76,15 +76,15 @@ sub do_save( $cv, $origname=undef) {
         $startfield = "0";
     }
     elsif ($xsaccessor_list) {
-        $xcv_root = 'NULL';
+        $xcv_root   = 'NULL';
         $startfield = sprintf( '.xcv_xsubany= {(void*) %s /* xsubany */}', $xsaccessor_list );    # xcv_xsubany
     }
     elsif ( my $c_function = $cv->can_do_const_sv() ) {
-        $xcv_root = sprintf( '.xcv_xsub=&%s', $c_function );
+        $xcv_root   = sprintf( '.xcv_xsub=&%s',                            $c_function );
         $startfield = sprintf( '.xcv_xsubany= {(void*) %s /* xsubany */}', $cv->XSUBANY->save() );    # xcv_xsubany
     }
-    else {    # default values for xcv_root and startfield
-        $xcv_root = sprintf( "%s", $root ? $root->save : 0 );
+    else {                                                                                            # default values for xcv_root and startfield
+        $xcv_root   = sprintf( "%s", $root ? $root->save : 0 );
         $startfield = $cv->save_optree();
     }
 
@@ -111,9 +111,9 @@ sub do_save( $cv, $origname=undef) {
 
     if ($is_xs_accessor_constructor) {
         init_xsaccessor->setup_method_for(
-            xpvcv_ix => $xpvcv_ix,                                 #.
-            xs_sub   => "Class::XSAccessor::constructor",          #.
-            fullname => $fullname                                  #.
+            xpvcv_ix => $xpvcv_ix,                           #.
+            xs_sub   => "Class::XSAccessor::constructor",    #.
+            fullname => $fullname                            #.
         );
     }
     elsif ($xsaccessor_list) {
@@ -123,7 +123,7 @@ sub do_save( $cv, $origname=undef) {
             xs_sub   => $xsaccessor_function,
             fullname => $fullname,
 
-            xsaccessor_entry   => $xsaccessor_list,                # bad name
+            xsaccessor_entry   => $xsaccessor_list,          # bad name
             xsaccessor_key     => $xsaccessor_key,
             xsaccessor_key_len => $xsaccessor_key_len,
         );
@@ -135,9 +135,9 @@ sub do_save( $cv, $origname=undef) {
 {
     my %_const_sv_function = map { $_ => 'bc_const_sv_xsub' } qw{B::IV B::UV B::PV B::PVIV B::PVUV};
 
-    sub can_do_const_sv($cv) {
+    sub can_do_const_sv ($cv) {
 
-        die unless $cv;
+        die    unless $cv;
         return unless $cv->CONST && $cv->XSUB;
         my $xsubany = $cv->XSUBANY;
         my $ref     = ref $cv->XSUBANY;
@@ -150,7 +150,7 @@ sub do_save( $cv, $origname=undef) {
     }
 }
 
-sub is_xs_accessor_constructor( $cv ) {
+sub is_xs_accessor_constructor ($cv) {
 
     return unless $INC{'Class/XSAccessor.pm'};
     my $name = $cv->FULLNAME;
@@ -163,7 +163,7 @@ sub is_xs_accessor_constructor( $cv ) {
     return 1;
 }
 
-sub save_xs_accessor($cv, $=undef) {
+sub save_xs_accessor ( $cv, $ = undef ) {
 
     return unless $INC{'Class/XSAccessor.pm'};
     my $name = $cv->FULLNAME;
@@ -192,7 +192,7 @@ sub save_xs_accessor($cv, $=undef) {
     return ( "&xsaccessor_list[$xsa_ix]", "Class::XSAccessor::$method_found", $key, $key_cur );
 }
 
-sub save_stash($cv) {
+sub save_stash ($cv) {
 
     $cv->STASH or return 'Nullhv';
 
@@ -203,7 +203,7 @@ sub save_stash($cv) {
     return $symbol;
 }
 
-sub get_cv_outside($cv) {
+sub get_cv_outside ($cv) {
 
     my $ref = ref( $cv->OUTSIDE );
 
@@ -220,13 +220,13 @@ sub get_cv_outside($cv) {
     return $cv->OUTSIDE->save;
 }
 
-sub is_format($cv) {
+sub is_format ($cv) {
 
     my $format_mask = SVt_PVFM() | SVs_RMG();
     return ( $cv->FLAGS & $format_mask ) == $format_mask ? 1 : 0;
 }
 
-sub cv_save_padlist( $cv, $origname ) {
+sub cv_save_padlist ( $cv, $origname ) {
 
     my $padlist = $cv->PADLIST;
 
@@ -236,7 +236,7 @@ sub cv_save_padlist( $cv, $origname ) {
     return $padlist->save( $fullname . ' :pad', $cv );
 }
 
-sub get_full_name( $cv, $origname ) {
+sub get_full_name ( $cv, $origname ) {
 
     my $fullname = $cv->NAME_HEK || '';
     return $fullname if $fullname;
@@ -256,7 +256,7 @@ sub get_full_name( $cv, $origname ) {
                 $cvname =~ s/^.*:://;
                 if ( $cvname =~ m/ :pad\[.*$/ ) {
                     $cvname =~ s/ :pad\[.*$//;
-                    $cvname = '__ANON__' if is_phase_name($cvname);
+                    $cvname   = '__ANON__' if is_phase_name($cvname);
                     $fullname = $cvstashname . '::' . $cvname;
                 }
             }
@@ -283,12 +283,12 @@ sub get_full_name( $cv, $origname ) {
 
 }
 
-sub get_xcv_gv_u($cv) {
+sub get_xcv_gv_u ($cv) {
 
     # $cv->CvFLAGS & CVf_NAMED
     if ( my $pv = $cv->NAME_HEK ) {
         my ($share_he) = save_shared_he($pv);
-        my $xcv_gv_u = sprintf( "{.xcv_hek=%s}", get_sHe_HEK($share_he) );    # xcv_gv_u
+        my $xcv_gv_u = sprintf( "{.xcv_hek=%s}", get_sHe_HEK($share_he) );      # xcv_gv_u
         return $xcv_gv_u;
     }
 
@@ -300,13 +300,13 @@ sub get_xcv_gv_u($cv) {
     return sprintf( "{.xcv_gv=%s}", $xcv_gv_u );
 }
 
-sub get_ROOT($cv) {
+sub get_ROOT ($cv) {
 
     my $root = $cv->ROOT;
     return ref $root eq 'B::NULL' ? undef : $root;
 }
 
-sub save_optree($cv) {
+sub save_optree ($cv) {
 
     my $root = $cv->get_ROOT;
 
@@ -316,22 +316,22 @@ sub save_optree($cv) {
     my $startfield = objsym( $cv->START );
 
     $startfield = objsym( $root->next ) unless $startfield;    # 5.8 autoload has only root
-    $startfield = "0" unless $startfield;                      # XXX either CONST ANON or empty body
+    $startfield = "0"                   unless $startfield;    # XXX either CONST ANON or empty body
 
     return $startfield;
 }
 
-sub is_lexsub($cv, $gv) {
+sub is_lexsub ( $cv, $gv ) {
 
     # logical shortcut perl5 bug since ~ 5.19: testcc.sh 42
     return ( ( !$gv or ref($gv) eq 'B::SPECIAL' ) and $cv->can('NAME_HEK') ) ? 1 : 0;
 }
 
-sub is_phase_name($phase) {
+sub is_phase_name ($phase) {
     return $phase =~ /^(BEGIN|INIT|UNITCHECK|CHECK|END)$/ ? 1 : 0;
 }
 
-sub FULLNAME($cv) {
+sub FULLNAME ($cv) {
 
     #return q{PL_main_cv} if $cv eq ${ main_cv() };
     # Do not coerce a RV into a GV during compile by calling $cv->GV on something with a NAME_HEK (RV)

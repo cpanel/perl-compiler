@@ -29,7 +29,8 @@ example:
     $xops->xop_used_by( 'is_yourmum',  '(OP*)&unop_list[11]' );
 
 =cut
-sub xop_used_by( $self, $xop_name, $opsym ) {
+
+sub xop_used_by ( $self, $xop_name, $opsym ) {
 
     $self->{xops} //= {};
     my $xops = $self->{xops};
@@ -58,7 +59,7 @@ sub xop_used_by( $self, $xop_name, $opsym ) {
 }
 
 # flush the last group
-sub flush($self) {
+sub flush ($self) {
 
     # only flush once
     return $self if $self->{_flushed};

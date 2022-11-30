@@ -15,31 +15,31 @@ sub get_symtable_ref {
 }
 
 # todo move all the sym to helper
-sub savesym( $obj, $value ) {
+sub savesym ( $obj, $value ) {
     no strict 'refs';
     my $sym = sprintf( "s\\_%x", $$obj );
     $SYMTABLE{$sym} = $value;
     return $value;
 }
 
-sub objsym($obj) {
+sub objsym ($obj) {
     no strict 'refs';
     return $SYMTABLE{ sprintf( "s\\_%x", $$obj ) };
 }
 
-sub getsym($sym) {
+sub getsym ($sym) {
 
     my $value;
 
     return 0 if $sym eq "sym_0";    # special case
     $value = $SYMTABLE{$sym};
     return $value if defined($value);
-    
+
     warn "warning: undefined symbol $sym\n" if $B::C::settings->{'warn_undefined_syms'};
     return "UNUSED";
 }
 
-sub delsym($obj) {
+sub delsym ($obj) {
     my $sym = sprintf( "s\\_%x", $$obj );
 
     # fixme move the variable here with accessor
@@ -49,7 +49,7 @@ sub delsym($obj) {
 }
 
 sub clearsym() {    #unit test helper
-    
+
     %SYMTABLE = ();
 
     return;
