@@ -83,6 +83,8 @@ our @xpvav_sizes;
 sub start_heavy {
     my $settings = $B::C::settings;
 
+    B::C::Debug::setup_debug( $settings->{'debug_options'}, $settings->{'enable_verbose'}, $settings->{'enable_debug'} );
+
     my $output_file = $settings->{'output_file'} or die("Please supply a -o option to B::C");
     B::C::File->new($output_file);    # Singleton.
 
@@ -110,8 +112,6 @@ sub start_heavy {
         # date:           Compiled at Feb 15 2019 18:58:02
         *Internals::V = eval qq[sub { return ( "$bincompat", "$non_bincompat", "$date", "patches list removed" ) }];
     }
-
-    B::C::Debug::setup_debug( $settings->{'debug_options'}, $settings->{'enable_verbose'}, $settings->{'enable_debug'} );
 
     die q[Class::XSAccessor::Array is not supported] if $INC{'Class/XSAccessor/Array.pm'};
 
