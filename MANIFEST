@@ -11,6 +11,9 @@ lib/B/C/Decimal.pm
 lib/B/C/File.pm
 lib/B/C/Helpers.pm
 lib/B/C/Helpers/Symtable.pm
+lib/B/C/Hooks.pm
+lib/B/C/Hooks/Base.pm
+lib/B/C/Hooks/Loader.pm
 lib/B/C/InitSection.pm
 lib/B/C/InitSection/Vtables.pm
 lib/B/C/InitSection/XOPs.pm
