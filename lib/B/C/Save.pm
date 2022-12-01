@@ -14,6 +14,8 @@ our @EXPORT_OK = qw/savecowpv/;
 my %strtable;
 my %cowtable;
 
+my %COW_map;
+
 sub savecowpv ($pv) {
 
     my ( $cstring, $cur, $len, $utf8 ) = cow_strlen_flags($pv);
@@ -23,42 +25,79 @@ sub savecowpv ($pv) {
 
         # the 0 entry is special
         cowpv->add(qq{Static const char allCOWPVs[] = "";\n});    # ";\n -> 3
-        cowpv()->{_total_len} = 0;
     }
 
-    {                                                             # append our string to the declaration of strings
-        my $declaration    = cowpv->get(0);
-        my $noquotecstring = $cstring;
-        $noquotecstring =~ s{^"}{};
-        $noquotecstring =~ s{"$}{};
-
-        my $end = qq{";\n};
-
-        # we are playing here with the limits with very long strings
-        #   but we can easily split them as part of a next iteration
-        #   by having multiple allCOWPVs strings
-        $declaration =~ s[^(.+)(\Q$end\E)$][$1${noquotecstring}$2]m;
-        cowpv->update( 0, $declaration );
-    }
-
-    my $ix = cowpv->index();    # not really exact
-
-    {
-        my $comment_str = $cstring;
-        $comment_str =~ s{\Q/*\E}{??}g;
-        $comment_str =~ s{\Q*/\E}{??}g;
-        $comment_str =~ s{\Q\000\377\E"$}{"};    # remove the cow part
-        cowpv->sadd( q{#define COWPV%d (char*) allCOWPVs+%d /* %s */}, $ix, cowpv()->{_total_len}, $comment_str );
-    }
-
-    # increase the total length of our master string (only after having use it)
-    cowpv()->{_total_len} += $len;
+    my $ix = cowpv->add(qq[/* fill later */]);
 
     my $pvsym = sprintf( q{COWPV%d}, $ix );
+    $COW_map{$pvsym} = [ $ix, $len, $cstring ];
 
+    # local cache for this function
     $cowtable{$cstring} = [ $pvsym, $cur, $len, $utf8 ];
 
     return ( $pvsym, $cur, $len, $utf8 );    # NOTE: $cur is total size of the perl string. len would be the length of the C string.
+}
+
+#
+# Run later when all our COWPV strings are setup
+#
+sub cowpv_setup() {
+
+    my $total_len = 0;
+
+    my @all_syms = keys %COW_map;    # shuffle the list
+    if ( defined $ENV{BC_COWPV_SHUFFLE} && $ENV{BC_COWPV_SHUFFLE} eq 0 ) {
+        print STDERR "### WARNING: BC_COWPV_SHUFFLE=0\n";
+        @all_syms = sort { $COW_map{$a}->[0] <=> $COW_map{$b}->[0] } @all_syms;
+    }
+
+    foreach my $pvsym (@all_syms) {
+        my ( $ix, $len, $cstring ) = $COW_map{$pvsym}->@*;
+
+        _append_str_to_allCOWPV($cstring);
+
+        cowpv->supdate(
+            $ix,
+            q{#define %s (char*) allCOWPVs+%d /* %s */},
+            $pvsym,
+            $total_len,
+            _comment_str($cstring)
+        );
+
+        $total_len += $len;
+    }
+
+    cowpv()->{_total_len} = $total_len;
+
+    return;
+}
+
+sub _append_str_to_allCOWPV ($str) {
+
+    # append our string to the declaration of strings
+
+    my $declaration = cowpv->get(0);
+
+    $str =~ s{^"}{};
+    $str =~ s{"$}{};
+
+    my $end = qq{";\n};
+
+    # we are playing here with the limits with very long strings
+    #   but we can easily split them as part of a next iteration
+    #   by having multiple allCOWPVs strings
+    $declaration =~ s[^(.+)(\Q$end\E)$][$1${str}$2]m;
+    cowpv->update( 0, $declaration );
+
+    return;
+}
+
+sub _comment_str ($str) {
+    $str =~ s{\Q/*\E}{??}g;
+    $str =~ s{\Q*/\E}{??}g;
+    $str =~ s{\Q\000\377\E"$}{"};    # remove the cow part
+
+    return $str;
 }
 
 sub _caller_comment {

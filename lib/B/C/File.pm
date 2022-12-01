@@ -209,13 +209,16 @@ sub write ( $c_file_stash, $template_name_short = undef ) {
         $c_file_stash->{SETUP_ALL_OPS} = $f->() // 0;
     }
 
+    # Prep COWPV strings
+    B::C::Save::cowpv_setup();
+
     #$c_file_stash->{SETUP_ALL_OPS} = 1; # testing...
 
     $c_file_stash->{op_section_list} = [ op_sections() ];
 
     $c_file_stash->{meta_section_list} = [ meta_sections() ];
 
-    $self->{'sharedhestructs'}->sort();            # sort them for human readability
+    $self->{'sharedhestructs'}->sort();    # sort them for human readability
 
     foreach my $section ( code_section_names(), init_section_names() ) {
         $c_file_stash->{'section'}->{$section} = $self->{$section};
