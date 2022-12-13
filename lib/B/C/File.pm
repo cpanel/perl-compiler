@@ -31,6 +31,7 @@ use B::C::Section           ();
 use B::C::Section::Meta     ();
 use B::C::InitSection       ();
 use B::C::Section::Assign   ();
+use B::C::Hooks             ();
 
 use B qw(cstring comppadlist);
 
@@ -189,9 +190,15 @@ sub replace_xs_bootstrap_to_init {
     return;
 }
 
+sub hooks ($self) {
+    return $self->{hooks} //= B::C::Hooks->new();
+}
+
 sub write ( $c_file_stash, $template_name_short = undef ) {
     die unless $c_file_stash;
     $template_name_short ||= 'base.c.tt2';
+
+    $self->hooks->pre_write();    # can alter sections before setting c_file_stash
 
     # TODO: refactor move section group logic outside of the 'write' which is the main purpose of File
     # Controls the rendering order of the sections.
@@ -279,6 +286,8 @@ sub write ( $c_file_stash, $template_name_short = undef ) {
 
     open( my $fh, '>:utf8', $self->{'c_file_name'} ) or die;
 
+    $self->hooks->pre_process( stash => $c_file_stash );
+
     # process input template, substituting variables
     $template->process( $template_name_short, $c_file_stash, $fh ) or die $template->error();
 
@@ -295,6 +304,9 @@ sub write ( $c_file_stash, $template_name_short = undef ) {
         $context->DESTROY if ref $context;
         $template->DESTROY;
     }
+    close $fh;
+
+    $self->hooks->post_process( c_file_name => $self->{'c_file_name'} );
 
     return;
 }

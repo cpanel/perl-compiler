@@ -1062,6 +1062,8 @@ static void bc_init_signals() {
 }
 [% END -%]
 
+[% hooks.before_main %]
+
 /************************************************************************************************************
 *
 *       output_main()
@@ -1086,6 +1088,8 @@ main(int argc, char **argv, char **env)
 
     /* Assure the interpreter struct is zeroed out. */
     Zero(&BC_unthreaded_interpreter, 1, PerlInterpreter);
+
+    [% hooks.main_after_zero %]
 
 #if USE_BC_NEWXZ
     /* use one single big malloc for all our stuff */

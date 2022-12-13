@@ -28,6 +28,8 @@ my %debug_map = (
     'W'     => 'walk',
     'bench' => 'benchmark',
     'stack' => 'stack',
+    'h'     => 'hooks',
+    'hook'  => 'hooks',
 );
 
 my %reverse_map = reverse %debug_map;
