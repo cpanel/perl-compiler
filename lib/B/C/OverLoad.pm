@@ -4,7 +4,6 @@ use B::C::OverLoad::B::OBJECT      ();    # nothing to save here
 use B::C::OverLoad::B::PADLIST     ();    # uses B::AV::save logic
 use B::C::OverLoad::B::PADNAMELIST ();    # uses B::AV::save logic
 use B::C::OverLoad::B::SPECIAL     ();    # nothing to do there: handle specialsv_name
-use B::C::OverLoad::B::SV          ();    # nothing to do there, generic fallback
 
 BEGIN {
     # needs to be loaded first: provide common helper for all OPs
