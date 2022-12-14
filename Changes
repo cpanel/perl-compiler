@@ -1,4 +1,17 @@
 
+5.036001 2022-12-14
+
+    Stop using cstring to save allCOWPVs
+    Shuffle allCOWPVs string
+    Add basic hook system
+
+5.036000 2022-07-28
+
+    Support for Perl 5.36
+    Use function signature
+    Fix Downgrade issue with PVIVs
+    Update fast_perl_destruct: Don't double destroy objects
+
 5.032002 2020-11-11
 
     Fix warnings in UNOP_AUX
