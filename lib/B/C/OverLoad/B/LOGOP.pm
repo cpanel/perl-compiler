@@ -1,4 +1,5 @@
-package B::LOGOP;
+package # do not index it
+        B::LOGOP;
 
 use B::C::Std;
 

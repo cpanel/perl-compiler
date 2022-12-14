@@ -1,4 +1,5 @@
-package B::LOOP;
+package # do not index it
+        B::LOOP;
 
 use B::C::Std;
 

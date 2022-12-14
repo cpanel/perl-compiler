@@ -1,4 +1,5 @@
-package B::UNOP_AUX;
+package # do not index it
+        B::UNOP_AUX;
 
 use B::C::Std;
 

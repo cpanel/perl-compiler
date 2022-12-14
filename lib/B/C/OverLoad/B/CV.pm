@@ -1,4 +1,5 @@
-package B::CV;
+package # do not index it
+	B::CV;
 
 use B::C::Std;
 

@@ -1,4 +1,5 @@
-package B::PADNAME;
+package # do not index it
+        B::PADNAME;
 
 use B::C::Std;
 

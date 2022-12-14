@@ -1,4 +1,5 @@
-package B::BINOP;
+package # do not index it
+	B::BINOP;
 
 use strict;
 

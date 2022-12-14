@@ -1,4 +1,5 @@
-package B::INVLIST;
+package # do not index it
+	B::INVLIST;
 
 use B::C::Std;
 

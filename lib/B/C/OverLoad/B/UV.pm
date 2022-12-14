@@ -1,4 +1,5 @@
-package B::UV;
+package # do not index it
+        B::UV;
 
 use B::C::Std;
 
