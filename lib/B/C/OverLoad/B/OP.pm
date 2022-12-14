@@ -1,4 +1,5 @@
-package B::OP;
+package # do not index it
+        B::OP;
 
 use B::C::Std;
 

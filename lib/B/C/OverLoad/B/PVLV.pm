@@ -1,4 +1,5 @@
-package B::PVLV;
+package # do not index it
+        B::PVLV;
 
 use B::C::Std;
 

@@ -1,4 +1,5 @@
-package B::REGEXP;
+package # do not index it
+        B::REGEXP;
 
 use B::C::Std;
 

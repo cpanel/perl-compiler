@@ -1,4 +1,5 @@
-package B::COP;
+package # do not index it
+	B::COP;
 
 use B::C::Std;
 

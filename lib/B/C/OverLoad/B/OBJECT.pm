@@ -1,4 +1,5 @@
-package B::OBJECT;
+package # do not index it
+        B::OBJECT;
 
 use strict;
 

@@ -1,4 +1,5 @@
-package B::GV;
+package # do not index it
+	B::GV;
 
 use B::C::Std;
 

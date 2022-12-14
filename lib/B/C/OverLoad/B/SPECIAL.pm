@@ -1,4 +1,5 @@
-package B::SPECIAL;
+package # do not index it
+        B::SPECIAL;
 
 use B::C::Std;
 use B qw( @specialsv_name);

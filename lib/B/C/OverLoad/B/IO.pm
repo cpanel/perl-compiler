@@ -1,4 +1,5 @@
-package B::IO;
+package # do not index it
+	B::IO;
 
 use B::C::Std;
 

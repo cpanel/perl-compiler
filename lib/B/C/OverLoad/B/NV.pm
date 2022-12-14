@@ -1,4 +1,5 @@
-package B::NV;
+package # do not index it
+        B::NV;
 
 use B::C::Std;
 

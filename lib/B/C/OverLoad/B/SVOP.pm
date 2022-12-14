@@ -1,4 +1,5 @@
-package B::SVOP;
+package # do not index it
+        B::SVOP;
 
 use B::C::Std;
 

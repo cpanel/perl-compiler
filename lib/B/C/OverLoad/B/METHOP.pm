@@ -1,4 +1,5 @@
-package B::METHOP;
+package # do not index it
+        B::METHOP;
 
 use B::C::Std;
 

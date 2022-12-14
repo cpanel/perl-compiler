@@ -1,4 +1,5 @@
-package B::PADLIST;
+package # do not index it
+        B::PADLIST;
 
 use B::C::Std;
 

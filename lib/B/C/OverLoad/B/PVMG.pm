@@ -1,4 +1,5 @@
-package B::PVMG;
+package # do not index it
+        B::PVMG;
 
 use B::C::Std;
 

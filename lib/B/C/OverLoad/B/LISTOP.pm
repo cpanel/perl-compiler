@@ -1,4 +1,5 @@
-package B::LISTOP;
+package # do not index it
+        B::LISTOP;
 
 use B::C::Std;
 

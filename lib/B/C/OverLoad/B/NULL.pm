@@ -1,4 +1,5 @@
-package B::NULL;
+package # do not index it
+        B::NULL;
 
 use B::C::Std;
 

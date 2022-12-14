@@ -1,4 +1,5 @@
-package B::PMOP;
+package # do not index it
+        B::PMOP;
 
 use B::C::Std;
 

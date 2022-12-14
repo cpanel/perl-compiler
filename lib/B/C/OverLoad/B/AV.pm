@@ -1,4 +1,5 @@
-package B::AV;
+package # do not index it
+	B::AV;
 
 use B::C::Std;
 
