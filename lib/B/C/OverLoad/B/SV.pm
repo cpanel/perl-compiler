@@ -1,5 +1,5 @@
 package # do not index it
-	SV;
+	B::SV;
 
 use B::C::Std;
 
