@@ -53,7 +53,6 @@ lib/B/C/OverLoad/B/PVOP.pm
 lib/B/C/OverLoad/B/REGEXP.pm
 lib/B/C/OverLoad/B/RV.pm
 lib/B/C/OverLoad/B/SPECIAL.pm
-lib/B/C/OverLoad/B/SV.pm
 lib/B/C/OverLoad/B/SVOP.pm
 lib/B/C/OverLoad/B/UNOP.pm
 lib/B/C/OverLoad/B/UNOP_AUX.pm
