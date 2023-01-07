@@ -191,7 +191,7 @@ sub do_save ( $av, $fullname = undef, $cv = undef, $is_backref = 0 ) {
     }
     else {
         my $max = $av->MAX;
-        init()->sadd( "av_extend(%s, %d);", $sym, $max ) if $max > -1;
+        $av->add_to_init( $sym, '', $fill, $fullname ) if $max > -1;
     }
 
     $av->update_sv( $ix, $fullname, { fill => $fill } );    # could be using PADLIST, PADNAMELIST, or AV method for this.
