@@ -67,14 +67,14 @@ sub run {
         die q[Cannot find a recent version of perl] if $ENV{CHECK_CPANEL_PERL_VERSION};
         local $ENV{CHECK_CPANEL_PERL_VERSION} = 1;
         note "Using perl535 to rerun this script";
-        exec '/usr/local/cpanel/3rdparty/perl/536/bin/perl', $0;
+        exec '/usr/local/cpanel/3rdparty/perl/540/bin/perl', $0;
     }
 
     # setup env
     local $ENV{PERL5LIB} = '';
 
     local $ENV{PATH}
-        = '/usr/local/cpanel/3rdparty/perl/536/bin/:/opt/cpanel/perl5/536/bin:'
+        = '/usr/local/cpanel/3rdparty/perl/540/bin/:/opt/cpanel/perl5/540/bin:'
         . $ENV{PATH};
 
     note "== START == $0 at ", scalar localtime();
