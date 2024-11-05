@@ -68,7 +68,7 @@ sub is_simple_pvnv ($sv) {    # should factorize this with the other is_simple f
     return if ( $flags & SVf_ROK ) == SVf_ROK;
     return if ( $flags & SVt_MASK ) != SVt_PVNV();
 
-    return if $sv->IsBool;
+    return if $sv->IsBOOL;
 
     # remove insignificant flags for us as a PVIV
     $flags &= ~SVf_IsCOW if $flags & SVp_POK;

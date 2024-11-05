@@ -16,7 +16,7 @@ my @SECTION_ORDER = qw{
 
 my %SIZEOF = (
     'PERL_HV_ARRAY_ALLOC_BYTES' => 8,     # 'sizeof(HE*) * size' by default
-    'struct xpvhv_aux'          => 56,
+    'struct xpvhv_aux'          => 112,
     'void *'                    => 8,
     'HE'                        => 24,    # need a check
 );
