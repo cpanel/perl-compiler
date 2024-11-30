@@ -13,7 +13,7 @@ for V in "532" "535" "536" "540"; do
     [ -e /usr/local/cpanel/3rdparty/perl/$V/bin/perl ] && rpm -e --nodeps cpanel-perl-$V ||:
 done
 
-rpm -Uv --force $SRC/cpanel-perl-540-5.40.0-1.cp126~el8.x86_64.rpm ||:
+rpm -Uv --force $SRC/cpanel-perl-540-5.40.0-3.cp126~el8.x86_64.rpm ||:
 
 echo "Setup 5.40 from 5.39"
 [ -e /usr/local/cpanel/3rdparty/perl/540 ] || ln -sf /usr/local/cpanel/3rdparty/perl/539 /usr/local/cpanel/3rdparty/perl/540
