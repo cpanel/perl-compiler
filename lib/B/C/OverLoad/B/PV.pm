@@ -86,7 +86,7 @@ sub save_svu ( $sv, $sym, $fullname, @ ) {
     if ( $sv->IsBOOL ) {
 
         # bool values are only sharing the PVX at this point
-        my $pv = $sv->IsBoolYes ? 'PL_Yes' : 'PL_No';
+        my $pv = $sv->IsBOOL && $sv->TRUE_nomg ? 'PL_Yes' : 'PL_No';
         return ( ".svu_pv=(char*) $pv", $sv->CUR, $sv->LEN, $pv, $sv->FLAGS );
     }
 
