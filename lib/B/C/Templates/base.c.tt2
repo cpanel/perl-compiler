@@ -1156,10 +1156,6 @@ main(int argc, char **argv, char **env)
    See perl's INSTALL file under
    Environment access for more information. */
 
-#ifndef PERL_USE_SAFE_PUTENV
-    PL_use_safe_putenv = 0;
-#endif /* PERL_USE_SAFE_PUTENV */
-
     benchmark_time("prenewx");
 
     declare_static_sections(); /* declare all our sections to perl */
@@ -1333,7 +1329,7 @@ static int bc_perl_parse(pTHXx_ int argc, char **argv, char **env)
     }
 
      /* Can we grab env area too to be used as the area for $0? */
-    if (s && PL_origenviron && !PL_use_safe_putenv) {
+    if (s && PL_origenviron) {
         if ((PL_origenviron[0] == s + 1) || (aligned && (PL_origenviron[0] > s && PL_origenviron[0] <= INT2PTR(char *, PTR2UV(s + PTRSIZE) & mask))) ) {
             s = PL_origenviron[0];
             while (*s) s++;
