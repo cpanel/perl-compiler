@@ -622,6 +622,36 @@ aux_list_thr(o)
         } /* switch */
 
 #/* ************************************************************ */
+MODULE = B	PACKAGE = B::PADNAME	PREFIX = Padname
+#/* ************************************************************ */
+
+#/*
+#* PadnameGEN submitted to 5.36
+#* - view https://github.com/Perl/perl5/pull/19599
+#*/
+
+int
+PadnameGEN(padn)
+       B::PADNAME      padn
+    CODE:
+        RETVAL = padn->xpadn_gen;
+    OUTPUT:
+       RETVAL
+
+#/*
+#* PadnameIsUndef submitted to 5.36
+#* - view https://github.com/Perl/perl5/pull/19599
+#*/
+
+bool
+PadnameIsUndef(padn)
+       B::PADNAME      padn
+    CODE:
+        RETVAL = padn == &PL_padname_undef ? TRUE : FALSE;
+    OUTPUT:
+       RETVAL
+
+#/* ************************************************************ */
 MODULE = B     PACKAGE = B::PADNAMELIST        PREFIX = Padnamelist
 #/* ************************************************************ */
 
