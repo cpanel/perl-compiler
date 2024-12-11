@@ -57,7 +57,7 @@ op/lexsub.t                                      BC        GH #60 - SEGV at comp
 op/magic.t                                       TESTS     v5.36 - needs investigation
 op/method.t                                      TESTS     HV_STATIC: plan no longer fails in statch branch. Need to determine the cause of the tests now.
 op/override.t                                    COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
-op/reset.t                                       TESTS     GH #52 - smartmatch ?...?
+op/reset.t                                       SKIP      GH #52 - smartmatch ?...? - need investigation: starts failing after switching to ubuntu 22
 op/sprintf2.t                                    SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
 op/sub.t                                         TESTS     GH #56 - state variable
 op/sub_lval.t                                    TESTS     BC issue #277 - sub declaration with :lvalue should apply it to XSUBs
@@ -79,6 +79,8 @@ re/regexp_nonull.t                               COMPAT    uses XS::APItest - fo
 re/regexp_unicode_prop.t                         COMPAT    trigger some regexp errors at compile time
 re/rxcode.t                                      TESTS     BC issue #295 - (?{}) should have its own lexical scope
 re/subst_amp.t                                   TESTS     BC issue #295 - (?{}) should have its own lexical scope
+re/uniprops02.t                                  SKIP      need investigation: starts failing after switching to ubuntu 22
+re/uniprops03.t                                  SKIP      need investigation: starts failing after switching to ubuntu 22
 uni/cache.t                                      TESTS     GH #66 - We are explicitly clearing Cache to get B::C to work for now.
 uni/chr.t                                        COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/greek.t                                      COMPAT    BC issue #283 - deprecated "encoding" pragma

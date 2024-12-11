@@ -48,11 +48,17 @@ jobs:
           - "uni/*.t"
 
     container:
-      image: cpanelos/perl-compiler:perl-v5.35.10
+      image: ghcr.io/webpros-cpanel/cpanel-perl-container@sha256:4e9a835172fe6261135b0be526f376ac12e0a94791405fe32bd7fdff99f03685
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+      - name: setup
+        run: |
+          cat /etc/lsb-release
+          mv /etc/apt/sources.list.d/cpanel.list /etc/apt/sources.list.d/cpanel.list.off ||:
+          # apt-get update
+          # apt-get install -y \
       - run: perl -V
       - name: which perl
         run: ls -l $(which perl)
@@ -67,5 +73,6 @@ jobs:
       - run: ls -l /usr/local/cpanel/3rdparty/perl/535/bin/perlcc
       - name: which perlcc
         run: which perlcc
+      - run: which git
       - name: "running test ${{ matrix.test_dir }}"
         run: ./cprove -j4 ${{ matrix.test_dir }}
