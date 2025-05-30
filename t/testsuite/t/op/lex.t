@@ -5,7 +5,11 @@
 use strict;
 use warnings;
 
-BEGIN { chdir 't' if -d 't'; require './test.pl'; }
+BEGIN {
+    chdir "t" if -d "t";
+    require './test.pl';
+    @INC= "../lib";
+}
 
 plan(tests => 53);
 
@@ -131,20 +135,18 @@ SKIP: {
     skip "Different output on EBCDIC (presumably)", 3 if $::IS_EBCDIC;
     fresh_perl_is(
       qq'"ab}"ax;&\0z\x8Ao}\x82x;', <<gibberish,
-Bareword found where operator expected at - line 1, near ""ab}"ax"
-	(Missing operator before ax?)
+Bareword found where operator expected (Missing operator before "ax"?) at - line 1, near ""ab}"ax"
 syntax error at - line 1, near ""ab}"ax"
-Unrecognized character \\x8A; marked by <-- HERE after ab}"ax;&\0z<-- HERE near column 12 at - line 1.
+Execution of - aborted due to compilation errors.
 gibberish
        { stderr => 1 },
       'gibberish containing &\0z - used to crash [perl #123753]'
     );
     fresh_perl_is(
       qq'"ab}"ax;&{+z}\x8Ao}\x82x;', <<gibberish,
-Bareword found where operator expected at - line 1, near ""ab}"ax"
-	(Missing operator before ax?)
+Bareword found where operator expected (Missing operator before "ax"?) at - line 1, near ""ab}"ax"
 syntax error at - line 1, near ""ab}"ax"
-Unrecognized character \\x8A; marked by <-- HERE after }"ax;&{+z}<-- HERE near column 14 at - line 1.
+Execution of - aborted due to compilation errors.
 gibberish
        { stderr => 1 },
       'gibberish containing &{+z} - used to crash [perl #123753]'
@@ -226,6 +228,12 @@ fresh_perl_is(
 
 like runperl(prog => 'sub ub(){0} ub ub', stderr=>1), qr/Bareword found/,
  '[perl #126482] Assert failure when mentioning a constant twice in a row';
+
+# Other test file(s) (I'm not sure which) can create and then fail to
+# unlink the file t/0 under some circumstances (possibly running under
+# minitest). The next test does the equivalent of "do '0'", which can trip
+# up if there's a real '0' file to load.
+unlink "0";
 
 fresh_perl_is(
     "do\0"."000000",

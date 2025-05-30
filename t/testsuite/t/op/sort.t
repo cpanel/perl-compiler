@@ -7,7 +7,7 @@ BEGIN {
     set_up_inc('../lib');
 }
 use warnings;
-plan(tests => 203);
+plan(tests => 205);
 use Tie::Array; # we need to test sorting tied arrays
 
 # these shouldn't hang
@@ -237,6 +237,7 @@ eval { @b = sort twoface 4,1 };
 cmp_ok(substr($@,0,4), 'eq', 'good', 'twoface eval');
 
 eval <<'CODE';
+    no warnings qw(deprecated syntax);
     my @result = sort main'Backwards 'one', 'two';
 CODE
 cmp_ok($@,'eq','',q(old skool package));
@@ -883,29 +884,26 @@ cmp_ok($answer,'eq','good','sort subr called from other package');
     }
 }
 
-
-
-# I commented out this TODO test because messing with FREEd scalars on the
-# stack can have all sorts of strange side-effects, not made safe by eval
-# - DAPM.
-#
-#{
-#    local $TODO = "sort should make sure elements are not freed in the sort block";
-#    eval { @nomodify_x=(1..8);
-#	   our @copy = sort { undef @nomodify_x; 1 } (@nomodify_x, 3); };
-#    is($@, "");
-#}
+SKIP:
+{
+    skip "freed args not under PERL_RC_STACK", 1
+        unless (Internals::stack_refcounted() & 1);
+    eval { @nomodify_x=(1..8);
+	   our @copy = sort { undef @nomodify_x; 1 } (@nomodify_x, 3); };
+    is($@, "");
+}
 
 
 # Sorting shouldn't increase the refcount of a sub
 {
     sub sportello {(1+$a) <=> (1+$b)}
-    my $refcnt = &Internals::SvREFCNT(\&sportello);
+    # + 1 to account for prototype-defeating &... calling convention
+    my $refcnt = &Internals::SvREFCNT(\&sportello) + 1;
     @output = sort sportello 3,7,9;
 
     {
         package Doc;
-        ::is($refcnt, &Internals::SvREFCNT(\&::sportello), "sort sub refcnt");
+        ::refcount_is \&::sportello, $refcnt, "sort sub refcnt";
         $fail_msg = q(Modification of a read-only value attempted);
         # Sorting a read-only array in-place shouldn't be allowed
         my @readonly = (1..10);
@@ -1229,3 +1227,8 @@ SKIP:
     eval 'my @s = (sort); 1';
     like($@, qr/Not enough arguments for sort/, 'empty (sort); not allowed');
 }
+
+# check that lexical sort subs are ok
+
+my sub lexcmp { $a <=> $b }
+is join('', sort lexcmp 3,4,1,2), "1234", "lexical sort sub" ;

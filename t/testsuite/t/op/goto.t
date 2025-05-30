@@ -11,11 +11,18 @@ BEGIN {
 
 use warnings;
 use strict;
-plan tests => 125;
+use Config;
+plan tests => 134;
 our $TODO;
 
 my $deprecated = 0;
-local $SIG{__WARN__} = sub { if ($_[0] =~ m/jump into a construct/) { $deprecated++; } else { warn $_[0] } };
+
+local $SIG{__WARN__} = sub {
+    if ($_[0] =~ m/jump into a construct.*?, and will become fatal in Perl 5\.42/) {
+        $deprecated++;
+    }
+    else { warn $_[0] }
+};
 
 our $foo;
 while ($?) {
@@ -636,8 +643,7 @@ format CHOLET =
 wellington
 .
 $foo .= "(1)";
-SKIP: {
-    skip_if_miniperl("no dynamic loading on miniperl, so can't load PerlIO::scalar", 1);
+{
     my $cholet;
     open(CHOLET, ">", \$cholet);
     write CHOLET;
@@ -901,4 +907,74 @@ is $@,'', 'goto the first parameter of a binary expression [perl #132854]';
     }
     eval { f198(); };
     is $@, "", "v5.31.3-198-gd2cd363728";
+}
+
+# GH #19188
+#
+# 'goto &xs_sub' should provide the correct caller context to an XS sub
+
+SKIP:
+{
+    skip "No XS::APItest in miniperl", 6 if is_miniperl();
+    skip "No XS::APItest in static perl", 6 if not $Config{usedl};
+
+    require XS::APItest;
+
+    sub f_19188 { goto &XS::APItest::gimme }
+    sub g_19188{ f_19188(); }
+    my ($s, @a);
+
+    f_19188();
+    is ($XS::APItest::GIMME_V, 1, 'xs_goto void (#19188)');
+
+    $s = f_19188();
+    is ($XS::APItest::GIMME_V, 2, 'xs_goto scalar (#19188)');
+
+    @a = f_19188();
+    is ($XS::APItest::GIMME_V, 3, 'xs_goto list (#19188)');
+
+    g_19188();
+    is ($XS::APItest::GIMME_V, 1, 'xs_goto indirect void (#19188)');
+
+    $s = g_19188();
+    is ($XS::APItest::GIMME_V, 2, 'xs_goto indirect scalar (#19188)');
+
+    @a = g_19188();
+    is ($XS::APItest::GIMME_V, 3, 'xs_goto indirect list (#19188)');
+}
+
+# GH #19936 segfault on goto &xs_sub when calling sub is replaced
+SKIP:
+{
+    skip "No XS::APItest in miniperl", 2 if is_miniperl();
+    skip "No XS::APItest in static perl", 2 if not $Config{usedl};
+
+    # utf8::is_utf8() is just an example of an XS sub
+    sub foo_19936 { *foo_19936 = {}; goto &utf8::is_utf8 }
+    ok(foo_19936("\x{100}"), "GH #19936 utf8 XS call");
+
+    # the gimme XS function accesses PL_op, which was null before the fix
+    sub bar_19936 { *bar_19936 = {}; goto &XS::APItest::gimme }
+    my @a = bar_19936();
+    is($XS::APItest::GIMME_V, 3, "GH #19936 gimme XS call");
+}
+
+# goto &sub could leave AvARRAY() slots of @_ uninitialised.
+
+{
+    my $i = 0;
+    my $f = sub {
+        goto &{ sub {} } unless $i++;
+        $_[1] = 1; # create a hole
+        # accessing $_[0] is more for valgrind/ASAN to chew on rather than
+        # we're too concerned about its value. Or it might give "bizarre
+        # copy" errors.
+        is($_[0], undef, "goto and AvARRAY");
+    };
+
+    # first call does goto, which gives &$f a fresh AV in pad[0],
+    # which formerly allocated an AvARRAY for it, but didn't zero it
+    $f->();
+    # second call creates hole in @_ which used to to be a wild SV pointer
+    $f->();
 }

@@ -8,7 +8,7 @@ BEGIN {
 
 use strict qw(refs subs);
 
-plan(254);
+plan(257);
 
 # Test this first before we extend the stack with other operations.
 # This caused an asan failure due to a bad write past the end of the stack.
@@ -259,14 +259,23 @@ like (*STDOUT{IO}, qr/^IO::File=IO\(0x[0-9a-f]+\)$/,
 
 $anonhash = {};
 is (ref $anonhash, 'HASH');
+
+# GH #21478
+$anonhash = { 'one' };
+is scalar keys %$anonhash, 1, 'single value in anonhash creates a key (count)';
+ok exists $anonhash->{one},   'single value in anonhash creates a key (existence)';
+is $anonhash->{one}, undef,   'single value in anonhash creates a key (value)';
+
 $anonhash2 = {FOO => 'BAR', ABC => 'XYZ',};
 is (join('', sort values %$anonhash2), 'BARXYZ');
 
 # Test bless operator.
 
 package MYHASH;
-
-$object = bless $main'anonhash2;
+{
+    no warnings qw(syntax deprecated);
+    $object = bless $main'anonhash2;
+}
 main::is (ref $object, 'MYHASH');
 main::is ($object->{ABC}, 'XYZ');
 
@@ -290,7 +299,10 @@ sub mymethod {
 $string = "bad";
 $object = "foo";
 $string = "good";
-$main'anonhash2 = "foo";
+{
+    no warnings qw(syntax deprecated);
+    $main'anonhash2 = "foo";
+}
 $string = "";
 
 DESTROY {
@@ -307,7 +319,10 @@ package OBJ;
 
 @ISA = ('BASEOBJ');
 
-$main'object = bless {FOO => 'foo', BAR => 'bar'};
+{
+    no warnings qw(syntax deprecated);
+    $main'object = bless {FOO => 'foo', BAR => 'bar'};
+}
 
 package main;
 
@@ -320,10 +335,13 @@ is ($object->doit("BAR"), 'bar');
 $foo = doit $object "FOO";
 main::is ($foo, 'foo');
 
-sub BASEOBJ'doit {
-    local $ref = shift;
-    die "Not an OBJ" unless ref $ref eq 'OBJ';
-    $ref->{shift()};
+{
+    no warnings qw(syntax deprecated);
+    sub BASEOBJ'doit {
+        local $ref = shift;
+        die "Not an OBJ" unless ref $ref eq 'OBJ';
+        $ref->{shift()};
+    }
 }
 
 package UNIVERSAL;

@@ -251,3 +251,78 @@ Type of arg 1 to pop must be array (not private hash) at - line 4, near "%a;"
 Type of arg 1 to shift must be array (not private hash) at - line 5, near "%a;"
 Type of arg 1 to unshift must be array (not private hash) at - line 6, near "1;"
 Execution of - aborted due to compilation errors.
+########
+use feature 'defer';
+no warnings 'experimental::defer';
+defer { return "retval" }
+EXPECT
+Can't "return" out of a "defer" block at - line 3.
+########
+use feature 'defer';
+no warnings 'experimental::defer';
+defer { goto HERE }
+HERE:
+EXPECT
+Can't "goto" out of a "defer" block at - line 3.
+########
+use feature 'defer';
+no warnings 'experimental::defer';
+my $subB = sub {};
+defer { goto &$subB }
+EXPECT
+Can't "goto" out of a "defer" block at - line 4.
+########
+use feature 'defer';
+no warnings 'experimental::defer';
+LOOP: while(1) {
+  defer { last LOOP }
+}
+EXPECT
+Can't "last" out of a "defer" block at - line 4.
+########
+use feature 'try';
+no warnings 'experimental::try';
+try {} catch ($e) {} finally { return "123" }
+EXPECT
+Can't "return" out of a "finally" block at - line 3.
+########
+use feature 'try';
+no warnings 'experimental::try';
+try {} catch ($e) {} finally { goto HERE; }
+HERE:
+EXPECT
+Can't "goto" out of a "finally" block at - line 3.
+########
+use feature 'try';
+no warnings 'experimental::try';
+LOOP: {
+  try {} catch ($e) {} finally { last LOOP; }
+}
+EXPECT
+Can't "last" out of a "finally" block at - line 4.
+########
+# NAME return HANDLE LIST isn't valid [github #21716]
+sub xx {
+  return sum map { $_+1} 1 .. 5;
+}
+EXPECT
+Missing comma after first argument to return at - line 2, near "5;"
+Execution of - aborted due to compilation errors.
+########
+# subsequent use VERSION to 5.39
+use v5.20;
+use v5.39;
+EXPECT
+use VERSION of 5.39 or above is not permitted while another use VERSION is in scope at - line 3.
+########
+# subsequent use VERSION from 5.39
+use v5.39;
+use v5.20;
+EXPECT
+use VERSION is not permitted while another use VERSION of 5.39 or above is in scope at - line 3.
+########
+# use VERSION across the 5.11 boundary
+use 5.012;
+use 5.010;
+EXPECT
+Downgrading a use VERSION declaration to below v5.11 is not permitted at - line 3.

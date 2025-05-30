@@ -7,7 +7,7 @@ BEGIN {
     set_up_inc('../lib');
 }
 
-plan( tests => 111 ); # some tests are run in a BEGIN block
+plan( tests => 112 ); # some tests are run in a BEGIN block
 
 foreach my $t ( @tests ) {
     my $s = \&{'main::'.$t->{type}};
@@ -353,14 +353,14 @@ do './op/caller.pl' or die $@;
 # See that callers within a nested series of 'use's gets the right
 # filenames.
 {
-    local @INC = 'lib/GH_15109/';
+    local @INC = 'lib/caller/';
     # Apack use's Bpack which use's Cpack which populates @Cpack::caller
     # with the file:N of all the callers
     eval 'use Apack; 1';
     is($@, "", "GH #15109 - eval");
     is (scalar(@Cpack::callers), 10, "GH #15109 - callers count");
-    like($Cpack::callers[$_], qr{GH_15109/Bpack.pm:3}, "GH #15109 level $_") for 0..2;
-    like($Cpack::callers[$_], qr{GH_15109/Apack.pm:3}, "GH #15109 level $_") for 3..5;
+    like($Cpack::callers[$_], qr{caller/Bpack.pm:3}, "GH #15109 level $_") for 0..2;
+    like($Cpack::callers[$_], qr{caller/Apack.pm:3}, "GH #15109 level $_") for 3..5;
     like($Cpack::callers[$_], qr{\(eval \d+\):1}, "GH #15109 level $_") for 6..8;
     like($Cpack::callers[$_], qr{caller\.t}, "GH #15109 level $_") for 9;
 
@@ -390,4 +390,21 @@ do './op/caller.pl' or die $@;
 #line 12345 "virtually/op/caller.t"
     }
 
+}
+
+{
+    # Try to avoid copying pointers to freed SVs into @DB::args.
+    # previously this caused "panic: attempt to copy freed scalar"
+    my @a = 'A';
+    sub {
+        my $i = shift;
+        my $j = shift;
+        @a = (); # free the 'A' scalar
+        package DB;
+        () = caller(0);
+        my $x = $DB::args[0];
+        my $y = $DB::args[1];
+        ::is("$x-$y", "-B", "no freed scalars");
+    }
+    ->($a[0], 'B');
 }

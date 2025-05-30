@@ -21,6 +21,8 @@ use File::Find;
 use File::Spec;
 use Text::Tabs;
 
+$| = 1;
+
 BEGIN {
     if ( $Config{usecrosscompile} ) {
         print "1..0 # Not all files are available during cross-compilation\n";
@@ -48,10 +50,10 @@ podcheck.t - Look for possible problems in the Perl pods
 =head1 SYNOPSIS
 
  cd t
- ./perl -I../lib porting/podcheck.t [--show_all] [--cpan] [--deltas]
+ ./perl -I../lib porting/podcheck.t [--show-all] [--cpan] [--deltas]
                                     [--counts] [--pedantic] [FILE ...]
 
- ./perl -I../lib porting/podcheck.t --add_link MODULE ...
+ ./perl -I../lib porting/podcheck.t --add-link MODULE ...
 
  ./perl -I../lib porting/podcheck.t --regen
 
@@ -84,7 +86,7 @@ the desired pod or man page.  That means that links outside the distribution
 are valid.  podcheck.t doesn't verify the validity of such links, but instead
 keeps a database of those known to be valid.  This means that if a link to a
 target not on the list is created, the target needs to be added to the data
-base.  This is accomplished via the L<--add_link|/--add_link MODULE ...>
+base.  This is accomplished via the L<--add-link|/--add-link MODULE ...>
 option to podcheck.t, described below.
 
 =item An internal link that isn't so specified
@@ -111,12 +113,13 @@ The pedantic checks are:
 
 =over
 
-=item Verbatim paragraphs that wrap in an 80 (including 1 spare) column window
+=item Verbatim paragraphs that wrap in an 80 (including 2 spare) column window
 
-It's annoying to have lines wrap when displaying pod documentation in a
-terminal window.  This checks that all verbatim lines fit in a standard 80
-column window, even when using a pager that reserves 2 columns for its own
-use.  (Thus the check is for a net of 78 columns.)
+Pod that inappropriately wraps is less legible.  Pod formatters generally wrap
+correctly, except for too long verbatim lines.  We assume that any display
+window has at least the traditional 80 columns, and check for verbatim lines
+that won't fit in that space, including when using a pager that reserves 2
+columns for its own use.  (Thus the check is for a net of 78 columns.)
 For those lines that don't fit, it tells you how much needs to be cut in
 order to fit.
 
@@ -140,7 +143,7 @@ really problems, but merely potential problems, that is, false positives.
 After inspecting them and
 deciding that they aren't real problems, it is possible to shut up this program
 about them, unlike base Pod::Checker.  For a valid link to an outside module
-or man page, call podcheck.t with the C<--add_link> option to add it to the
+or man page, call podcheck.t with the C<--add-link> option to add it to the
 database of known links; for other causes, call podcheck.t with the C<--regen>
 option to regenerate the entire database.  This tells it that all existing
 issues are to not be mentioned again.
@@ -190,7 +193,7 @@ C<XXX>.
 =item Porting/perldelta_template.pod
 
 This is not a pod, but a template for C<perldelta>.  Any errors introduced
-here will show up when C<perldelta> is created from it.
+by it will show up when C<perldelta> is created from it.
 
 =item cpan-upstream pods
 
@@ -206,7 +209,7 @@ See the L</--deltas> option documentation
 
 =over
 
-=item --add_link MODULE ...
+=item --add-link MODULE ...
 
 Use this option to teach podcheck.t that the C<MODULE>s or man pages actually
 exist, and to silence any messages that links to them are broken.
@@ -221,7 +224,7 @@ to that database.
 For example,
 
     cd t
-    ./perl -I../lib porting/podcheck.t --add_link Unicode::Casing
+    ./perl -I../lib porting/podcheck.t --add-link Unicode::Casing
 
 causes the external module "Unicode::Casing" to be added to the database, so
 C<LE<lt>Unicode::CasingE<gt>> will be considered valid.
@@ -246,13 +249,17 @@ stable, and perhaps trying to fix them will cause changes that will
 misrepresent Perl's history.  But, this option will cause them to be fully
 checked.
 
-=item --show_all
+=item --show-all
 
 Normally, if the number of potential problems of a given type found for a
 pod matches the expected value in the database, they will not be displayed.
-This option forces the database to be ignored during the run, so all potential
-problems are displayed and will fail their respective pod test.  Specifying
-any particular FILES to operate on automatically selects this option.
+This option forces the database to be generally ignored during the run, so all
+potential problems are displayed and will fail their respective pod test.
+If, however, the database indicates that a particular problem type for a
+particular file is to be skipped, this option doesn't override that unless
+that particular file is passed specifically as one of the FILE parameters on
+the command line.  And, passing particular FILEs selects this option in
+general.
 
 =item --counts
 
@@ -354,10 +361,10 @@ our @perldelta_ignore_links = ( "XXX", "perl5YYYdelta", "perldiag/message" );
 # which is not an error, it uses a checksum to save work.
 my $digest_type = "SHA-1";
 
-my $original_dir = File::Spec->rel2abs(File::Spec->curdir);
-my $data_dir = File::Spec->catdir($original_dir, 'porting');
+my $original_t_dir = File::Spec->rel2abs(File::Spec->curdir);
+my $data_dir = File::Spec->catdir($original_t_dir, 'porting');
 my $known_issues = File::Spec->catfile($data_dir, 'known_pod_issues.dat');
-my $MANIFEST = File::Spec->catfile(File::Spec->updir($original_dir), 'MANIFEST');
+my $MANIFEST = File::Spec->catfile(File::Spec->updir($original_t_dir), 'MANIFEST');
 my $copy_fh;
 
 my $MAX_LINE_LENGTH = 78;   # 78 columns
@@ -398,10 +405,8 @@ my %excluded_files = (
                         canonicalize("configpm") => 1,
                         canonicalize("miniperl") => 1,
                         canonicalize("perl") => 1,
-                        canonicalize('cpan/Pod-Perldoc/corpus/no-head.pod') => 1,
-                        canonicalize('cpan/Pod-Perldoc/corpus/perlfunc.pod') => 1,
-                        canonicalize('cpan/Pod-Perldoc/corpus/utf8.pod') => 1,
                         canonicalize("lib/unicore/mktables") => 1,
+                        canonicalize("dist/devel-ppport/parts/inc/ppphdoc") => 1,
                     );
 
 # This list should not include anything for which case sensitivity is
@@ -410,8 +415,8 @@ my %excluded_files = (
 # be examined for them, and each such file explicitly excluded, as is done for
 # .PL files in the loop just below this.  For files not catchable this way,
 # is_pod_file() can be used to exclude these at a finer grained level.
-my $non_pods = qr/ (?: \.
-                       (?: [achot]  | zip | gz | bz2 | jar | tar | tgz
+my $non_pods = qr/
+                (?: \. (?: [achot]  | zip | gz | bz2 | jar | tar | tgz
                            | orig | rej | patch   # Patch program output
                            | sw[op] | \#.*  # Editor droppings
                            | old      # buildtoc output
@@ -422,11 +427,22 @@ my $non_pods = qr/ (?: \.
                            | lst      # assorted listing files
                            | bat      # Windows,OS2 batch files
                            | cmd      # Windows,OS2 command files
+                           | pdb      # Windows, C debugger symbols
+                           | dmp      # Windows, C debugger temps
+                           | nam      # Windows, C debugger temps
+                           | id0      # Windows, C debugger temps
+                           | id1      # Windows, C debugger temps
+                           | obj      # Windows .o equivalent
+                           | lib      # Windows .a equivalent
+                           | def      # Windows compiler DLL related (ASCII)
+                           | exp      # Windows compiler DLL related (binary)
+                           | pch      # Windows pre-compiled headers
                            | lis      # VMS compiler listings
                            | map      # VMS linker maps
                            | opt      # VMS linker options files
                            | mms      # MM(K|S) description files
                            | ts       # timestamp files generated during build
+                           | txt      # plain text
                            | $obj_ext # object files
                            | exe      # $Config{'exe_ext'} might be empty string
                            | $lib_ext # object libraries
@@ -434,16 +450,24 @@ my $non_pods = qr/ (?: \.
                            | $dl_ext  # dynamic libraries
                            | gif      # GIF images (example files from CGI.pm)
                            | eg       # examples from libnet
+                           | U        # metaconfig unit
                            | core .*
                        )
-                       $
-                    ) | ~$ | \ \(Autosaved\)\.txt$ # Other editor droppings
-                           | ^cxx\$demangler_db\.$ # VMS name mangler database
-                           | ^typemap\.?$          # typemap files
-                           | ^(?i:Makefile\.PL)$
-                           | ^core (?: $ | \. .* )
-                           | ^vgcore\.[1-9][0-9]*$
-                /x;
+                 $
+               ) | ~$                    # Vim droppings
+                 | \.bak$                # Other editor droppings
+                 | \ \(Autosaved\)\.txt$ # Other editor droppings
+                 | ^cxx\$demangler_db\.$ # VMS name mangler database
+                 | ^typemap\.?$          # typemap files
+                 | ^(?i:Makefile\.PL)$
+                 | ^core (?: $ | \. .* )
+                 | ^vgcore\.[1-9][0-9]*$
+                 | \b Changes \b
+
+                   # This is a pod, but is part of a corpus to test agains; we
+                   # don't care about any issues in it.
+                 | ext\/Pod-Html\/corpus\/perlvar-copy.pod
+             /x;
 
 # Matches something that looks like a file name, but is enclosed in C<...>
 my $C_path_re = qr{ ^
@@ -454,10 +478,11 @@ my $C_path_re = qr{ ^
                             | \d+/\d+ \b       # probable fractions
                             | (?: [LF] < )+
                             | OS/2 \b
+                            | Perl/perl.git \b
+                            | Perl/perl5.git \b
                             | Perl/Tk \b
                             | origin/blead \b
                             | origin/maint \b
-
                         )
                         /?  # Optional initial slash
                         \w+ # First component of path, doesn't begin with
@@ -592,7 +617,7 @@ while (@ARGV && substr($ARGV[0], 0, 1) eq '-') {
         $regen = 1;
         $pedantic = 1;
     }
-    elsif ($arg eq '-add_link') {
+    elsif ($arg =~ /^-add[-_]link$/) {
         $add_link = 1;
     }
     elsif ($arg eq '-cpan') {
@@ -601,7 +626,7 @@ while (@ARGV && substr($ARGV[0], 0, 1) eq '-') {
     elsif ($arg eq '-deltas') {
         $do_deltas = 1;
     }
-    elsif ($arg eq '-show_all') {
+    elsif ($arg =~ /^-show[-_]all$/) {
         $show_all = 1;
     }
     elsif ($arg eq '-counts') {
@@ -614,12 +639,12 @@ while (@ARGV && substr($ARGV[0], 0, 1) eq '-') {
         die <<EOF;
 Unknown option '$arg'
 
-Usage: $0 [ --regen | --cpan | --show_all | FILE ... | --add_link MODULE ... ]\n"
-    --add_link -> Add the MODULE and man page references to the database
+Usage: $0 [ --regen | --cpan | --show-all | FILE ... | --add-link MODULE ... ]\n"
+    --add-link -> Add the MODULE and man page references to the database
     --regen    -> Regenerate the data file for $0
     --cpan     -> Include files in the cpan subdirectory.
     --deltas   -> Include stable perldeltas
-    --show_all -> Show all known potential problems
+    --show-all -> Show all known potential problems
     --counts   -> Don't test, but give summary counts of the currently
                   existing database
     --pedantic -> Check for overly long lines in verbatim blocks
@@ -632,7 +657,8 @@ my @files = @ARGV;
 
 my $cpan_or_deltas = $do_upstream_cpan || $do_deltas;
 if (($regen + $show_all + $show_counts + $add_link + $cpan_or_deltas ) > 1) {
-    croak "--regen, --show_all, --counts, and --add_link are mutually exclusive\n and none can be run with --cpan nor --deltas";
+    croak "--regen, --show-all, --counts, and --add-link are mutually"
+        . " exclusive\n and none can be run with --cpan nor --deltas";
 }
 
 my $has_input_files = @files;
@@ -640,7 +666,7 @@ my $has_input_files = @files;
 
 if ($add_link) {
     if (! $has_input_files) {
-        croak "--add_link requires at least one module or man page reference";
+        croak "--add-link requires at least one module or man page reference";
     }
 }
 elsif ($has_input_files) {
@@ -663,7 +689,7 @@ package My::Pod::Checker {      # Extend Pod::Checker
     my %C_text;             # If defined, are in a C<> section, and includes
                             # the accumulated text from that
     my %current_indent;     # Current line's indent
-    my %filename;           # The pod is store in this file
+    my %filename;           # The pod is stored in this file
     my %in_CFL;             # count of stacked C<>, F<>, L<> directives
     my %indents;            # Stack of indents from =over's in effect for
                             # current line
@@ -671,8 +697,6 @@ package My::Pod::Checker {      # Extend Pod::Checker
     my %in_NAME;            # true if within NAME section
     my %in_begin;           # true if within =begin section
     my %in_X;               # true if in a X<>
-    my %linkable_item;      # Bool: if the latest =item is linkable.  It isn't
-                            # for bullet and number lists
     my %linkable_nodes;     # Pod::Checker adds all =items to its node list,
                             # but not all =items are linkable-to
     my %running_CFL_text;   # The current text that is being accumulated until
@@ -700,7 +724,6 @@ package My::Pod::Checker {      # Extend Pod::Checker
         delete $in_for{$addr};
         delete $in_NAME{$addr};
         delete $in_X{$addr};
-        delete $linkable_item{$addr};
         delete $linkable_nodes{$addr};
         delete $running_CFL_text{$addr};
         delete $running_simple_text{$addr};
@@ -724,7 +747,6 @@ package My::Pod::Checker {      # Extend Pod::Checker
         $in_X{$addr} = 0;
         $in_CFL{$addr} = 0;
         $in_NAME{$addr} = 0;
-        $linkable_item{$addr} = 0;
         $seen_pod_cmd{$addr} = 0;
         return $self;
     }
@@ -898,7 +920,7 @@ package My::Pod::Checker {      # Extend Pod::Checker
         return $self->SUPER::start_Para(@_);
     }
 
-    sub start_item {
+    sub start_item {    # Pod::Checker has no corresponding method
         my $self = shift;
         check_see_but_not_link($self);
 
@@ -906,16 +928,11 @@ package My::Pod::Checker {      # Extend Pod::Checker
         $start_line{$addr} = $_[0]->{start_line};
         $running_CFL_text{$addr} = "";
         $running_simple_text{$addr} = "";
-
     }
 
     sub start_item_text {
         my $self = shift;
         start_item($self);
-        my $addr = refaddr $self;
-
-        # This is the only =item that is linkable
-        $linkable_item{$addr} = 1;
 
         return $self->SUPER::start_item_text(@_);
     }
@@ -934,7 +951,34 @@ package My::Pod::Checker {      # Extend Pod::Checker
         return $self->SUPER::start_item_bullet(@_);
     }
 
-    sub end_item {  # No difference in =item types endings
+    sub clean_up_node_name_ {
+        my $text = shift;
+        $text =~ s/\s+$//;      # strip trailing space
+        $text =~ s/\s{2,}/ /gs; # collapse whitespace
+        return $text;
+    }
+
+    sub end_head  {
+        my $self = shift;
+        my $addr = refaddr $self;
+        $running_simple_text{$addr} =
+                               clean_up_node_name_($running_simple_text{$addr});
+        $linkable_nodes{$addr}{$running_simple_text{$addr}}++;
+
+        return $self->SUPER::end_head(@_);
+    }
+
+    sub end_item_text {
+        my $self = shift;
+        my $addr = refaddr $self;
+        $running_simple_text{$addr} =
+                              clean_up_node_name_($running_simple_text{$addr});
+        $linkable_nodes{$addr}{$running_simple_text{$addr}}++;
+
+        return $self->SUPER::end_item_text(@_);
+    }
+
+    sub end_item {
         my $self = shift;
         check_see_but_not_link($self);
         return $self->SUPER::end_item(@_);
@@ -981,9 +1025,8 @@ package My::Pod::Checker {      # Extend Pod::Checker
 
     sub check_see_but_not_link {
 
-        # Looks through accumulated text for current element that includes the
-        # C<>, F<>, and L<> directives for ones that look like they are
-        # C<link> instead of L<link>.
+        # Looks through accumulated text for current element to see if it
+        # refers to something that should be linked to, but isn't.
 
         my $self = shift;
         my $addr = refaddr $self;
@@ -1061,14 +1104,21 @@ package My::Pod::Checker {      # Extend Pod::Checker
         $self->SUPER::end_Para(@_);
     }
 
+    sub start_head {
+        my $self = shift;
+        my $addr = refaddr $self;
+        $running_CFL_text{$addr} = "";
+        $running_simple_text{$addr} = "";
+
+        return $self->SUPER::start_head(@_);
+    }
+
     sub start_head1 {
         my $self = shift;
         check_see_but_not_link($self);
 
         my $addr = refaddr $self;
         $start_line{$addr} = $_[0]->{start_line};
-        $running_CFL_text{$addr} = "";
-        $running_simple_text{$addr} = "";
 
         return $self->SUPER::start_head1(@_);
     }
@@ -1080,7 +1130,7 @@ package My::Pod::Checker {      # Extend Pod::Checker
         my $addr = refaddr $self;
 
         $in_NAME{$addr} = 1 if $running_simple_text{$addr} eq 'NAME';
-        return $self->SUPER::end_head(@_);
+        return $self->SUPER::end_head1(@_);
     }
 
     sub start_Verbatim {
@@ -1107,18 +1157,68 @@ package My::Pod::Checker {      # Extend Pod::Checker
 
         my $indent = $self->get_current_indent;
 
-        # Look at each line to verify it is short enough
+        # split the code by line.
         my @lines = split /^/, $running_simple_text{$addr};
-        for my $i (0 .. @lines - 1) {
-            $lines[$i] =~ s/\s+$//;
-            my $exceeds = length(Text::Tabs::expand($lines[$i]))
-                        + $indent - $MAX_LINE_LENGTH;
-            next unless $exceeds > 0;
 
-            $self->poderror({ -line => $start_line{$addr} + $i,
-                -msg => $line_length,
-                parameter => "+$exceeds (including " . ($indent - $INDENT) . " from =over's)",
-            });
+        # We have two cases here. The verbatim text may be copied from
+        # one of our files, in which case we check to make sure that the
+        # code in the documentation matches that of the code in the
+        # file, OR, we check the line lengths are appropriate. Copied text
+        # is identified by the first line containing one of the following
+        # strings: "file source: FILENAME" or "copied from: FILENAME" where
+        # the FILENAME actually exists.
+        #
+        # Yes, this implies that where we are copying code verbatim from
+        # one of our source files we do not check its length. This is
+        # because it is a copy, and we shouldn't require the code to be
+        # munged to be placed in the docs. This should only be used in
+        # pod files which are used to document the internals for other
+        # developers, as it may result in unpleasant to view HTML docs.
+
+        my $copied = 0;
+        if ($lines[0] =~ /(?:file source|copied from):\s*([\/\w.]+)/i and -e $1) {
+            # this text was copied from a source file. Make sure that it still
+            # matches the source. This is a whitespace insensitive match.
+
+            my $file = $1;
+            $copied = 1;
+            my $pat = "";
+            foreach my $line (@lines[1..$#lines]) {
+                # convert each line into a pattern fragment
+                $line =~ s/(?:(\s+)|(\S+))/$1 ? "\\s++" : quotemeta($2)/ge;
+                $pat .= $line;
+            }
+            # merge adjacent \s+ sequences
+            $pat =~ s/(?:\\s\+\+){2,}/\\s++/g;
+            # slurp the file
+            my $slurped = do {
+                open my $ifh, "<", $file
+                    or die "Failed to open '$file' for read: $!";
+                local $/;
+                <$ifh>;
+            };
+            if ($slurped !~ /$pat/) {
+                $self->poderror({ -line => $start_line{$addr},
+                    -msg => "Copied verbatim text is out of sync with source file",
+                    parameter => $file,
+                });
+            }
+        }
+        if (!$copied) {
+            # if the verbatim text has not been copied from one of our
+            # source files we look at each line to verify it is short enough
+            for my $i (0 .. @lines - 1) {
+                $lines[$i] =~ s/\s+$//;
+                my $exceeds = length(Text::Tabs::expand($lines[$i]))
+                            + $indent - $MAX_LINE_LENGTH;
+                next unless $exceeds > 0;
+
+                $self->poderror({ -line => $start_line{$addr} + $i,
+                    -msg => $line_length,
+                    parameter => "+$exceeds (including " . ($indent - $INDENT) .
+                                 " from =over's and $INDENT as base indent)",
+                });
+            }
         }
 
         undef $running_simple_text{$addr};
@@ -1296,20 +1396,6 @@ package My::Pod::Checker {      # Extend Pod::Checker
         return $self->SUPER::hyperlink($link);
     }
 
-    sub node {
-        my $self = shift;
-        my $text = $_[0];
-        if($text) {
-            $text =~ s/\s+$//s; # strip trailing whitespace
-            $text =~ s/\s+/ /gs; # collapse whitespace
-            my $addr = refaddr $self;
-            push(@{$linkable_nodes{$addr}}, $text) if
-                                    ! $current_indent{$addr}
-                                    || $linkable_item{$addr};
-        }
-        return $self->SUPER::node($_[0]);
-    }
-
     sub get_current_indent {
         return $INDENT + $current_indent{refaddr $_[0]};
     }
@@ -1321,7 +1407,7 @@ package My::Pod::Checker {      # Extend Pod::Checker
     sub linkable_nodes {
         my $linkables = $linkable_nodes{refaddr $_[0]};
         return undef unless $linkables;
-        return @$linkables;
+        return $linkables;
     }
 
     sub get_skip {
@@ -1395,9 +1481,9 @@ my @existing_issues;
 
 while (<$data_fh>) {    # Read the database
     chomp;
-    next if /^\s*(?:#|$)/;  # Skip comment and empty lines
+    next if /^\s*(?:#|$)/;          # Skip comment and empty lines
+    next if /^ [ < = > ]{7} /xx;    # Skip version control conflict markers
     if (/\t/) {
-        next if $show_all;
         if ($add_link) {    # The issues are saved and later output unchanged
             push @existing_issues, $_;
             next;
@@ -1405,6 +1491,17 @@ while (<$data_fh>) {    # Read the database
 
         # Keep track of counts of each issue type for each file
         my ($filename, $message, $count) = split /\t/;
+
+        # The way things aren't shown is to see if the count of the number of
+        # warnings of a given type has changed.  To show all, we pretend there
+        # weren't any already stored.  If the stored value is negative, it
+        # means counting for this warning in this file is disabled, and hence
+        # won't change.  To skip showing those files under --show-all, we
+        # retain the negatvie value.  To show all occurrences of other
+        # warnings, we skip setting their count, making them appear to have
+        # had zero occurrences.
+        next if $show_all && $count > 0;
+
         $known_problems{$filename}{$message} = $count;
 
         if ($show_counts) {
@@ -1453,7 +1550,7 @@ if ($show_counts) {
     note("-----\n" . Text::Tabs::expand("$total\tknown potential issues"));
     if (%suppressed_files) {
         note("\nFiles that have all messages of at least one type suppressed:");
-        note(join ",", sort keys %suppressed_files);
+        note(join ", ", sort keys %suppressed_files);
     }
     exit 0;
 }
@@ -1563,8 +1660,9 @@ sub is_pod_file {
 
     if (-d) {
         # Don't look at files in directories that are for tests, nor those
-        # beginning with a dot
-        if (m!/t\z! || m!/\.!) {
+        # beginning with a dot, nor those in the directory where Windows
+        # builds generate HTML from other POD sources.
+        if (m!/t\z! || m!/\.! || m!^./win32/html\z!) {
             $File::Find::prune = 1;
         }
         return;
@@ -1580,7 +1678,7 @@ sub is_pod_file {
         note("Not considering $_") if DEBUG;
         return;
     }
-               
+
     my $filename = $File::Find::name;
 
     # $filename is relative, like './path'.  Strip that initial part away.
@@ -1671,6 +1769,7 @@ sub is_pod_file {
                     $checker->name($name);
                     $id_to_checker{$name} = $checker
                         if $filename =~ m{^cpan/};
+                    $valid_modules{$name} = 1;
                 }
             }
             elsif ($filename =~ m{^cpan/}) {
@@ -1683,7 +1782,7 @@ sub is_pod_file {
 } # End of is_pod_file()
 
 # Start of real code that isn't processing the command line (except the
-# db is read in above, as is processing of the --add_link option).
+# db is read in above, as is processing of the --add-link option).
 # Here, @files contains list of files on the command line.  If have any of
 # these, unconditionally test them, and show all the errors, even the known
 # ones, and, since not testing other pods, don't do cross-pod link tests.
@@ -1953,10 +2052,10 @@ foreach my $filename (@files) {
         }
 
         # Go through everything in the file that could be an anchor that
-        # could be a link target.  Count how many there are of the same name.
-        foreach my $node ($checker->linkable_nodes) {
-            next FILE if ! $node;        # Can be empty is like '=item *'
-            $nodes{$name}{$node}++;
+        # could be a link target.
+        my $linkables = $checker->linkable_nodes;
+        foreach my $node (keys $linkables->%*) {
+            $nodes{$name}{$node} = $linkables->{$node};
 
             # Experiments have shown that cpan search can figure out the
             # target of a link even if the exact wording is incorrect, as long
@@ -1974,7 +2073,7 @@ foreach my $filename (@files) {
 
 # Here, all files have been parsed, and all links and link targets are stored.
 # Now go through the files again and see which don't have matches.
-if (! $has_input_files) {
+if (! $has_input_files) {   # No xref unless processing all files
     foreach my $filename (@files) {
         next if $filename_to_checker{$filename}->get_skip;
 
@@ -2128,7 +2227,7 @@ foreach my $filename (@files) {
             next if ! $known_problems{$canonical}{$message};
             next if $known_problems{$canonical}{$message} < 0; # Preserve negs
 
-            next if !$pedantic and $message =~ 
+            next if !$pedantic and $message =~
                 /^(?:\Q$line_length\E|\Q$C_not_linked\E|\Q$C_with_slash\E)/;
 
             my $diagnostic = output_thanks($filename, $known_problems{$canonical}{$message}, 0, $message);
@@ -2188,7 +2287,7 @@ following:
 
 1) If a problem is about a link to an unknown module or man page that
    you know exists, re-run the command something like:
-      ./perl -I../lib porting/podcheck.t --add_link MODULE man_page ...
+      ./perl -I../lib porting/podcheck.t --add-link { MODULE | man_page ... }
    (MODULEs should look like Foo::Bar, and man_pages should look like
    bar(3c); don't do this for a module or man page that you aren't sure
    about; instead treat as another type of issue and follow the
@@ -2227,7 +2326,7 @@ EOF
 }
 
 if ($regen) {
-    chdir $original_dir || die "Can't change directories to $original_dir";
+    chdir $original_t_dir || die "Can't change directories to $original_t_dir";
     close_and_rename($copy_fh);
 }
 

@@ -9,6 +9,9 @@
 # - freebsd
 # and on other platforms, and if things seem odd, just give up (skip_all).
 #
+# Symbol types for LTO builds don't seem to match their final section, so
+# skip on LTO builds too.
+#
 # Debugging tip: nm output (this script's input) can be faked by
 # giving one command line argument for this script: it should be
 # either the filename to read, or "-" for STDIN.  You can also append
@@ -42,9 +45,23 @@ use strict;
 
 use Config;
 
+# maint (and tarballs of maint releases) may not have updates here to
+# deal with changes to nm's output in some toolchains
+$^V =~ /^v\d+\.\d*[13579]\./
+  or skip_all "on maint";
+
 if ($Config{cc} =~ /g\+\+/) {
     # XXX Could use c++filt, maybe.
     skip_all "on g++";
+}
+
+# ccname is gcc for both gcc and clang
+if ($Config{ccname} eq "gcc" && $Config{ccflags} =~ /-flto\b/) {
+    # If we compile with gcc nm marks PL_no_mem as "D" (normal data) rather than a R (read only)
+    # but the symbol still ends up in the .rodata section of the image on linking.
+    # If we compile with clang 14, nm marks PL_no_mem as "T" (text, aka code) rather than R
+    # but the symbol still ends up in the .rodata section on linking.
+    skip_all "LTO libperl.a flags don't match the final linker sections";
 }
 
 my $libperl_a;
@@ -233,7 +250,8 @@ sub nm_parse_gnu {
 sub nm_parse_darwin {
     my $symbols = shift;
     my $line = $_;
-    if (m{^(?:.+)?libperl\.a\((\w+\.o)\):$}) {
+    if (m{^(?:.+)?libperl\.a\((\w+\.o)\):$} ||
+        m{^(\w+\.o):$}) {
         # object file name
         $symbols->{obj}{$1}++;
         $symbols->{o} = $1;
@@ -245,7 +263,7 @@ sub nm_parse_darwin {
             # String literals can live in different sections
             # depending on the compiler and os release, assumedly
             # also linker flags.
-            if (/^\(__TEXT,__(?:const|(?:asan_)?cstring|literal\d+)\) (?:non-)?external _?(\w+)(\.\w+)?$/) {
+            if (/^\(__TEXT,__(?:const|(?:asan_)?cstring|literal\d+)\) (?:non-)?external _?(\w+)(\.\w+){0,2}$/) {
                 my ($symbol, $suffix) = ($1, $2);
                 # Ignore function-local constants like
                 # _Perl_av_extend_guts.oom_array_extend
@@ -253,10 +271,13 @@ sub nm_parse_darwin {
                 # Ignore the cstring unnamed strings.
                 return if $symbol =~ /^L\.str\d+$/;
                 $symbols->{data}{const}{$symbol}{$symbols->{o}}++;
-            } elsif (/^\(__TEXT,__text\) ((?:non-)?external) _(\w+)$/) {
+            } elsif (/^\(__TEXT,__text\) ((?:non-|private )?external) \[cold func\] _(\w+\.cold\.[1-9][0-9]*)$/) {
+                # for N_COLD_FUNC symbols in MachO
+                # eg. 0000000000022c60 (__TEXT,__text) non-external [cold func] _Perl_lex_next_chunk.cold.1 (toke.o)
+            } elsif (/^\(__TEXT,__text\) ((?:non-|private )?external) _(\w+)$/) {
                 my ($exp, $sym) = ($1, $2);
                 $symbols->{text}{$sym}{$symbols->{o}}{$exp =~ /^non/ ? 't' : 'T'}++;
-            } elsif (/^\(__DATA,__\w*?(const|data|bss|common)\w*\) (?:non-)?external _?(\w+)(\.\w+)?$/) {
+            } elsif (/^\(__DATA,__\w*?(const|data|bss|common)\w*\) (?:non-)?external _?(\w+)(\.\w+){0,3}$/) {
                 my ($dtype, $symbol, $suffix) = ($1, $2, $3);
                 # Ignore function-local constants like
                 # _Perl_pp_gmtime.dayname
@@ -317,11 +338,10 @@ unless (exists $symbols{text}) {
 
 # These should always be true for everyone.
 
-ok($symbols{obj}{'pp.o'}, "has object pp.o");
-ok($symbols{text}{'Perl_peep'}, "has text Perl_peep");
-ok($symbols{text}{'Perl_pp_uc'}{'pp.o'}, "has text Perl_pp_uc in pp.o");
+ok($symbols{obj}{'util.o'}, "has object util.o");
+ok($symbols{text}{'Perl_croak'}{'util.o'}, "has text Perl_croak in util.o");
 ok(exists $symbols{data}{const}, "has data const symbols");
-ok($symbols{data}{const}{PL_no_mem}{'globals.o'}, "has PL_no_mem");
+ok($symbols{data}{const}{PL_no_modify}{'globals.o'}, "has PL_no_modify");
 
 my $nocommon = $Config{ccflags} =~ /-fno-common/ ? 1 : 0;
 

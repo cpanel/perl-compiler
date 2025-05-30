@@ -6,7 +6,7 @@ BEGIN {
     set_up_inc('../lib');
 }
 
-plan(tests => 62);
+plan(tests => 65);
 
 sub empty_sub {}
 
@@ -423,6 +423,32 @@ eval '
    {my ($a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u);}
    {my ($a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u);}
    {my ($a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u);}
+   # avoid "Lexical subroutine &b masks previously declared package subroutine"
+   no warnings "shadow";
    CORE::state sub b; sub d { sub b {} sub d }
  ';
 eval '()=%e; sub e { sub e; eval q|$x| } e;';
+watchdog 0;
+
+fresh_perl_like(
+    q#<s,,$0[sub{m]]]],}>0,shift#,
+    qr/^syntax error/,
+    {},
+    "GH Issue #16944 - Syntax error with sub and shift causes segfault"
+);
+
+# Bug 20010515.004 (#6998)
+# freeing array used as args to sub
+
+fresh_perl_like(
+    q{my @h = 1 .. 10; bad(@h); sub bad { undef @h; warn "O\n"; print for @_; warn "K\n";}},
+    (Internals::stack_refcounted() & 1)
+        ? qr/^O\nK/
+        : qr/Use of freed value in iteration/,
+    {},
+    "#6998 freeing array used as args to sub",
+);
+
+# github #21044
+ok( eval { $_->{x} = 1 for sub { undef }->(); 1 }, "check sub return values are modifiable")
+  or diag $@;
