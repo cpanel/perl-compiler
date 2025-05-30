@@ -3,25 +3,21 @@
 set -e
 
 # consider using a yum repo
-SRC="https://buildhub.dev.cpanel.net/RPM/11.126/centos/8/x86_64/"
+SRC="https://branch-build.dev.cpanel.net/RPM/11.130/centos/8/x86_64/"
 SRC="src" # for now use local src (no packages built on buildhub)
 
-PERL=/usr/local/cpanel/3rdparty/bin/perl540
+PERL=/usr/local/cpanel/3rdparty/bin/perl542
 
 echo "Removing perl older versions of Perl"
 for V in "532" "535" "536" "540"; do
     [ -e /usr/local/cpanel/3rdparty/perl/$V/bin/perl ] && rpm -e --nodeps cpanel-perl-$V ||:
 done
 
-rpm -Uv --force $SRC/cpanel-perl-540-5.40.0-3.cp126~el8.x86_64.rpm ||:
+rpm -Uv --force $SRC/cpanel-perl-542-5.42.0-1.cp130~el8.x86_64.rpm ||:
 
-echo "Setup 5.40 from 5.39"
-[ -e /usr/local/cpanel/3rdparty/perl/540 ] || ln -sf /usr/local/cpanel/3rdparty/perl/539 /usr/local/cpanel/3rdparty/perl/540
-ln -sf /usr/local/cpanel/3rdparty/bin/perl539 /usr/local/cpanel/3rdparty/bin/perl540
+echo "Setting perl & prove for 542"
 
-echo "Setting perl & prove for 540"
-
-ln -sf /usr/local/cpanel/3rdparty/perl/540/bin/prove /usr/local/cpanel/3rdparty/bin/prove
+ln -sf /usr/local/cpanel/3rdparty/perl/542/bin/prove /usr/local/cpanel/3rdparty/bin/prove
 
 # # we now whave some custom RPMs available install and use them if possible
 # rpm -Uv --force \

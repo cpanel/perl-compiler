@@ -70,8 +70,8 @@ jobs:
       - name: make install
         run: make -j4 install
       - name: setup PATH
-        run: echo "/usr/local/cpanel/3rdparty/perl/540/bin:$PATH" >> $GITHUB_PATH
-      - run: ls -l /usr/local/cpanel/3rdparty/perl/540/bin/perlcc
+        run: echo "/usr/local/cpanel/3rdparty/perl/542/bin:$PATH" >> $GITHUB_PATH
+      - run: ls -l /usr/local/cpanel/3rdparty/perl/542/bin/perlcc
       - name: which perlcc
         run: which perlcc
       - run: which git
