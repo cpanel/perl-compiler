@@ -138,7 +138,7 @@ sub save_warnings ($op) {
     );
 
     # set cache
-    return $lexwarnsym_cache{$pv} = sprintf( "(STRLEN*) &lexwarn_list[%d]", $ix );
+    return $lexwarnsym_cache{$pv} = sprintf( "(char*) &lexwarn_list[%d]", $ix );
 }
 
 1;
