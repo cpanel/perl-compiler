@@ -41,7 +41,7 @@ sub compile_script {
     my ( $file_to_test, $errors, $opts ) = @_;
 
     my $PERL = $^X;
-    my $blib = ( grep { $_ =~ m{/blib/} } @INC ) ? '-Mblib' : '';
+    my $blib = '-Mblib';
 
     # Generate the C code at $optimization level
     my $extra        = $opts->{extra}        // '';
