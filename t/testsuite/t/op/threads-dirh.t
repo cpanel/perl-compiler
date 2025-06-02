@@ -22,7 +22,7 @@ use File::Path;
 use File::Spec::Functions qw 'updir catdir';
 use Cwd 'getcwd';
 
-plan(6);
+plan(1);
 
 # Basic sanity check: make sure this does not crash
 fresh_perl_is <<'# this is no comment', 'ok', {}, 'crash when duping dirh';

@@ -248,7 +248,7 @@ no warnings 'experimental::try';
     is($scalar, "result", 'do { try/catch } with multiple statements');
 }
 
-my $program = $0;
+my $program = $DOLLAR_0;
 $program =~ s/\.dp$//; # running under 'cd t; ./TEST -deparse'
 
 # try{} blocks should be invisible to caller()
@@ -264,7 +264,7 @@ $program =~ s/\.dp$//; # running under 'cd t; ./TEST -deparse'
     my $LINE = __LINE__+1;
     B();
 
-    is($caller, "main::B ($DOLLAR_0 line $LINE)", 'try {} block is invisible to caller()');
+    is($caller, "main::B ($program line $LINE)", 'try {} block is invisible to caller()');
 }
 
 # try/catch/finally
