@@ -176,7 +176,7 @@ op/join.t                                        SIG       Exit signal is 139
 op/kill0.t                                       SIG       Exit signal is 139 
 op/kvaslice.t                                    SIG       Exit signal is 139 
 op/kvhslice.t                                    SIG       Exit signal is 139 
-op/lc.t                                          SIG       Exit signal is 139 
+op/lc.t                                          GCC       op/lc.bin is compiled and ready to run.
 op/leaky-magic.t                                 SIG       Exit signal is 139 
 op/length.t                                      SIG       Exit signal is 139 
 op/lex.t                                         COMPAT    Tests trigger errors at compilation time
@@ -236,7 +236,7 @@ op/select.t                                      SIG       Exit signal is 139
 op/setpgrpstack.t                                SIG       Exit signal is 139 
 op/sigdispatch.t                                 SIG       Exit signal is 139 
 op/signame_canonical.t                           SIG       Exit signal is 139 
-op/signatures.t                                  PLAN      Plan was valid
+op/signatures.t                                  GCC       op/signatures.bin is compiled and ready to run.
 op/sigsystem.t                                   SIG       Exit signal is 139 
 op/sleep.t                                       SIG       Exit signal is 139 
 op/smartkve.t                                    SIG       Exit signal is 134 
@@ -281,7 +281,7 @@ op/universal.t                                   SIG       Exit signal is 139
 op/unlink.t                                      SIG       Exit signal is 139 
 op/unshift.t                                     SIG       Exit signal is 139 
 op/upgrade.t                                     SIG       Exit signal is 139 
-op/utf8cache.t                                   SIG       Exit signal is 139 
+op/utf8cache.t                                   BC        op/utf8cache.c is generated ()
 op/utf8decode.t                                  SIG       Exit signal is 139 
 op/utf8magic.t                                   SIG       Exit signal is 139 
 op/utfhash.t                                     SIG       Exit signal is 139 
@@ -369,7 +369,7 @@ uni/chomp.t                                      SIG       Exit signal is 139
 uni/chr.t                                        COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/class.t                                      SIG       Exit signal is 139 
 uni/eval.t                                       SIG       Exit signal is 139 
-uni/fold.t                                       SIG       Exit signal is 139 
+uni/fold.t                                       GCC       uni/fold.bin is compiled and ready to run.
 uni/goto.t                                       SIG       Exit signal is 139 
 uni/greek.t                                      COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/gv.t                                         SIG       Exit signal is 139 
@@ -379,7 +379,7 @@ uni/lex_utf8.t                                   SIG       Exit signal is 139
 uni/lower.t                                      SIG       Exit signal is 139 
 uni/method.t                                     SIG       Exit signal is 139 
 uni/opcroak.t                                    SIG       Exit signal is 139 
-uni/overload.t                                   SIG       Exit signal is 139 
+uni/overload.t                                   GCC       uni/overload.bin is compiled and ready to run.
 uni/package.t                                    SIG       Exit signal is 139 
 uni/parser.t                                     SIG       Exit signal is 139 
 uni/readline.t                                   SIG       Exit signal is 139 
@@ -490,9 +490,9 @@ xtestc/2900.t                                    TESTS     GH #57 - open qw(:std
 xtestc/2950.t                                    TESTS     Output is: "2 2 5 : \n?\xFF?8 5 8?" (len=22) expect "2 2 5 : 8 5 8" (len=13)
 xtestc/3050.t                                    TESTS     Encode XS issue
 xtestc/3051.t                                    TESTS     Output is: "" (len=0) expect "www.google.com" (len=14)
-xtestc/3052.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/3052.t                                    GCC       xtestc/3052.bin is compiled and ready to run.
 xtestc/3090.t                                    TESTS     Output is: "" (len=0) expect "Net::LibIDN: ok\nNet::SSLeay: ok" (len=32)
-xtestc/3170.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/3170.t                                    GCC       xtestc/3170.bin is compiled and ready to run.
 xtestc/3200.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
 xtestc/3310.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
 xtestc/3451.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
