@@ -24,6 +24,10 @@
 #
 
 base/lex.t                                       PLAN      GH #49 - Cannot use '<<' in regexp
+base/num.t                                       SIG       Exit signal is 139 
+base/rs.t                                        SIG       Exit signal is 139 
+base/term.t                                      SIG       Exit signal is 139 
+base/translate.t                                 SIG       Exit signal is 139 
 bctestc/51.regexp-variable.t                     TESTS     Output is: "o" expect "ok"
 bctestc/75.compile-time-re-eval.t                TESTS     GH #75 - compile-time re-eval count bc524 & bc526 issue
 benchmark/gh7094-speed-up-keys-on-empty-hash.t   COMPAT    benchmark test
@@ -81,6 +85,47 @@ io/tell.t                                        SIG       Exit signal is 139
 io/through.t                                     SIG       Exit signal is 139 
 io/utf8.t                                        SIG       Exit signal is 139 
 japh/abigail.t                                   SKIP      skip
+mro/basic.t                                      SIG       Exit signal is 139 
+mro/basic_05_c3.t                                SIG       Exit signal is 139 
+mro/basic_05_c3_utf8.t                           SIG       Exit signal is 139 
+mro/basic_05_dfs.t                               SIG       Exit signal is 139 
+mro/basic_05_dfs_utf8.t                          SIG       Exit signal is 139 
+mro/basic_utf8.t                                 SIG       Exit signal is 139 
+mro/c3_with_overload.t                           SIG       Exit signal is 139 
+mro/c3_with_overload_utf8.t                      SIG       Exit signal is 139 
+mro/inconsistent_c3.t                            SIG       Exit signal is 139 
+mro/inconsistent_c3_utf8.t                       SIG       Exit signal is 139 
+mro/isa_aliases.t                                SIG       Exit signal is 139 
+mro/isa_aliases_utf8.t                           SIG       Exit signal is 139 
+mro/isa_c3.t                                     SIG       Exit signal is 139 
+mro/isa_c3_utf8.t                                SIG       Exit signal is 139 
+mro/isa_dfs.t                                    SIG       Exit signal is 139 
+mro/isa_dfs_utf8.t                               SIG       Exit signal is 139 
+mro/isarev.t                                     SIG       Exit signal is 139 
+mro/isarev_utf8.t                                SIG       Exit signal is 139 
+mro/method_caching.t                             SIG       Exit signal is 139 
+mro/method_caching_utf8.t                        SIG       Exit signal is 139 
+mro/next_edgecases.t                             SIG       Exit signal is 139 
+mro/next_edgecases_utf8.t                        SIG       Exit signal is 139 
+mro/next_inanon.t                                SIG       Exit signal is 139 
+mro/next_inanon_utf8.t                           SIG       Exit signal is 139 
+mro/next_method.t                                SIG       Exit signal is 139 
+mro/next_method_utf8.t                           SIG       Exit signal is 139 
+mro/next_NEXT.t                                  SIG       Exit signal is 139 
+mro/next_NEXT_utf8.t                             SIG       Exit signal is 139 
+mro/next_skip.t                                  SIG       Exit signal is 139 
+mro/next_skip_utf8.t                             PLAN      Plan was valid
+mro/overload_c3.t                                SIG       Exit signal is 139 
+mro/overload_c3_utf8.t                           SIG       Exit signal is 139 
+mro/overload_dfs.t                               SIG       Exit signal is 139 
+mro/package_aliases.t                            SIG       Exit signal is 139 
+mro/package_aliases_utf8.t                       SIG       Exit signal is 139 
+mro/pkg_gen.t                                    SIG       Exit signal is 139 
+mro/pkg_gen_utf8.t                               SIG       Exit signal is 139 
+mro/recursion_c3.t                               SIG       Exit signal is 139 
+mro/recursion_c3_utf8.t                          SIG       Exit signal is 139 
+mro/recursion_dfs.t                              SIG       Exit signal is 139 
+mro/recursion_dfs_utf8.t                         SIG       Exit signal is 139 
 op/64bitint.t                                    SIG       Exit signal is 139 
 op/aassign.t                                     SIG       Exit signal is 139 
 op/alarm.t                                       SIG       Exit signal is 139 
@@ -176,7 +221,6 @@ op/join.t                                        SIG       Exit signal is 139
 op/kill0.t                                       SIG       Exit signal is 139 
 op/kvaslice.t                                    SIG       Exit signal is 139 
 op/kvhslice.t                                    SIG       Exit signal is 139 
-op/lc.t                                          GCC       op/lc.bin is compiled and ready to run.
 op/leaky-magic.t                                 SIG       Exit signal is 139 
 op/length.t                                      SIG       Exit signal is 139 
 op/lex.t                                         COMPAT    Tests trigger errors at compilation time
@@ -236,7 +280,6 @@ op/select.t                                      SIG       Exit signal is 139
 op/setpgrpstack.t                                SIG       Exit signal is 139 
 op/sigdispatch.t                                 SIG       Exit signal is 139 
 op/signame_canonical.t                           SIG       Exit signal is 139 
-op/signatures.t                                  GCC       op/signatures.bin is compiled and ready to run.
 op/sigsystem.t                                   SIG       Exit signal is 139 
 op/sleep.t                                       SIG       Exit signal is 139 
 op/smartkve.t                                    SIG       Exit signal is 134 
@@ -281,7 +324,6 @@ op/universal.t                                   SIG       Exit signal is 139
 op/unlink.t                                      SIG       Exit signal is 139 
 op/unshift.t                                     SIG       Exit signal is 139 
 op/upgrade.t                                     SIG       Exit signal is 139 
-op/utf8cache.t                                   BC        op/utf8cache.c is generated ()
 op/utf8decode.t                                  SIG       Exit signal is 139 
 op/utf8magic.t                                   SIG       Exit signal is 139 
 op/utfhash.t                                     SIG       Exit signal is 139 
@@ -310,7 +352,6 @@ re/fold_grind_u.t                                SIG       Exit signal is 139
 re/keep_tabs.t                                   SIG       Exit signal is 139 
 re/no_utf8_pm.t                                  SIG       Exit signal is 139 
 re/opt.t                                         SIG       Exit signal is 139 
-re/overload.t                                    SIG       Exit signal is 139 
 re/pat.t                                         SIG       Exit signal is 139 
 re/pat_advanced.t                                SIG       Exit signal is 139 
 re/pat_psycho.t                                  SIG       Exit signal is 139 
@@ -331,7 +372,7 @@ re/reg_fold.t                                    SIG       Exit signal is 139
 re/reg_mesg.t                                    SIG       Exit signal is 139 
 re/reg_nc_tie.t                                  SIG       Exit signal is 139 
 re/reg_nocapture.t                               SIG       Exit signal is 139 
-re/reg_pmod.t                                    TESTS     BC issue #295 - (?{}) should have its own lexical scope
+re/reg_pmod.t                                    SIG       Exit signal is 139 
 re/reg_posixcc.t                                 SIG       Exit signal is 139 
 re/regex_sets.t                                  SIG       Exit signal is 139 
 re/regex_sets_compat.t                           SIG       Exit signal is 139 
@@ -369,7 +410,6 @@ uni/chomp.t                                      SIG       Exit signal is 139
 uni/chr.t                                        COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/class.t                                      SIG       Exit signal is 139 
 uni/eval.t                                       SIG       Exit signal is 139 
-uni/fold.t                                       GCC       uni/fold.bin is compiled and ready to run.
 uni/goto.t                                       SIG       Exit signal is 139 
 uni/greek.t                                      COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/gv.t                                         SIG       Exit signal is 139 
@@ -379,7 +419,6 @@ uni/lex_utf8.t                                   SIG       Exit signal is 139
 uni/lower.t                                      SIG       Exit signal is 139 
 uni/method.t                                     SIG       Exit signal is 139 
 uni/opcroak.t                                    SIG       Exit signal is 139 
-uni/overload.t                                   GCC       uni/overload.bin is compiled and ready to run.
 uni/package.t                                    SIG       Exit signal is 139 
 uni/parser.t                                     SIG       Exit signal is 139 
 uni/readline.t                                   SIG       Exit signal is 139 
@@ -490,9 +529,7 @@ xtestc/2900.t                                    TESTS     GH #57 - open qw(:std
 xtestc/2950.t                                    TESTS     Output is: "2 2 5 : \n?\xFF?8 5 8?" (len=22) expect "2 2 5 : 8 5 8" (len=13)
 xtestc/3050.t                                    TESTS     Encode XS issue
 xtestc/3051.t                                    TESTS     Output is: "" (len=0) expect "www.google.com" (len=14)
-xtestc/3052.t                                    GCC       xtestc/3052.bin is compiled and ready to run.
 xtestc/3090.t                                    TESTS     Output is: "" (len=0) expect "Net::LibIDN: ok\nNet::SSLeay: ok" (len=32)
-xtestc/3170.t                                    GCC       xtestc/3170.bin is compiled and ready to run.
 xtestc/3200.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
 xtestc/3310.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
 xtestc/3451.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
