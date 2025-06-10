@@ -1,5 +1,5 @@
-package # do not index it
-        B::UNOP_AUX;
+package    # do not index it
+  B::UNOP_AUX;
 
 use B::C::Std;
 
@@ -77,7 +77,7 @@ sub do_save ( $op, @ ) {
     my $unopaux_item_sect = meta_unopaux_item($list_size);
 
     $unopaux_item_sect->comment(q{length prefix, UNOP_AUX_item * $auxlen });
-    my $uaux_item_ix = $unopaux_item_sect->add( join( ', ', qq[{.uv=$auxlen}], @to_be_filled ) );
+    my $uaux_item_ix = $unopaux_item_sect->add( join( ', ', qq[{.ssize=$auxlen}], @to_be_filled ) );
 
     my $symname = sprintf(
         'meta_unopaux_item%d_list[%d]', $list_size,
@@ -250,6 +250,7 @@ sub aux_list_for_multiconcat {
     # (required to read content correctly when the string is utf8)
     #   - it returns the plain PV & the utf8 PV (the original B function only return one PV)
     #   - it also returns the raw contents of the aux slots (@segments part) without converting it
+
     my ( $nargs, $pv_as_sv_plain, $pv_as_sv_utf8, @segments ) = $op->aux_list_thr();    # is this complete
 
     # initialize the multiconcat header: all values to 0

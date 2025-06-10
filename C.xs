@@ -472,8 +472,31 @@ aux_list_thr(o)
                 /* if this changes, this block of code probably needs fixing */
                 assert(PERL_MULTICONCAT_HEADER_SIZE == 8);
                 nargs = aux[PERL_MULTICONCAT_IX_NARGS].ssize;
-                EXTEND(SP, ((SSize_t)(2 + (nargs+1))));
-                PUSHs(sv_2mortal(newSViv((IV)nargs)));
+
+                /* * If the string has different plain and utf8 representations
+                *   (e.g. "\x80"), then then aux[PERL_MULTICONCAT_IX_PLAIN_PV/LEN]]
+                *   holds the plain rep, while aux[PERL_MULTICONCAT_IX_UTF8_PV/LEN]
+                *   holds the utf8 rep, and there are/OP_METHSTART 2 sets of segment lengths,
+                *   with the utf8 set following after the plain set.
+                *
+                *   Calculate extra pushes if both plain and utf8 are present and different
+                */
+
+                SSize_t orig_nargs = nargs;
+                SSize_t extra = 0;
+                if (
+                    aux[PERL_MULTICONCAT_IX_PLAIN_PV].pv
+                    && aux[PERL_MULTICONCAT_IX_UTF8_PV].pv
+                    && aux[PERL_MULTICONCAT_IX_UTF8_PV].pv != aux[PERL_MULTICONCAT_IX_PLAIN_PV].pv ) {
+                        extra = 2;
+                        nargs += 2;
+                }
+                nargs++; /* for the lens loop */
+
+                /* We push: 1 (nargs) + 1 (plain) + 1 (utf8) + (nargs) (lens) */
+                EXTEND(SP, 3 + nargs);
+
+                PUSHs(sv_2mortal(newSViv((IV)orig_nargs)));
 
                 {   /* the plain string slots */
                     p   = aux[PERL_MULTICONCAT_IX_PLAIN_PV].pv;
@@ -495,37 +518,22 @@ aux_list_thr(o)
                     } else {
                         PUSHs(&PL_sv_undef);
                     }
-
-     /* * If the string has different plain and utf8 representations
-     *   (e.g. "\x80"), then then aux[PERL_MULTICONCAT_IX_PLAIN_PV/LEN]]
-     *   holds the plain rep, while aux[PERL_MULTICONCAT_IX_UTF8_PV/LEN]
-     *   holds the utf8 rep, and there are/OP_METHSTART 2 sets of segment lengths,
-     *   with the utf8 set following after the plain set.
-     */
-                    if (
-                        aux[PERL_MULTICONCAT_IX_PLAIN_PV].pv
-                        && aux[PERL_MULTICONCAT_IX_UTF8_PV].pv
-                        && aux[PERL_MULTICONCAT_IX_UTF8_PV].pv != aux[PERL_MULTICONCAT_IX_PLAIN_PV].pv ) {
-                            nargs += 2;
-                    }
                 }
 
                 lens = aux + PERL_MULTICONCAT_IX_LENGTHS;
-                nargs++; /* loop (nargs+1) times */
-
-                while (nargs--) {
+                SSize_t lens_count = nargs; // nargs already incremented above
+                while (lens_count--) {
                     PUSHs(sv_2mortal(newSViv(lens->ssize)));
                     lens++;
                 }
-
             break;
         }
         case OP_MULTIDEREF:
 #  define PUSH_SV(item) PUSHs(make_sv_object(aTHX_ (item)->sv))
             {
                 UNOP_AUX_item *items = cUNOP_AUXo->op_aux;
-                UV actions = items->uv;
-                UV len = items[-1].uv;
+                SSize_t actions = items->ssize;
+                SSize_t len = items[-1].ssize;
                 bool last = 0;
                 bool is_hash = FALSE;
 
@@ -537,7 +545,7 @@ aux_list_thr(o)
                     switch (actions & MDEREF_ACTION_MASK) {
 
                     case MDEREF_reload:
-                        actions = (++items)->uv;
+                        actions = (++items)->ssize;
                         mPUSHu(actions);
                         continue;
                         NOT_REACHED; /* NOTREACHED */
