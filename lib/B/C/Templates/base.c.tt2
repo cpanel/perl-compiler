@@ -264,6 +264,7 @@ struct my_padname_with_str {
        HV *    xpadn_typestash;
        CV *    xpadn_protocv;
     } xpadn_type_u;
+    struct padname_fieldinfo *xpadn_fieldinfo;
     U32        xpadn_low;
     U32        xpadn_high;
     U32        xpadn_refcnt;

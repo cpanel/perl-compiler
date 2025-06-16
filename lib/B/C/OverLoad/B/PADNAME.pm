@@ -1,5 +1,5 @@
-package # do not index it
-        B::PADNAME;
+package    # do not index it
+  B::PADNAME;
 
 use B::C::Std;
 
@@ -43,6 +43,7 @@ sub do_save ( $pn, $fullname ) {
         "%s"                         => $xpadn_pv,                         # char *xpadn_pv;
         "(HV*) %s"                   => $pn->OURSTASH->save($fullname),    # HV *xpadn_ourstash;
         "{.xpadn_typestash=(HV*)%s}" => $pn->TYPE->save($fullname),        # union { HV *xpadn_typestash; CV *xpadn_protocv; } xpadn_type_u;
+        "%s"                         => 'NULL',                            # struct padname_fieldinfo *xpadn_fieldinfo
         "%u"                         => $pn->COP_SEQ_RANGE_LOW,            # U32 xpadn_low;
         "%u"                         => $pn->COP_SEQ_RANGE_HIGH,           # U32 xpadn_high;
         "0x%x"                       => $refcnt,                           # U32 xpadn_refcnt;
