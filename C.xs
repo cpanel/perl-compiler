@@ -422,7 +422,7 @@ OUTPUT:
 # The design of the upstream aux_list method deviates significantly from proper B design.
 
 void
-aux_list_thr(o)
+aux_list_bc(o)
 	B::OP  o
     PPCODE:
         PERL_UNUSED_VAR(cv); /* not needed on unthreaded builds */
@@ -494,7 +494,7 @@ aux_list_thr(o)
                 nargs++; /* for the lens loop */
 
                 /* We push: 1 (nargs) + 1 (plain) + 1 (utf8) + (nargs) (lens) */
-                EXTEND(SP, 3 + nargs);
+                EXTEND(SP, 6 + nargs);
 
                 PUSHs(sv_2mortal(newSViv((IV)orig_nargs)));
 
@@ -518,6 +518,38 @@ aux_list_thr(o)
                     } else {
                         PUSHs(&PL_sv_undef);
                     }
+                }
+
+                /* Save up to 3 padtmps added in e3777abb2629e */
+
+                /* general PADTMP for the target of each concat 
+                    aux[PERL_MULTICONCAT_IX_PADTMP0].pad_offset = pad_alloc(OP_MULTICONCAT, SVs_PADTMP);
+                */    
+                { /* PERL_MULTICONCAT_IX_PADTMP0  */
+                    if(aux[PERL_MULTICONCAT_IX_PADTMP0].pad_offset) {
+                        mPUSHu(aux[PERL_MULTICONCAT_IX_PADTMP0].pad_offset);
+                    }
+                    else {
+                        PUSHs(&PL_sv_undef);
+                    }                
+                }
+
+                { /* PERL_MULTICONCAT_IX_PADTMP1  */
+                    if(aux[PERL_MULTICONCAT_IX_PADTMP1].pad_offset) {
+                        mPUSHu(aux[PERL_MULTICONCAT_IX_PADTMP1].pad_offset);
+                    }
+                    else {
+                        PUSHs(&PL_sv_undef);
+                    }                
+                }
+
+                { /* PERL_MULTICONCAT_IX_PADTMP2  */
+                    if(aux[PERL_MULTICONCAT_IX_PADTMP2].pad_offset) {
+                        mPUSHu(aux[PERL_MULTICONCAT_IX_PADTMP2].pad_offset);
+                    }
+                    else {
+                        PUSHs(&PL_sv_undef);
+                    }                
                 }
 
                 lens = aux + PERL_MULTICONCAT_IX_LENGTHS;

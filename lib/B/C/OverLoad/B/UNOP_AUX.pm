@@ -20,7 +20,7 @@ sub OP_AUX_IX { 15 }
 
 sub do_save ( $op, @ ) {
 
-    _clear_stack();                 # avoid a weird B (or B::C) issue when calling aux_list_thr
+    _clear_stack();                 # avoid a weird B (or B::C) issue when calling aux_list_bc
 
     unopauxsect()->comment_for_op("first, aux");
     my ( $ix, $sym ) = unopauxsect()->reserve( $op, "OP*" );
@@ -51,21 +51,17 @@ sub do_save ( $op, @ ) {
         return $sym;
     }
     elsif ( $op->name eq 'argcheck' ) {
-        @aux_list = $op->aux_list_thr;
-
-        #print STDERR join( ' ', '# ARGCHECK', @aux_list, "\n" );
+        @aux_list = $op->aux_list_bc;
     }
     elsif ( $op->name eq 'multideref' ) {
-        @aux_list = $op->aux_list_thr;
+        @aux_list = $op->aux_list_bc;
     }
     elsif ( $op->name eq 'multiconcat' ) {
         my $list = aux_list_for_multiconcat($op);
         @aux_list = @$list;
     }
-    else {    # ithread
-              # Usage: B::UNOP_AUX::aux_list(o, cv)
-        die "ithreads";
-        @aux_list = $op->aux_list;    # GH#283, GH#341
+    else {
+        ...;    # ithreads never got implemented since we don't support it. should be unreachable.
     }
 
     #### Saving the regular AUX LIST
@@ -217,15 +213,18 @@ sub get_action_name ( $op, $item ) {
 
 }
 
-sub MULTICONCAT_IX_NARGS     { 0 }    # number of arguments
-sub MULTICONCAT_IX_PLAIN_PV  { 1 }    # non-utf8 constant string
-sub MULTICONCAT_IX_PLAIN_LEN { 2 }    # non-utf8 constant string length
-sub MULTICONCAT_IX_UTF8_PV   { 3 }    # utf8 constant string
-sub MULTICONCAT_IX_UTF8_LEN  { 4 }    # utf8 constant string length
+sub MULTICONCAT_IX_NARGS        { 0 }    # number of arguments
+sub MULTICONCAT_IX_PLAIN_PV     { 1 }    # non-utf8 constant string
+sub MULTICONCAT_IX_PLAIN_LEN    { 2 }    # non-utf8 constant string length
+sub MULTICONCAT_IX_UTF8_PV      { 3 }    # utf8 constant string
+sub MULTICONCAT_IX_UTF8_LEN     { 4 }    # utf8 constant string length
+sub PERL_MULTICONCAT_IX_PADTMP0 { 5 }    # utf8 constant string length
+sub PERL_MULTICONCAT_IX_PADTMP1 { 6 }    # utf8 constant string length
+sub PERL_MULTICONCAT_IX_PADTMP2 { 7 }    # utf8 constant string length
 
 #sub MULTICONCAT_IX_LENGTHS   { 5 }    # first of nargs+1 const segment lens - B::C does not need this value
 
-sub MULTICONCAT_HEADER_SIZE { 5 }     # The number of fields of a multiconcat header
+sub MULTICONCAT_HEADER_SIZE { 8 }        # The number of fields of a multiconcat header
 
 =pod
 
@@ -251,24 +250,30 @@ sub aux_list_for_multiconcat {
     #   - it returns the plain PV & the utf8 PV (the original B function only return one PV)
     #   - it also returns the raw contents of the aux slots (@segments part) without converting it
 
-    my ( $nargs, $pv_as_sv_plain, $pv_as_sv_utf8, @segments ) = $op->aux_list_thr();    # is this complete
+    my ( $nargs, $pv_as_sv_plain, $pv_as_sv_utf8, $tmp0, $tmp1, $tmp2, @segments ) = $op->aux_list_bc();    # is this complete
+
+    #print STDERR "****** MULTICONCAT tmp0=$tmp0, tmp1=$tmp1, tmp2=$tmp2\n";
 
     # initialize the multiconcat header: all values to 0
     my @header = (0) x MULTICONCAT_HEADER_SIZE();
 
-    $header[ MULTICONCAT_IX_NARGS() ] = $nargs;                                         # ix=0
+    $header[ MULTICONCAT_IX_NARGS() ] = $nargs;    # ix=0
 
     if ( defined $pv_as_sv_plain ) {
         my ( $savesym, $cur, $len, $utf8 ) = savecowpv($pv_as_sv_plain);
-        $header[ MULTICONCAT_IX_PLAIN_PV() ]  = $savesym;                               # ix=1
-        $header[ MULTICONCAT_IX_PLAIN_LEN() ] = $cur;                                   # ix=2
+        $header[ MULTICONCAT_IX_PLAIN_PV() ]  = $savesym;    # ix=1
+        $header[ MULTICONCAT_IX_PLAIN_LEN() ] = $cur;        # ix=2
     }
 
     if ( defined $pv_as_sv_utf8 ) {
         my ( $savesym, $cur, $len, $utf8 ) = savecowpv($pv_as_sv_utf8);
-        $header[ MULTICONCAT_IX_UTF8_PV() ]  = $savesym;                                # ix=3
-        $header[ MULTICONCAT_IX_UTF8_LEN() ] = $cur;                                    # ix=4
+        $header[ MULTICONCAT_IX_UTF8_PV() ]  = $savesym;     # ix=3
+        $header[ MULTICONCAT_IX_UTF8_LEN() ] = $cur;         # ix=4
     }
+
+    $header[PERL_MULTICONCAT_IX_PADTMP0] = $tmp0 ? $tmp0 : 0;
+    $header[PERL_MULTICONCAT_IX_PADTMP1] = $tmp1 ? $tmp1 : 0;
+    $header[PERL_MULTICONCAT_IX_PADTMP2] = $tmp2 ? $tmp2 : 0;
 
     return [ @header, @segments ];
 }
