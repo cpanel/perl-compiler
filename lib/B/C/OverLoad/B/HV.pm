@@ -158,6 +158,7 @@ sub do_save ( $hv, $fullname = undef ) {
             '%d'   => $hv_total_keys,                                                                  # xhv_keys
             '%d'   => $max,                                                                            # xhv_max
             '%s'   => '{0}',                                                                           # struct xpvhv_aux
+            # We may need to do something special if it's a blessed class. See changes to xpvhv_aux
         );
 
         $xpvh_sym = sprintf( "xpvhv_with_aux_list[%d]", xpvhv_with_auxsect()->index );

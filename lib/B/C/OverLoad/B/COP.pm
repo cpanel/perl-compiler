@@ -60,8 +60,9 @@ sub do_save ( $op, @ ) {
         '(GV*) %s' => $filegv,                              # GV *    cop_filegv; /* file the following line # is from */
         '%u'       => $op->hints,                           # U32     cop_hints;  /* hints bits from pragmata */
         '%s'       => get_integer_value( $op->cop_seq ),    # U32     cop_seq;    /* parse sequence number */
-        '%s'       => $op->save_warnings,                   # STRLEN *    cop_warnings;   /* lexical warnings bitmask */
+        '%s'       => $op->save_warnings,                   # char *    cop_warnings;   /* lexical warnings bitmask */
         '%s'       => $op->save_hints,                      # COPHH * cop_hints_hash; /* compile time state of %^H. */
+        #'' => ...,                                          # struct cop_feature_t       cop_features;
     );
 
     return $sym;
