@@ -23,514 +23,212 @@
 # - Fields are white space delimited. It's assumed $test and $type will have no spaces in them.
 #
 
-base/lex.t                                       PLAN      GH #49 - Cannot use '<<' in regexp
-base/num.t                                       SIG       Exit signal is 139 
-base/rs.t                                        SIG       Exit signal is 139 
-base/term.t                                      SIG       Exit signal is 139 
-base/translate.t                                 SIG       Exit signal is 139 
-bctestc/51.regexp-variable.t                     TESTS     Output is: "o" expect "ok"
-bctestc/75.compile-time-re-eval.t                TESTS     GH #75 - compile-time re-eval count bc524 & bc526 issue
-benchmark/gh7094-speed-up-keys-on-empty-hash.t   COMPAT    benchmark test
-benchmark/rt26188-speed-up-keys-on-empty-hash.t  COMPAT    benchmark test
-bigmem/hash.t                                    COMPAT    bigmem/hash.c is generated ()
-bigmem/index.t                                   COMPAT    bigmem/index.c is generated ()
-bigmem/pos.t                                     COMPAT    bigmem/pos.c is generated ()
-bigmem/read.t                                    COMPAT    bigmem/read.c is generated ()
-bigmem/regexp.t                                  COMPAT    bigmem/regexp.c is generated ()
-bigmem/subst.t                                   COMPAT    bigmem/subst.c is generated ()
-bigmem/vec.t                                     COMPAT    bigmem/vec.c is generated ()
-comp/final_line_num.t                            COMPAT    This test is about BEGIN / file parse behavior so not relevant to B::C
-comp/hints.t                                     COMPAT    tests are using BEGIN block, do not ready for B::C
-comp/parser.t                                    COMPAT    We're not going to support ' as a package separator until we need to: https://github.com/rurban/perl-compiler/issues/217
-comp/parser_run.t                                COMPAT    no need to check this in BC
-extra/xs-accessor-array.t                        BC        extra/xs-accessor-array.c is generated (-v,)
-io/argv.t                                        SIG       Exit signal is 139 
-io/binmode.t                                     SIG       Exit signal is 139 
-io/bom.t                                         COMPAT    BC issue 312 - BOM seems to be rejected by perlcc but really, who needs this?
-io/closepid.t                                    SIG       Exit signal is 139 
-io/crlf.t                                        SIG       Exit signal is 139 
-io/data.t                                        SIG       Exit signal is 139 
-io/defout.t                                      SIG       Exit signal is 139 
-io/dup.t                                         SIG       Exit signal is 139 
-io/eintr.t                                       SIG       Exit signal is 139 
-io/eintr_print.t                                 SIG       Exit signal is 139 
-io/errno.t                                       SIG       Exit signal is 139 
-io/errnosig.t                                    SIG       Exit signal is 139 
-io/fflush.t                                      SIG       Exit signal is 139 
-io/fs.t                                          SIG       Exit signal is 139 
-io/getcwd.t                                      SIG       Exit signal is 139 
-io/inplace.t                                     SIG       Exit signal is 139 
-io/iofile.t                                      SIG       Exit signal is 139 
-io/iprefix.t                                     SIG       Exit signal is 139 
-io/layers.t                                      SIG       Exit signal is 139 
-io/msg.t                                         SIG       Exit signal is 139 
-io/nargv.t                                       SIG       Exit signal is 139 
-io/open.t                                        SIG       Exit signal is 139 
-io/openpid.t                                     SIG       Exit signal is 139 
-io/paragraph_mode.t                              SIG       Exit signal is 139 
-io/perlio.t                                      SIG       Exit signal is 139 
-io/perlio_fail.t                                 SIG       Exit signal is 139 
-io/perlio_leaks.t                                SIG       Exit signal is 139 
-io/perlio_open.t                                 SIG       Exit signal is 139 
-io/pipe.t                                        SIG       Exit signal is 139 
-io/print.t                                       SIG       Exit signal is 139 
-io/pvbm.t                                        SIG       Exit signal is 139 
-io/read.t                                        SIG       Exit signal is 139 
-io/sem.t                                         SIG       Exit signal is 139 
-io/semctl.t                                      SIG       Exit signal is 139 
-io/shm.t                                         SIG       Exit signal is 139 
-io/socket.t                                      SIG       Exit signal is 139 
-io/socketpair.t                                  SIG       Exit signal is 139 
-io/tell.t                                        SIG       Exit signal is 139 
-io/through.t                                     SIG       Exit signal is 139 
-io/utf8.t                                        SIG       Exit signal is 139 
-japh/abigail.t                                   SKIP      skip
-mro/basic.t                                      SIG       Exit signal is 139 
-mro/basic_05_c3.t                                SIG       Exit signal is 139 
-mro/basic_05_c3_utf8.t                           SIG       Exit signal is 139 
-mro/basic_05_dfs.t                               SIG       Exit signal is 139 
-mro/basic_05_dfs_utf8.t                          SIG       Exit signal is 139 
-mro/basic_utf8.t                                 SIG       Exit signal is 139 
-mro/c3_with_overload.t                           SIG       Exit signal is 139 
-mro/c3_with_overload_utf8.t                      SIG       Exit signal is 139 
-mro/inconsistent_c3.t                            SIG       Exit signal is 139 
-mro/inconsistent_c3_utf8.t                       SIG       Exit signal is 139 
-mro/isa_aliases.t                                SIG       Exit signal is 139 
-mro/isa_aliases_utf8.t                           SIG       Exit signal is 139 
-mro/isa_c3.t                                     SIG       Exit signal is 139 
-mro/isa_c3_utf8.t                                SIG       Exit signal is 139 
-mro/isa_dfs.t                                    SIG       Exit signal is 139 
-mro/isa_dfs_utf8.t                               SIG       Exit signal is 139 
-mro/isarev.t                                     SIG       Exit signal is 139 
-mro/isarev_utf8.t                                SIG       Exit signal is 139 
-mro/method_caching.t                             SIG       Exit signal is 139 
-mro/method_caching_utf8.t                        SIG       Exit signal is 139 
-mro/next_edgecases.t                             SIG       Exit signal is 139 
-mro/next_edgecases_utf8.t                        SIG       Exit signal is 139 
-mro/next_inanon.t                                SIG       Exit signal is 139 
-mro/next_inanon_utf8.t                           SIG       Exit signal is 139 
-mro/next_method.t                                SIG       Exit signal is 139 
-mro/next_method_utf8.t                           SIG       Exit signal is 139 
-mro/next_NEXT.t                                  SIG       Exit signal is 139 
-mro/next_NEXT_utf8.t                             SIG       Exit signal is 139 
-mro/next_skip.t                                  SIG       Exit signal is 139 
-mro/next_skip_utf8.t                             PLAN      Plan was valid
-mro/overload_c3.t                                SIG       Exit signal is 139 
-mro/overload_c3_utf8.t                           SIG       Exit signal is 139 
-mro/overload_dfs.t                               SIG       Exit signal is 139 
-mro/package_aliases.t                            SIG       Exit signal is 139 
-mro/package_aliases_utf8.t                       SIG       Exit signal is 139 
-mro/pkg_gen.t                                    SIG       Exit signal is 139 
-mro/pkg_gen_utf8.t                               SIG       Exit signal is 139 
-mro/recursion_c3.t                               SIG       Exit signal is 139 
-mro/recursion_c3_utf8.t                          SIG       Exit signal is 139 
-mro/recursion_dfs.t                              SIG       Exit signal is 139 
-mro/recursion_dfs_utf8.t                         SIG       Exit signal is 139 
-op/64bitint.t                                    SIG       Exit signal is 139 
-op/aassign.t                                     SIG       Exit signal is 139 
-op/alarm.t                                       SIG       Exit signal is 139 
-op/anonconst.t                                   SIG       Exit signal is 139 
-op/anonsub.t                                     SIG       Exit signal is 139 
-op/append.t                                      SIG       Exit signal is 139 
-op/args.t                                        SIG       Exit signal is 139 
-op/arith2.t                                      SIG       Exit signal is 139 
-op/array.t                                       SIG       Exit signal is 139 
-op/assignwarn.t                                  SIG       Exit signal is 139 
-op/attrhand.t                                    PLAN      GH #59 - Attribute::Handlers
-op/attrproto.t                                   SIG       Exit signal is 139 
-op/attrs.t                                       PLAN      Plan was valid
-op/auto.t                                        SIG       Exit signal is 139 
-op/avhv.t                                        SIG       Exit signal is 139 
-op/bless.t                                       SIG       Exit signal is 139 
-op/blocks.t                                      COMPAT    check order of execution of special blocks ( BEGIN included )
-op/bool.t                                        SIG       Exit signal is 139 
-op/bop.t                                         SIG       Exit signal is 139 
-op/caller.t                                      SIG       Exit signal is 139 
-op/catch.t                                       SIG       Exit signal is 139 
-op/chars.t                                       SIG       Exit signal is 139 
-op/chdir.t                                       SIG       Exit signal is 139 
-op/chop.t                                        SIG       Exit signal is 139 
-op/chr.t                                         SIG       Exit signal is 139 
-op/closure.t                                     SIG       Exit signal is 139 
-op/cmpchain.t                                    SIG       Exit signal is 139 
-op/concat2.t                                     SIG       Exit signal is 139 
-op/cond.t                                        SIG       Exit signal is 139 
-op/const-optree.t                                SIG       Exit signal is 139 
-op/context.t                                     SIG       Exit signal is 139 
-op/coreamp.t                                     COMPAT    unsupported experimental::lexical_topic
-op/coresubs.t                                    COMPAT    uses B::walkoptree
-op/cproto.t                                      SIG       Exit signal is 139 
-op/crypt.t                                       SIG       Exit signal is 139 
-op/current_sub.t                                 SIG       Exit signal is 139 
-op/dbm.t                                         SIG       Exit signal is 139 
-op/decl-refs.t                                   SIG       Exit signal is 139 
-op/defer.t                                       SIG       Exit signal is 139 
-op/defined.t                                     SIG       Exit signal is 139 
-op/defins.t                                      SIG       Exit signal is 139 
-op/delete.t                                      SIG       Exit signal is 139 
-op/die.t                                         SIG       Exit signal is 139 
-op/die_exit.t                                    SIG       Exit signal is 139 
-op/die_keeperr.t                                 SIG       Exit signal is 139 
-op/die_unwind.t                                  SIG       Exit signal is 139 
-op/do.t                                          PLAN      Plan was valid
-op/dor.t                                         SIG       Exit signal is 139 
-op/dump.t                                        SIG       Exit signal is 139 
-op/each.t                                        SIG       Exit signal is 139 
-op/each_array.t                                  SIG       Exit signal is 139 
-op/eval.t                                        SIG       Exit signal is 139 
-op/evalbytes.t                                   SIG       Exit signal is 139 
-op/exec.t                                        SIG       Exit signal is 139 
-op/exists_sub.t                                  SIG       Exit signal is 139 
-op/exp.t                                         SIG       Exit signal is 139 
-op/fh.t                                          SIG       Exit signal is 139 
-op/filehandle.t                                  SIG       Exit signal is 139 
-op/filetest.t                                    SIG       Exit signal is 139 
-op/filetest_stack_ok.t                           SIG       Exit signal is 139 
-op/filetest_t.t                                  SIG       Exit signal is 139 
-op/flip.t                                        SIG       Exit signal is 139 
-op/for-many.t                                    SIG       Exit signal is 139 
-op/for.t                                         SIG       Exit signal is 139 
-op/fork.t                                        SIG       Exit signal is 139 
-op/fresh_perl_utf8.t                             SIG       Exit signal is 139 
-op/getpid.t                                      PLAN      Plan was valid
-op/getppid.t                                     SIG       Exit signal is 139 
-op/glob.t                                        SKIP      Flaps because it's surprised to see perlcc files during its run.
-op/gmagic.t                                      SIG       Exit signal is 139 
-op/goto.t                                        SIG       Exit signal is 139 
-op/goto_xs.t                                     COMPAT    needs XS::APItest
-op/grent.t                                       SIG       Exit signal is 139 
-op/grep.t                                        SIG       Exit signal is 139 
-op/groups.t                                      SIG       Exit signal is 139 
-op/gv.t                                          SIG       Exit signal is 139 
-op/hash-clear-placeholders.t                     SIG       Exit signal is 139 
-op/hash-rt85026.t                                SIG       Exit signal is 139 
-op/hash.t                                        SIG       v5.36 - needs investigation
-op/hashassign.t                                  SIG       Exit signal is 139 
-op/hashwarn.t                                    SIG       Exit signal is 139 
-op/heredoc.t                                     SKIP      this test can be compiled with B::C but uses more than 100s subtest - 10 min to run
-op/hexfp.t                                       SIG       Exit signal is 139 
-op/inc.t                                         SIG       Exit signal is 139 
-op/inccode-tie.t                                 SIG       Exit signal is 139 
-op/inccode.t                                     SIG       Exit signal is 139 
-op/incfilter.t                                   SIG       Exit signal is 139 
-op/index.t                                       SIG       Exit signal is 139 
-op/infnan.t                                      SIG       Exit signal is 139 
-op/int.t                                         SIG       Exit signal is 139 
-op/isa.t                                         SIG       Exit signal is 139 
-op/join.t                                        SIG       Exit signal is 139 
-op/kill0.t                                       SIG       Exit signal is 139 
-op/kvaslice.t                                    SIG       Exit signal is 139 
-op/kvhslice.t                                    SIG       Exit signal is 139 
-op/leaky-magic.t                                 SIG       Exit signal is 139 
-op/length.t                                      SIG       Exit signal is 139 
-op/lex.t                                         COMPAT    Tests trigger errors at compilation time
-op/lex_assign.t                                  SIG       Exit signal is 139 
-op/lexsub.t                                      BC        GH #60 - SEGV at compile time from B
-op/lfs.t                                         SIG       Exit signal is 139 
-op/list.t                                        SIG       Exit signal is 139 
-op/local.t                                       SIG       Exit signal is 139 
-op/lock.t                                        SIG       Exit signal is 139 
-op/loopctl.t                                     SIG       Exit signal is 139 
-op/lop.t                                         PLAN      Plan was valid
-op/lvref.t                                       SIG       Exit signal is 139 
-op/magic-27839.t                                 BC        op/magic-27839.c is generated ()
-op/magic.t                                       SIG       Exit signal is 139 
-op/method.t                                      SIG       Exit signal is 139 
-op/mkdir.t                                       SIG       Exit signal is 139 
-op/multideref.t                                  SIG       Exit signal is 139 
-op/my.t                                          SIG       Exit signal is 139 
-op/my_stash.t                                    SIG       Exit signal is 139 
-op/mydef.t                                       SIG       Exit signal is 139 
-op/negate.t                                      SIG       Exit signal is 139 
-op/not.t                                         SIG       Exit signal is 139 
-op/numconvert.t                                  SIG       Exit signal is 139 
-op/numify.t                                      SIG       Exit signal is 139 
-op/numify_chkflags.t                             SIG       Exit signal is 139 
-op/oct.t                                         SIG       Exit signal is 139 
-op/or.t                                          SIG       Exit signal is 139 
-op/ord.t                                         SIG       Exit signal is 139 
-op/overload_integer.t                            SIG       Exit signal is 139 
-op/override.t                                    COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
-op/pack.t                                        SIG       Exit signal is 139 
-op/packagev.t                                    SIG       Exit signal is 139 
-op/pos.t                                         SIG       Exit signal is 139 
-op/postfixderef.t                                SIG       Exit signal is 139 
-op/pow.t                                         SIG       Exit signal is 139 
-op/print.t                                       SIG       Exit signal is 139 
-op/protowarn.t                                   SIG       Exit signal is 139 
-op/push.t                                        SIG       Exit signal is 139 
-op/pwent.t                                       SIG       Exit signal is 139 
-op/qr.t                                          SIG       Exit signal is 139 
-op/quotemeta.t                                   SIG       Exit signal is 139 
-op/rand.t                                        SIG       Exit signal is 139 
-op/range.t                                       SIG       Exit signal is 139 
-op/read.t                                        SIG       Exit signal is 139 
-op/readdir.t                                     SIG       Exit signal is 139 
-op/readline.t                                    SIG       Exit signal is 139 
-op/recurse.t                                     SIG       Exit signal is 139 
-op/ref.t                                         SIG       Exit signal is 139 
-op/repeat.t                                      SIG       Exit signal is 139 
-op/require_37033.t                               SIG       Exit signal is 139 
-op/require_errors.t                              SIG       Exit signal is 139 
-op/require_override.t                            SIG       Exit signal is 139 
-op/reset.t                                       SKIP      GH #52 - smartmatch ?...? - need investigation: starts failing after switching to ubuntu 22
-op/reverse.t                                     SIG       Exit signal is 139 
-op/rt119311.t                                    SIG       Exit signal is 139 
-op/select.t                                      SIG       Exit signal is 139 
-op/setpgrpstack.t                                SIG       Exit signal is 139 
-op/sigdispatch.t                                 SIG       Exit signal is 139 
-op/signame_canonical.t                           SIG       Exit signal is 139 
-op/sigsystem.t                                   SIG       Exit signal is 139 
-op/sleep.t                                       SIG       Exit signal is 139 
-op/smartkve.t                                    SIG       Exit signal is 134 
-op/smartmatch.t                                  SIG       Exit signal is 139 
-op/sort.t                                        SIG       Exit signal is 139 
-op/splice.t                                      SIG       Exit signal is 139 
-op/split.t                                       SIG       Exit signal is 139 
-op/split_unicode.t                               SIG       Exit signal is 139 
-op/sprintf.t                                     SIG       Exit signal is 139 
-op/sprintf2.t                                    SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
-op/srand.t                                       SIG       Exit signal is 139 
-op/sselect.t                                     SIG       Exit signal is 139 
-op/stash.t                                       SIG       Exit signal is 139 
-op/stash_parse_gv.t                              SIG       Exit signal is 139 
-op/stat.t                                        SIG       Exit signal is 139 
-op/stat_errors.t                                 SIG       Exit signal is 139 
-op/state.t                                       SIG       Exit signal is 139 
-op/study.t                                       SIG       Exit signal is 139 
-op/studytied.t                                   SIG       Exit signal is 139 
-op/sub.t                                         SIG       Exit signal is 139 
-op/sub_lval.t                                    SIG       Exit signal is 139 
-op/substr.t                                      SIG       Exit signal is 139 
-op/svflags.t                                     SIG       Exit signal is 139 
-op/svleak.t                                      COMPAT    This test uses XS::APItest, which we don't install during perl install?
-op/switch.t                                      SIG       Exit signal is 139 
-op/symbolcache.t                                 SIG       Exit signal is 139 
-op/sysio.t                                       SIG       Exit signal is 139 
-op/taint.t                                       SIG       Exit signal is 139 
-op/threads-dirh.t                                COMPAT    We don't support threaded perl in this branch.
-op/threads.t                                     COMPAT    We don't support threaded perl in this branch.
-op/tie_fetch_count.t                             SIG       Exit signal is 139 
-op/tiearray.t                                    SIG       Exit signal is 139 
-op/tiehandle.t                                   SIG       Exit signal is 139 
-op/tiehash.t                                     SIG       Exit signal is 139 
-op/time.t                                        SIG       Exit signal is 139 
-op/time_loop.t                                   SIG       Exit signal is 139 
-op/tr.t                                          SIG       Exit signal is 139 
-op/tr_latin1.t                                   SIG       Exit signal is 139 
-op/try.t                                         SIG       Exit signal is 139 
-op/undef.t                                       SIG       Exit signal is 139 
-op/universal.t                                   SIG       Exit signal is 139 
-op/unlink.t                                      SIG       Exit signal is 139 
-op/unshift.t                                     SIG       Exit signal is 139 
-op/upgrade.t                                     SIG       Exit signal is 139 
-op/utf8decode.t                                  SIG       Exit signal is 139 
-op/utf8magic.t                                   SIG       Exit signal is 139 
-op/utfhash.t                                     SIG       Exit signal is 139 
-op/utftaint.t                                    SIG       Exit signal is 139 
-op/vec.t                                         SIG       Exit signal is 139 
-op/ver.t                                         SIG       Exit signal is 139 
-op/waitpid.t                                     SIG       Exit signal is 139 
-op/wantarray.t                                   SIG       Exit signal is 139 
-op/warn.t                                        SIG       Exit signal is 139 
-op/while.t                                       SIG       Exit signal is 139 
-op/write.t                                       SIG       Exit signal is 139 
-op/yadayada.t                                    COMPAT    Unimplemented does not display the correct line number
-opbasic/magic_phase.t                            COMPAT    Testing BEGIN, INIT, ... phases order, not compatible with B::C
-re/alpha_assertions.t                            SIG       Exit signal is 139 
-re/anyof.t                                       SKIP      ignoring test for now - infinite loop - need to investigate
-re/begin-once.t                                  SIG       Exit signal is 139 
-re/bigfuzzy_not_utf8.t                           SIG       Exit signal is 139 
-re/charset.t                                     SIG       Exit signal is 139 
-re/fold_grind_8.t                                SIG       Exit signal is 139 
-re/fold_grind_a.t                                SIG       Exit signal is 139 
-re/fold_grind_aa.t                               SIG       Exit signal is 139 
-re/fold_grind_d.t                                SIG       Exit signal is 139 
-re/fold_grind_l.t                                SIG       Exit signal is 139 
-re/fold_grind_T.t                                SIG       Exit signal is 139 
-re/fold_grind_u.t                                SIG       Exit signal is 139 
-re/keep_tabs.t                                   SIG       Exit signal is 139 
-re/no_utf8_pm.t                                  SIG       Exit signal is 139 
-re/opt.t                                         SIG       Exit signal is 139 
-re/pat.t                                         SIG       Exit signal is 139 
-re/pat_advanced.t                                SIG       Exit signal is 139 
-re/pat_psycho.t                                  SIG       Exit signal is 139 
-re/pat_re_eval.t                                 PLAN      GH #62 - Cannot compile eval group RegExp at runtime
-re/pat_rt_report.t                               PLAN      Plan was valid
-re/pat_special_cc.t                              SIG       Exit signal is 139 
-re/pos.t                                         SIG       Exit signal is 139 
-re/qr-72922.t                                    SIG       Exit signal is 139 
-re/qr.t                                          SIG       Exit signal is 139 
-re/qr_gc.t                                       SIG       Exit signal is 139 
-re/qrstack.t                                     SIG       Exit signal is 139 
-re/recompile.t                                   SIG       Exit signal is 139 
-re/reg_60508.t                                   SIG       Exit signal is 139 
-re/reg_email.t                                   SIG       Exit signal is 139 
-re/reg_eval.t                                    SIG       Exit signal is 139 
-re/reg_eval_scope.t                              SIG       Exit signal is 139 
-re/reg_fold.t                                    SIG       Exit signal is 139 
-re/reg_mesg.t                                    SIG       Exit signal is 139 
-re/reg_nc_tie.t                                  SIG       Exit signal is 139 
-re/reg_nocapture.t                               SIG       Exit signal is 139 
-re/reg_pmod.t                                    SIG       Exit signal is 139 
-re/reg_posixcc.t                                 SIG       Exit signal is 139 
-re/regex_sets.t                                  SIG       Exit signal is 139 
-re/regex_sets_compat.t                           SIG       Exit signal is 139 
-re/regexp.t                                      SIG       Exit signal is 139 
-re/regexp_noamp.t                                SIG       Exit signal is 139 
-re/regexp_nonull.t                               COMPAT    uses XS::APItest - for internal use only and hence no longer installed
-re/regexp_notrie.t                               SIG       Exit signal is 139 
-re/regexp_qr.t                                   SIG       Exit signal is 139 
-re/regexp_qr_embed.t                             SIG       Exit signal is 139 
-re/regexp_trielist.t                             SIG       Exit signal is 139 
-re/regexp_unicode_prop.t                         COMPAT    trigger some regexp errors at compile time
-re/rt122747.t                                    SIG       Exit signal is 139 
-re/rxcode.t                                      SIG       Exit signal is 139 
-re/script_run.t                                  SIG       Exit signal is 139 
-re/speed.t                                       BC        re/speed.c is generated ()
-re/subst.t                                       SIG       Exit signal is 139 
-re/subst_amp.t                                   SIG       Exit signal is 139 
-re/subst_wamp.t                                  SIG       Exit signal is 139 
-re/substT.t                                      SIG       Exit signal is 139 
-re/uniprops01.t                                  SIG       Exit signal is 139 
-re/uniprops02.t                                  SKIP      need investigation: starts failing after switching to ubuntu 22
-re/uniprops03.t                                  SKIP      need investigation: starts failing after switching to ubuntu 22
-re/uniprops04.t                                  SIG       Exit signal is 139 
-re/uniprops05.t                                  SIG       Exit signal is 139 
-re/uniprops06.t                                  SIG       Exit signal is 139 
-re/uniprops07.t                                  SIG       Exit signal is 139 
-re/uniprops08.t                                  SIG       Exit signal is 139 
-re/uniprops09.t                                  SIG       Exit signal is 139 
-re/uniprops10.t                                  SIG       Exit signal is 139 
-uni/attrs.t                                      PLAN      Plan was valid
-uni/bless.t                                      SIG       Exit signal is 139 
-uni/cache.t                                      TESTS     GH #66 - We are explicitly clearing Cache to get B::C to work for now.
-uni/caller.t                                     SIG       Exit signal is 139 
-uni/chomp.t                                      SIG       Exit signal is 139 
-uni/chr.t                                        COMPAT    BC issue #283 - deprecated "encoding" pragma
-uni/class.t                                      SIG       Exit signal is 139 
-uni/eval.t                                       SIG       Exit signal is 139 
-uni/goto.t                                       SIG       Exit signal is 139 
-uni/greek.t                                      COMPAT    BC issue #283 - deprecated "encoding" pragma
-uni/gv.t                                         SIG       Exit signal is 139 
-uni/labels.t                                     SIG       Exit signal is 139 
-uni/latin2.t                                     COMPAT    BC issue #283 - deprecated "encoding" pragma
-uni/lex_utf8.t                                   SIG       Exit signal is 139 
-uni/lower.t                                      SIG       Exit signal is 139 
-uni/method.t                                     SIG       Exit signal is 139 
-uni/opcroak.t                                    SIG       Exit signal is 139 
-uni/package.t                                    SIG       Exit signal is 139 
-uni/parser.t                                     SIG       Exit signal is 139 
-uni/readline.t                                   SIG       Exit signal is 139 
-uni/select.t                                     SIG       Exit signal is 139 
-uni/sprintf.t                                    SIG       Exit signal is 139 
-uni/stash.t                                      SIG       Exit signal is 139 
-uni/tie.t                                        SIG       Exit signal is 139 
-uni/title.t                                      SIG       Exit signal is 139 
-uni/tr_7jis.t                                    COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
-uni/tr_eucjp.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
-uni/tr_sjis.t                                    COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
-uni/tr_utf8.t                                    COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
-uni/universal.t                                  SIG       Exit signal is 139 
-uni/upper.t                                      SIG       Exit signal is 139 
-uni/variables.t                                  SKIP      Taking too long to run. something's really broken. need to get to the root of it.
-uni/write.t                                      SIG       Exit signal is 139 
-xtestc/0009.t                                    TESTS     Output is: "" (len=0) expect "3" (len=1)
-xtestc/0010.t                                    TESTS     Output is: "" (len=0) expect "133" (len=3)
-xtestc/0012.t                                    TESTS     Output is: "" (len=0) expect "6" (len=1)
-xtestc/0028.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0042.t                                    TESTS     Output is: "attributes object version ..." (len=69) expect "ok" (len=2)
-xtestc/0043.t                                    TESTS     Output is: "attributes object version ..." (len=69) expect "ok" (len=2)
-xtestc/0090.t                                    TESTS     Output is: "Modification of a read-only ..." (len=69) expect "ok" (len=2)
-xtestc/0091.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0093.t                                    TESTS     GH #63 - STDOUT opened in BEGIN block
-xtestc/0095.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0101.t                                    TESTS     Output is: "0" (len=1) expect "12" (len=2)
-xtestc/0105.t                                    TESTS     Output is: "0" (len=1) expect "12" (len=2)
-xtestc/0124.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0157.t                                    TESTS     Output is: "" (len=0) expect "18446744073709551615\n18446744073709551615" (len=42)
-xtestc/0158.t                                    TESTS     Output is: "" (len=0) expect "0" (len=1)
-xtestc/0163.t                                    TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
-xtestc/0166.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0169.t                                    TESTS     GH #59 - Attribute::Handlers cannot be compiled
-xtestc/0170.t                                    TESTS     Output is: "" (len=0) expect "~~~~\nInvalid CODE attribute: bad at (eval 1) line 1.\nBEGIN failed--compilation aborted at (eval 1) line 1.\n~~~~" (len=114)
-xtestc/0176.t                                    TESTS     Output is: "" (len=0) expect "5000000000" (len=10)
-xtestc/0179.t                                    TESTS     Output is: "" (len=0) expect "Smartmatch is experimental at (eval 1) line 1.\nmatch ? 0" (len=57)
-xtestc/0181.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0188.t                                    TESTS     GH #52 - smart match - reset issue
-xtestc/0192.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0194.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0196.t                                    TESTS     Output is: "" (len=0) expect "m: Modification of a read-only value attempted at xtestc/0196.pl line 3.\n" (len=74)
-xtestc/0208.t                                    TESTS     Output is: "" (len=0) expect "RUN MyKooh DESTRUCT OurKooh" (len=27)
-xtestc/0212.t                                    TESTS     Output is: "" (len=0) expect "variable: 5\neval: 5" (len=20)
-xtestc/0215.t                                    TESTS     Output is: "" (len=0) expect ":t3\n:" (len=6)
-xtestc/0219.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0222.t                                    TESTS     GH #49 - Cannot use "here-document" in RegExp
-xtestc/0230.t                                    TESTS     Output is: "" (len=0) expect "ok||" (len=4)
-xtestc/0232.t                                    TESTS     Output is: "panic: sv_setpvn_fresh called ..." (len=114) expect "ok" (len=2)
-xtestc/0236.t                                    TESTS     Output is: "0not ok -1.2-" (len=14) expect "ok" (len=2)
-xtestc/0239.t                                    TESTS     Output is: "ok\n\n" (len=4) expect "ok 1\n" (len=6)
-xtestc/0243.t                                    TESTS     Output is: "" (len=0) expect "0 598" (len=5)
-xtestc/0244.t                                    TESTS     Output is: "" (len=0) expect "(-2)\n(-1)\n(0)" (len=15)
-xtestc/0247.t                                    TESTS     GH #50 - $^H when using arybase
-xtestc/0248.t                                    TESTS     GH #51 - using variable inside a regexp
-xtestc/0253.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0259.t                                    TESTS     Output is: "attributes object version ..." (len=69) expect "[false]" (len=7)
-xtestc/0260.t                                    TESTS     Output is: "attributes object version ..." (len=69) expect "1" (len=1)
-xtestc/0263.t                                    TESTS     Output is: "attributes object version ..." (len=69) expect "[]" (len=2)
-xtestc/0264.t                                    TESTS     Output is: "" (len=0) expect "." (len=1)
-xtestc/0271.t                                    TESTS     Output is: "Modification of a read-only ..." (len=69) expect "ok" (len=2)
-xtestc/0274.t                                    TESTS     GH #52 - smartmatch reset issue
-xtestc/0278.t                                    TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
-xtestc/0281.t                                    TESTS     Output is: "\nnest\n" (len=6) expect "birds\nnest" (len=11)
-xtestc/0284.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0288.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0293.t                                    TESTS     GH #53 - CORO need to reload and mark some SVs as readonly
-xtestc/0294.t                                    TESTS     Output is: "Constant subroutine ..." (len=174) expect "ok" (len=2)
-xtestc/0295.t                                    TESTS     GH #51 - using variable inside a regexp/substitute
-xtestc/0300.t                                    TESTS     Output is: "IO::File ?? ?\xFFcFORMATo" (len=25) expect "IO::File || FORMAT" (len=18)
-xtestc/0301.t                                    TESTS     Output is: "" (len=0) expect "W1W2" (len=4)
-xtestc/0308.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0309.t                                    TESTS     GH #54 - cannot overwrite Regexp::DESTROY
-xtestc/0312.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0319.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0321.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0324.t                                    TESTS     Output is: "" (len=0) expect "Master\nSlave of Master" (len=23)
-xtestc/0326.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0328.t                                    TESTS     Output is: "" (len=0) expect "45" (len=2)
-xtestc/0329.t                                    TESTS     GH #51 - using variable inside a regexp/substitute
-xtestc/0340.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0342.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0345.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0350.t                                    SKIP      Moose - failed to compile Class::MOP::Method::Accessor
-xtestc/0352.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0365.t                                    TESTS     Encode XS issue  - duplicate of 3050
-xtestc/0368.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0369.t                                    TESTS     GH #53 #58 - EV & CORO issue combined together
-xtestc/0371.t                                    SKIP      Moose - failed to compile Class::MOP::Method::Accessor
-xtestc/0372.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0527.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0904.t                                    TESTS     Output is: "Modification of a read-only ..." (len=69) expect "ok" (len=2)
-xtestc/0932.t                                    TESTS     GH #63 - STDOUT opened / assigned in BEGIN block.
-xtestc/1941.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/1960.t                                    TESTS     GH #58 - cannot compile EV - SEGV
-xtestc/2190.t                                    TESTS     Output is: "" (len=0) expect "11" (len=2)
-xtestc/2193.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/2450.t                                    TESTS     Output is: "" (len=0) expect "a: 223 ; b: 223\na: 223 ; b: 223 [ from foo ]" (len=45)
-xtestc/2501.t                                    TESTS     Output is: "Invalid version format (no ..." (len=211) expect "Misplaced _ in number at (eval 1) line 1.\nInvalid version format (no underscores) at (eval 1) line 1, near "package withversion "\nsyntax error at (eval 1) line 1, near "package withversion 1.1_"" (len=196)
-xtestc/2530.t                                    TESTS     Output is: "1..2\nok 1 - ?at ..." (len=74) expect "1..2\nok 1\nok 2" (len=16)
-xtestc/2540.t                                    TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
-xtestc/2811.t                                    TESTS     Output is: "ok\n0 0 2 7?- = \n?10 1 6 10?4" (len=30) expect "ok\n@- = 0 0 2 7\n@+ = 10 1 6 10\nlen @- = 4" (len=44)
-xtestc/2841.t                                    TESTS     Output is: "" (len=0) expect "123\n456\n789" (len=13)
-xtestc/2870.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/2871.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/2872.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/2900.t                                    TESTS     GH #57 - open qw(:std :utf8) STDOUT issue
-xtestc/2950.t                                    TESTS     Output is: "2 2 5 : \n?\xFF?8 5 8?" (len=22) expect "2 2 5 : 8 5 8" (len=13)
-xtestc/3050.t                                    TESTS     Encode XS issue
-xtestc/3051.t                                    TESTS     Output is: "" (len=0) expect "www.google.com" (len=14)
-xtestc/3090.t                                    TESTS     Output is: "" (len=0) expect "Net::LibIDN: ok\nNet::SSLeay: ok" (len=32)
-xtestc/3200.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/3310.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/3451.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/3452.t                                    TESTS     Output is: "" (len=0) expect "ok" (len=2)
+base/lex.t                                      PLAN      GH #49 - Cannot use '<<' in regexp
+bctestc/51.regexp-variable.t                    TESTS     Output is: "o" expect "ok"
+bctestc/75.compile-time-re-eval.t               TESTS     GH #75 - compile-time re-eval count bc524 & bc526 issue
+benchmark/gh7094-speed-up-keys-on-empty-hash.t  COMPAT    benchmark test
+bigmem/hash.t                                   COMPAT    bigmem/hash.c is generated ()
+bigmem/index.t                                  COMPAT    bigmem/index.c is generated ()
+bigmem/pos.t                                    COMPAT    bigmem/pos.c is generated ()
+bigmem/read.t                                   COMPAT    bigmem/read.c is generated ()
+bigmem/regexp.t                                 COMPAT    bigmem/regexp.c is generated ()
+bigmem/stack.t                                  BC        bigmem/stack.c is generated ()
+bigmem/stack_over.t                             BC        bigmem/stack_over.c is generated ()
+bigmem/str.t                                    BC        bigmem/str.c is generated ()
+bigmem/subst.t                                  COMPAT    bigmem/subst.c is generated ()
+bigmem/subst2.t                                 BC        bigmem/subst2.c is generated ()
+bigmem/sv_gets.t                                BC        bigmem/sv_gets.c is generated ()
+bigmem/vec.t                                    COMPAT    bigmem/vec.c is generated ()
+comp/final_line_num.t                           COMPAT    This test is about BEGIN / file parse behavior so not relevant to B::C
+comp/hints.t                                    COMPAT    tests are using BEGIN block, do not ready for B::C
+comp/parser.t                                   COMPAT    We're not going to support ' as a package separator until we need to: https://github.com/rurban/perl-compiler/issues/217
+comp/parser_run.t                               COMPAT    no need to check this in BC
+extra/xs-accessor-array.t                       BC        extra/xs-accessor-array.c is generated (-v,)
+io/argv.t                                       PLAN      Plan was valid
+io/binmode.t                                    PLAN      Plan was valid
+io/bom.t                                        COMPAT    BC issue 312 - BOM seems to be rejected by perlcc but really, who needs this?
+io/dup.t                                        PLAN      Plan was valid
+io/open.t                                       SIG       Exit signal is 139 
+io/openpid.t                                    PLAN      Plan was valid
+io/perlio_fail.t                                SIG       Exit signal is 139 
+io/pipe.t                                       PLAN      Plan was valid
+io/read.t                                       PLAN      Plan was valid
+io/scalar.t                                     SIG       Exit signal is 139 
+io/tell.t                                       PLAN      Plan was valid
+io/utf8.t                                       SIG       Exit signal is 139 
+mro/basic.t                                     SIG       Exit signal is 139 
+mro/basic_utf8.t                                PLAN      Plan was valid
+mro/method_caching_utf8.t                       SIG       Exit signal is 139 
+op/64bitint.t                                   SIG       Exit signal is 139 
+op/aassign.t                                    PLAN      Plan was valid
+op/anonconst.t                                  SIG       Exit signal is 139 
+op/any_all.t                                    SIG       Exit signal is 139 
+op/array.t                                      SIG       Exit signal is 139 
+op/attrhand.t                                   PLAN      GH #59 - Attribute::Handlers
+op/attrproto.t                                  SIG       Exit signal is 139 
+op/attrs.t                                      PLAN      Plan was valid
+op/blocks.t                                     COMPAT    check order of execution of special blocks ( BEGIN included )
+op/bop.t                                        PLAN      Plan was valid
+op/caller.t                                     PLAN      v5.36 - needs investigation
+op/chdir.t                                      PLAN      Plan was valid
+op/closure.t                                    TESTS     BC issue #278 - destruction issue
+op/cmpchain.t                                   SIG       Exit signal is 139 
+op/const-optree.t                               SIG       Exit signal is 139 
+op/coreamp.t                                    COMPAT    unsupported experimental::lexical_topic
+op/coresubs.t                                   COMPAT    uses B::walkoptree
+op/decl-refs.t                                  SIG       Exit signal is 139 
+op/defer.t                                      SIG       Exit signal is 139 
+op/defined.t                                    SIG       Exit signal is 139 
+op/defins.t                                     TESTS     Test results:
+op/die.t                                        SIG       Exit signal is 139 
+op/die_keeperr.t                                PLAN      Plan was valid
+op/do.t                                         PLAN      Plan was valid
+op/each.t                                       SIG       Exit signal is 139 
+op/exp.t                                        TESTS     Test results:
+op/for.t                                        SIG       Exit signal is 139 
+op/getpid.t                                     PLAN      Plan was valid
+op/glob.t                                       SKIP      Flaps because it's surprised to see perlcc files during its run.
+op/gmagic.t                                     PLAN      Plan was valid
+op/goto.t                                       PLAN      Plan was valid
+op/goto_xs.t                                    COMPAT    needs XS::APItest
+op/gv.t                                         PLAN      GH #67 - improper utf8 warnings emitted during bad sprintf
+op/hash.t                                       SIG       v5.36 - needs investigation
+op/hashassign.t                                 PLAN      Plan was valid
+op/hashwarn.t                                   SIG       Exit signal is 139 
+op/heredoc.t                                    SKIP      this test can be compiled with B::C but uses more than 100s subtest - 10 min to run
+op/hexfp.t                                      TESTS     Test results:
+op/inc.t                                        PLAN      Plan was valid
+op/infnan.t                                     PLAN      Plan was valid
+op/int.t                                        TESTS     Test results:
+op/join.t                                       SIG       Exit signal is 139 
+op/leaky-magic.t                                TESTS     Test results:
+op/lex.t                                        COMPAT    Tests trigger errors at compilation time
+op/lexsub.t                                     BC        GH #60 - SEGV at compile time from B
+op/lvref.t                                      SIG       Exit signal is 139 
+op/magic-27839.t                                BC        op/magic-27839.c is generated ()
+op/magic.t                                      SIG       Exit signal is 139 
+op/method.t                                     PLAN      Plan was valid
+op/multideref.t                                 SIG       Exit signal is 139 
+op/negate.t                                     PLAN      Plan was valid
+op/numify.t                                     TESTS     Test results:
+op/ord.t                                        PLAN      Plan was valid
+op/override.t                                   COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
+op/pack.t                                       PLAN      Plan was valid
+op/packagev.t                                   SIG       Exit signal is 139 
+op/range.t                                      TESTS     Test results:
+op/recurse.t                                    TESTS     Test results:
+op/refstack.t                                   PLAN      Plan was valid
+op/reset.t                                      PLAN      Plan was valid
+op/signatures.t                                 SIG       Exit signal is 139 
+op/smartkve.t                                   SIG       Exit signal is 139 
+op/smartmatch.t                                 SIG       Exit signal is 139 
+op/sort.t                                       PLAN      Plan was valid
+op/sprintf2.t                                   SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
+op/stat.t                                       PLAN      Plan was valid
+op/state.t                                      PLAN      Plan was valid
+op/sub.t                                        PLAN      Plan was valid
+op/sub_lval.t                                   TESTS     BC issue #277 - sub declaration with :lvalue should apply it to XSUBs
+op/substr.t                                     SIG       Exit signal is 139 
+op/substr_left.t                                BC        op/substr_left.c is generated ()
+op/svleak.t                                     COMPAT    This test uses XS::APItest, which we don't install during perl install?
+op/switch.t                                     PLAN      Plan was valid
+op/taint.t                                      SIG       Exit signal is 139 
+op/threads-dirh.t                               COMPAT    We don't support threaded perl in this branch.
+op/threads.t                                    COMPAT    We don't support threaded perl in this branch.
+op/tie_fetch_count.t                            PLAN      Plan was valid
+op/time.t                                       TESTS     Test results:
+op/tr.t                                         PLAN      Plan was valid
+op/try.t                                        PLAN      Plan was valid
+op/universal.t                                  PLAN      Plan was valid
+op/vec.t                                        SIG       Exit signal is 139 
+op/yadayada.t                                   COMPAT    Unimplemented does not display the correct line number
+opbasic/arith.t                                 PLAN      Plan was valid
+opbasic/magic_phase.t                           COMPAT    Testing BEGIN, INIT, ... phases order, not compatible with B::C
+re/anyof.t                                      SKIP      ignoring test for now - infinite loop - need to investigate
+re/charset.t                                    SIG       Exit signal is 139 
+re/opt.t                                        SIG       Exit signal is 139 
+re/overload.t                                   PLAN      Plan was valid
+re/pat.t                                        PLAN      BC issue #295
+re/pat_advanced.t                               PLAN      Recheck BC issue #317 - nested regexp
+re/pat_re_eval.t                                PLAN      GH #62 - Cannot compile eval group RegExp at runtime
+re/pat_rt_report.t                              PLAN      Plan was valid
+re/qr-72922.t                                   PLAN      Plan was valid
+re/qr_gc.t                                      TESTS     BC issue #309 - regexp destruction
+re/reg_eval_scope.t                             PLAN      BC issue #295 - (?{}) should have its own lexical scope
+re/reg_mesg.t                                   PLAN      Plan was valid
+re/reg_pmod.t                                   TESTS     BC issue #295 - (?{}) should have its own lexical scope
+re/regex_sets.t                                 PLAN      Plan was valid
+re/regexp.t                                     PLAN      Plan was valid
+re/regexp_nonull.t                              COMPAT    uses XS::APItest - for internal use only and hence no longer installed
+re/regexp_unicode_prop.t                        COMPAT    trigger some regexp errors at compile time
+re/rxcode.t                                     TESTS     BC issue #295 - (?{}) should have its own lexical scope
+re/subst.t                                      PLAN      Plan was valid
+re/subst_amp.t                                  TESTS     BC issue #295 - (?{}) should have its own lexical scope
+re/uniprops01.t                                 EXIT      Exit code is 255
+re/uniprops02.t                                 EXIT      Exit code is 255
+re/uniprops03.t                                 EXIT      Exit code is 255
+re/uniprops04.t                                 EXIT      Exit code is 255
+re/uniprops07.t                                 TESTS     Test results:
+re/uniprops08.t                                 TESTS     Test results:
+re/uniprops09.t                                 TESTS     Test results:
+uni/attrs.t                                     PLAN      Plan was valid
+uni/chr.t                                       COMPAT    BC issue #283 - deprecated "encoding" pragma
+uni/fold.t                                      EXIT      Exit code is 255
+uni/greek.t                                     COMPAT    BC issue #283 - deprecated "encoding" pragma
+uni/gv.t                                        PLAN      Plan was valid
+uni/labels.t                                    PLAN      Plan was valid
+uni/latin2.t                                    COMPAT    BC issue #283 - deprecated "encoding" pragma
+uni/method.t                                    PLAN      Plan was valid
+uni/overload.t                                  PLAN      Plan was valid
+uni/package.t                                   SIG       Exit signal is 139 
+uni/parser.t                                    PLAN      Plan was valid
+uni/tr_7jis.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
+uni/tr_eucjp.t                                  COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
+uni/tr_sjis.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
+uni/tr_utf8.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
+uni/universal.t                                 TESTS     Test results:
+uni/variables.t                                 SKIP      Taking too long to run. something's really broken. need to get to the root of it.
+xtestc/0042.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "ok" (len=2)
+xtestc/0043.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "ok" (len=2)
+xtestc/0091.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/0093.t                                   TESTS     GH #63 - STDOUT opened in BEGIN block
+xtestc/0101.t                                   TESTS     Output is: "0" (len=1) expect "12" (len=2)
+xtestc/0105.t                                   TESTS     Output is: "0" (len=1) expect "12" (len=2)
+xtestc/0163.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
+xtestc/0169.t                                   TESTS     GH #59 - Attribute::Handlers cannot be compiled
+xtestc/0179.t                                   TESTS     Output is: "" (len=0) expect "Smartmatch is experimental at (eval 1) line 1.\nmatch ? 0" (len=57)
+xtestc/0188.t                                   TESTS     GH #52 - smart match - reset issue
+xtestc/0192.t                                   TESTS     Output is: "not ok" (len=6) expect "ok" (len=2)
+xtestc/0195.t                                   TESTS     Output is: "Perl API version v5.38.0 of ..." (len=59) expect "ok" (len=2)
+xtestc/0222.t                                   TESTS     GH #49 - Cannot use "here-document" in RegExp
+xtestc/0232.t                                   TESTS     Output is: "panic: sv_setpvn_fresh called ..." (len=114) expect "ok" (len=2)
+xtestc/0236.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/0247.t                                   TESTS     GH #50 - $^H when using arybase
+xtestc/0248.t                                   TESTS     GH #51 - using variable inside a regexp
+xtestc/0259.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "[false]" (len=7)
+xtestc/0260.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "1" (len=1)
+xtestc/0263.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "[]" (len=2)
+xtestc/0274.t                                   TESTS     GH #52 - smartmatch reset issue
+xtestc/0278.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
+xtestc/0293.t                                   TESTS     GH #53 - CORO need to reload and mark some SVs as readonly
+xtestc/0294.t                                   TESTS     Output is: "Constant subroutine ..." (len=174) expect "ok" (len=2)
+xtestc/0295.t                                   TESTS     GH #51 - using variable inside a regexp/substitute
+xtestc/0309.t                                   TESTS     GH #54 - cannot overwrite Regexp::DESTROY
+xtestc/0319.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/0329.t                                   TESTS     GH #51 - using variable inside a regexp/substitute
+xtestc/0350.t                                   SKIP      Moose - failed to compile Class::MOP::Method::Accessor
+xtestc/0365.t                                   TESTS     Encode XS issue  - duplicate of 3050
+xtestc/0368.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/0369.t                                   TESTS     GH #53 #58 - EV & CORO issue combined together
+xtestc/0371.t                                   SKIP      Moose - failed to compile Class::MOP::Method::Accessor
+xtestc/0932.t                                   TESTS     GH #63 - STDOUT opened / assigned in BEGIN block.
+xtestc/1960.t                                   TESTS     GH #58 - cannot compile EV - SEGV
+xtestc/2501.t                                   TESTS     Output is: "Invalid version format (no ..." (len=211) expect "Misplaced _ in number at (eval 1) line 1.\nInvalid version format (no underscores) at (eval 1) line 1, near "package withversion "\nsyntax error at (eval 1) line 1, near "package withversion 1.1_"" (len=196)
+xtestc/2530.t                                   TESTS     Output is: "1..2\nok 1 - ?at ..." (len=74) expect "1..2\nok 1\nok 2" (len=16)
+xtestc/2540.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
+xtestc/2870.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/2871.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/2872.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
+xtestc/2900.t                                   TESTS     GH #57 - open qw(:std :utf8) STDOUT issue
+xtestc/3050.t                                   TESTS     Encode XS issue
+xtestc/3200.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
