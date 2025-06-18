@@ -66,13 +66,11 @@ op/decl-refs.t                                  SIG       Exit signal is 139
 op/defer.t                                      SIG       Exit signal is 139 
 op/defined.t                                    SIG       Exit signal is 139 
 op/defins.t                                     TESTS     Test results:
-op/die.t                                        SIG       Exit signal is 139 
 op/die_keeperr.t                                PLAN      Plan was valid
 op/do.t                                         PLAN      Plan was valid
 op/each.t                                       SIG       Exit signal is 139 
 op/exp.t                                        TESTS     Test results:
 op/for.t                                        SIG       Exit signal is 139 
-op/getpid.t                                     PLAN      Plan was valid
 op/glob.t                                       SKIP      Flaps because it's surprised to see perlcc files during its run.
 op/gmagic.t                                     PLAN      Plan was valid
 op/goto.t                                       PLAN      Plan was valid
@@ -84,7 +82,6 @@ op/hashwarn.t                                   SIG       Exit signal is 139
 op/heredoc.t                                    SKIP      this test can be compiled with B::C but uses more than 100s subtest - 10 min to run
 op/hexfp.t                                      TESTS     Test results:
 op/inc.t                                        PLAN      Plan was valid
-op/infnan.t                                     PLAN      Plan was valid
 op/int.t                                        TESTS     Test results:
 op/join.t                                       SIG       Exit signal is 139 
 op/leaky-magic.t                                TESTS     Test results:
@@ -95,18 +92,13 @@ op/magic.t                                      SIG       Exit signal is 139
 op/method.t                                     PLAN      Plan was valid
 op/multideref.t                                 SIG       Exit signal is 139 
 op/negate.t                                     PLAN      Plan was valid
-op/numify.t                                     TESTS     Test results:
 op/ord.t                                        PLAN      Plan was valid
 op/override.t                                   COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
 op/pack.t                                       PLAN      Plan was valid
 op/packagev.t                                   SIG       Exit signal is 139 
-op/range.t                                      TESTS     Test results:
-op/recurse.t                                    TESTS     Test results:
 op/refstack.t                                   PLAN      Plan was valid
 op/reset.t                                      PLAN      Plan was valid
-op/signatures.t                                 SIG       Exit signal is 139 
 op/smartkve.t                                   SIG       Exit signal is 139 
-op/sort.t                                       SIG       Exit signal is 139 
 op/sprintf2.t                                   SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
 op/stat.t                                       PLAN      Plan was valid
 op/state.t                                      PLAN      Plan was valid
@@ -116,7 +108,6 @@ op/substr.t                                     SIG       Exit signal is 139
 op/substr_left.t                                SIG       Exit signal is 139 
 op/svleak.t                                     COMPAT    This test uses XS::APItest, which we don't install during perl install?
 op/switch.t                                     PLAN      Plan was valid
-op/taint.t                                      SIG       Exit signal is 139 
 op/threads-dirh.t                               COMPAT    We don't support threaded perl in this branch.
 op/threads.t                                    COMPAT    We don't support threaded perl in this branch.
 op/tie_fetch_count.t                            PLAN      Plan was valid
@@ -126,7 +117,6 @@ op/try.t                                        PLAN      Plan was valid
 op/universal.t                                  PLAN      Plan was valid
 op/vec.t                                        SIG       Exit signal is 139 
 op/yadayada.t                                   COMPAT    Unimplemented does not display the correct line number
-opbasic/arith.t                                 PLAN      Plan was valid
 opbasic/magic_phase.t                           COMPAT    Testing BEGIN, INIT, ... phases order, not compatible with B::C
 re/anyof.t                                      SKIP      ignoring test for now - infinite loop - need to investigate
 re/charset.t                                    SIG       Exit signal is 139 
@@ -155,7 +145,6 @@ re/uniprops07.t                                 TESTS     Test results:
 re/uniprops08.t                                 TESTS     Test results:
 re/uniprops09.t                                 TESTS     Test results:
 uni/attrs.t                                     PLAN      Plan was valid
-uni/chr.t                                       COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/fold.t                                      EXIT      Exit code is 255
 uni/greek.t                                     COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/gv.t                                        PLAN      Plan was valid
@@ -165,18 +154,10 @@ uni/method.t                                    PLAN      Plan was valid
 uni/overload.t                                  PLAN      Plan was valid
 uni/package.t                                   SIG       Exit signal is 139 
 uni/parser.t                                    PLAN      Plan was valid
-uni/tr_7jis.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
-uni/tr_eucjp.t                                  COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
-uni/tr_sjis.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
 uni/tr_utf8.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
-uni/universal.t                                 TESTS     Test results:
 uni/variables.t                                 SKIP      Taking too long to run. something's really broken. need to get to the root of it.
-xtestc/0042.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "ok" (len=2)
-xtestc/0043.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "ok" (len=2)
 xtestc/0091.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
 xtestc/0093.t                                   TESTS     GH #63 - STDOUT opened in BEGIN block
-xtestc/0101.t                                   TESTS     Output is: "0" (len=1) expect "12" (len=2)
-xtestc/0105.t                                   TESTS     Output is: "0" (len=1) expect "12" (len=2)
 xtestc/0163.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
 xtestc/0169.t                                   TESTS     GH #59 - Attribute::Handlers cannot be compiled
 xtestc/0179.t                                   TESTS     Output is: "" (len=0) expect "Smartmatch is experimental at (eval 1) line 1.\nmatch ? 0" (len=57)
@@ -185,12 +166,8 @@ xtestc/0192.t                                   TESTS     Output is: "not ok" (l
 xtestc/0195.t                                   TESTS     Output is: "Perl API version v5.38.0 of ..." (len=59) expect "ok" (len=2)
 xtestc/0222.t                                   TESTS     GH #49 - Cannot use "here-document" in RegExp
 xtestc/0232.t                                   TESTS     Output is: "panic: sv_setpvn_fresh called ..." (len=114) expect "ok" (len=2)
-xtestc/0236.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
 xtestc/0247.t                                   TESTS     GH #50 - $^H when using arybase
 xtestc/0248.t                                   TESTS     GH #51 - using variable inside a regexp
-xtestc/0259.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "[false]" (len=7)
-xtestc/0260.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "1" (len=1)
-xtestc/0263.t                                   TESTS     Output is: "attributes object version ..." (len=69) expect "[]" (len=2)
 xtestc/0274.t                                   TESTS     GH #52 - smartmatch reset issue
 xtestc/0278.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
 xtestc/0293.t                                   TESTS     GH #53 - CORO need to reload and mark some SVs as readonly
@@ -209,9 +186,6 @@ xtestc/1960.t                                   TESTS     GH #58 - cannot compil
 xtestc/2501.t                                   TESTS     Output is: "Invalid version format (no ..." (len=211) expect "Misplaced _ in number at (eval 1) line 1.\nInvalid version format (no underscores) at (eval 1) line 1, near "package withversion "\nsyntax error at (eval 1) line 1, near "package withversion 1.1_"" (len=196)
 xtestc/2530.t                                   TESTS     Output is: "1..2\nok 1 - ?at ..." (len=74) expect "1..2\nok 1\nok 2" (len=16)
 xtestc/2540.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
-xtestc/2870.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/2871.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/2872.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
 xtestc/2900.t                                   TESTS     GH #57 - open qw(:std :utf8) STDOUT issue
 xtestc/3050.t                                   TESTS     Encode XS issue
 xtestc/3200.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
