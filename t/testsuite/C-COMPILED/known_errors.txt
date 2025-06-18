@@ -50,13 +50,11 @@ io/bom.t                                        COMPAT    BC issue 312 - BOM see
 io/dup.t                                        PLAN      Plan was valid
 io/open.t                                       SIG       Exit signal is 139 
 io/openpid.t                                    PLAN      Plan was valid
-io/perlio_fail.t                                SIG       Exit signal is 139 
 io/pipe.t                                       PLAN      Plan was valid
 io/read.t                                       PLAN      Plan was valid
 io/scalar.t                                     SIG       Exit signal is 139 
 io/tell.t                                       PLAN      Plan was valid
 io/utf8.t                                       SIG       Exit signal is 139 
-mro/basic.t                                     SIG       Exit signal is 139 
 mro/basic_utf8.t                                PLAN      Plan was valid
 mro/method_caching_utf8.t                       SIG       Exit signal is 139 
 op/64bitint.t                                   SIG       Exit signal is 139 
@@ -104,7 +102,6 @@ op/join.t                                       SIG       Exit signal is 139
 op/leaky-magic.t                                TESTS     Test results:
 op/lex.t                                        COMPAT    Tests trigger errors at compilation time
 op/lexsub.t                                     BC        GH #60 - SEGV at compile time from B
-op/lvref.t                                      SIG       Exit signal is 139 
 op/magic-27839.t                                BC        op/magic-27839.c is generated ()
 op/magic.t                                      SIG       Exit signal is 139 
 op/method.t                                     PLAN      Plan was valid
@@ -121,8 +118,7 @@ op/refstack.t                                   PLAN      Plan was valid
 op/reset.t                                      PLAN      Plan was valid
 op/signatures.t                                 SIG       Exit signal is 139 
 op/smartkve.t                                   SIG       Exit signal is 139 
-op/smartmatch.t                                 SIG       Exit signal is 139 
-op/sort.t                                       PLAN      Plan was valid
+op/sort.t                                       SIG       Exit signal is 139 
 op/sprintf2.t                                   SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
 op/stat.t                                       PLAN      Plan was valid
 op/state.t                                      PLAN      Plan was valid
@@ -155,7 +151,6 @@ re/pat_rt_report.t                              PLAN      Plan was valid
 re/qr-72922.t                                   PLAN      Plan was valid
 re/qr_gc.t                                      TESTS     BC issue #309 - regexp destruction
 re/reg_eval_scope.t                             PLAN      BC issue #295 - (?{}) should have its own lexical scope
-re/reg_mesg.t                                   PLAN      Plan was valid
 re/reg_pmod.t                                   TESTS     BC issue #295 - (?{}) should have its own lexical scope
 re/regex_sets.t                                 PLAN      Plan was valid
 re/regexp.t                                     PLAN      Plan was valid
