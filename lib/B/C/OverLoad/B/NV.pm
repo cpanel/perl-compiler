@@ -24,24 +24,20 @@ sub do_save ( $sv, $fullname, $custom = undef ) {
     my $nv = get_double_value( $sv->NV );
     $nv .= '.00' if $nv =~ /^-?\d+$/;
 
-    # IVX is invalid in B.xs and unused
-    my $iv = $svflags & SVf_IOK ? $sv->IVX : 0;
-
-    my $xpv_sym = 'NULL';
-    if ( $sv->HAS_ANY ) {
-        xpvnvsect()->comment('STASH, MAGIC, cur, len, IVX, NVX');
-        my $xpv_ix = xpvnvsect()->sadd( 'Nullhv, {0}, 0, {0}, {%ld}, {%s}', $iv, $nv );
-
-        $xpv_sym = sprintf( "&xpvnv_list[%d]", $xpv_ix );
-    }
-    my $sv_ix = svsect()->sadd( '%s, %Lu, 0x%x , {0}', $xpv_sym, $refcnt, $svflags );
-
+    my ( $ix, $sym ) = svsect()->reserve($sv);
     svsect()->debug( $fullname, $sv );
-    debug(
-        sv => "Saving NV %s to xpvnv_list[%d], sv_list[%d]\n",
-        $nv, xpvnvsect()->index, $sv_ix
+
+    # Since 5.24 we can access the IV/NV/UV value from either the union from the main SV body
+    # or also from the SvANY of it. View IV.pm for more information
+
+    svsect()->supdatel(
+        $ix,
+        'BODYLESS_UV_PTR(%s)' => $sym,        # sv_any NOTE we're not pointing top NV_PTR 
+        '%lu',                => $refcnt,     # sv_refcnt
+        '0x%x'                => $svflags,    # sv_flags
+        '{.svu_nv=%s}'        => $nv,         # sv_u.svu_nv
     );
-    return sprintf( "&sv_list[%d]", $sv_ix );
+    return $sym;
 }
 
 1;
