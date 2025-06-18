@@ -27,18 +27,6 @@ base/lex.t                                      PLAN      GH #49 - Cannot use '<
 bctestc/51.regexp-variable.t                    TESTS     Output is: "o" expect "ok"
 bctestc/75.compile-time-re-eval.t               TESTS     GH #75 - compile-time re-eval count bc524 & bc526 issue
 benchmark/gh7094-speed-up-keys-on-empty-hash.t  COMPAT    benchmark test
-bigmem/hash.t                                   COMPAT    bigmem/hash.c is generated ()
-bigmem/index.t                                  COMPAT    bigmem/index.c is generated ()
-bigmem/pos.t                                    COMPAT    bigmem/pos.c is generated ()
-bigmem/read.t                                   COMPAT    bigmem/read.c is generated ()
-bigmem/regexp.t                                 COMPAT    bigmem/regexp.c is generated ()
-bigmem/stack.t                                  BC        bigmem/stack.c is generated ()
-bigmem/stack_over.t                             BC        bigmem/stack_over.c is generated ()
-bigmem/str.t                                    BC        bigmem/str.c is generated ()
-bigmem/subst.t                                  COMPAT    bigmem/subst.c is generated ()
-bigmem/subst2.t                                 BC        bigmem/subst2.c is generated ()
-bigmem/sv_gets.t                                BC        bigmem/sv_gets.c is generated ()
-bigmem/vec.t                                    COMPAT    bigmem/vec.c is generated ()
 comp/final_line_num.t                           COMPAT    This test is about BEGIN / file parse behavior so not relevant to B::C
 comp/hints.t                                    COMPAT    tests are using BEGIN block, do not ready for B::C
 comp/parser.t                                   COMPAT    We're not going to support ' as a package separator until we need to: https://github.com/rurban/perl-compiler/issues/217
@@ -125,7 +113,7 @@ op/state.t                                      PLAN      Plan was valid
 op/sub.t                                        PLAN      Plan was valid
 op/sub_lval.t                                   TESTS     BC issue #277 - sub declaration with :lvalue should apply it to XSUBs
 op/substr.t                                     SIG       Exit signal is 139 
-op/substr_left.t                                BC        op/substr_left.c is generated ()
+op/substr_left.t                                SIG       Exit signal is 139 
 op/svleak.t                                     COMPAT    This test uses XS::APItest, which we don't install during perl install?
 op/switch.t                                     PLAN      Plan was valid
 op/taint.t                                      SIG       Exit signal is 139 

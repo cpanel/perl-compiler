@@ -2,11 +2,8 @@
 
 BEGIN {
     $SIG{__WARN__} = sub { die "Dying on warning: ", @_ };
-    chdir 't' if -d 't';
+    chdir 't';
     require './test.pl';
-    skip_all_if_miniperl(
-	"no dynamic loading on miniperl, no Tie::Hash::NamedCapture"
-    );
 }
 
 plan(tests => 2);
