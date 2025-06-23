@@ -5,7 +5,10 @@ use v5.14;    # or later
 use warnings;
 use strict;
 
+use App::Prove   ();
+use Getopt::Long ();
 use Cwd;
+use Git;
 
 use constant TEST_SUITE_VERSION => 'testsuite';
 use constant KNOWN_ERRORS       => 't/' . TEST_SUITE_VERSION . '/C-COMPILED/known_errors.txt';
@@ -19,64 +22,71 @@ my @BLACKLIST = (
 
 exit( run(@ARGV) // 0 ) unless caller;
 
+
 sub run {
     my (@args) = @_;
-
     my @copy_args = @args;
 
     my $v = TEST_SUITE_VERSION;
 
+    my %opts;
+    Getopt::Long::Configure('pass_through');
+    Getopt::Long::GetOptionsFromArray(
+        \@args,
+        'h|help'        => \$opts{'help'},
+        'c|config'      => \$opts{'config'},
+        'u|uncompiled'  => \$opts{'uncompiled'},
+        't'             => \$opts{'checkout_tests'},
+        'k'             => \$opts{'checkout_known_errors'},
+        'state=s'       => \$opts{'state'},
+        'errors'        => \$opts{'errors'},
+        'git|new'       => \$opts{'new'},
+        'all'           => \$opts{'all'},
+        'restart|rerun' => \$opts{'restart'},
+        'debug'         => \$opts{'debug'},
+    );
+
     return usage() if !scalar @args || grep { $_ =~ qr{^-+h(elp)?$} } @args;
 
-    #$run_compile_version = grep { qr{^-+c(ompiled)?$} } @args;
-    my $run_compile_version = !grep { $_ =~ qr{^-+u(ncompiled)?$} } @args;
-    @args = grep { $_ !~ qr{^-+u(ncompiled)?$} } @args;
-
-    my $saving_state;
-
-    if ( grep { $_ =~ qr{^--?c(onfig)?$} } @args ) {
-        @args = grep { $_ !~ qr{^--?c(onfig)$} } @args;
+    if($opts{config}) {
         say '# Running: Makefile.PL + make install for B::C';
         system('./configure.cpanel') == 0 or do { warn $!; return $? };
         say '# Ok: B::C is updated.';
     }
 
-    if ( grep { $_ eq q{-t} } @args ) {
-        @args = grep { $_ ne q{-t} } @args;
-        qx{git checkout t};
-        say '# git checkout t - ', $? ? 'failure !' : 'ok';
+    my $run_compile_version = !$opts{'uncompiled'};
+    my $saving_state;
+
+    my $git;
+    if ( $opts{'checkout_tests'} ) {
+        Git::command_noisy(qw{checkout t});
     }
 
-    if ( grep { $_ eq q{-k} } @args ) {
-        @args = grep { $_ ne q{-k} } @args;
-        qx{git checkout t/$v/C-COMPILED/known_errors.txt};
-        say qq[# git checkout t/$v/C-COMPILED/known_errors.txt -], $? ? 'failure !' : 'ok';
+    if ( $opts{'checkout_known_errors'} ) {
+        Git::command_noisy( 'checkout', "t/$v/C-COMPILED/known_errors.txt" );
         $ENV{PERLCC_DONT_UPDATE_TESTS} = 1;
     }
 
-    if ( !grep { $_ =~ qr{^--state} } @args ) {
-        unshift @args, '--state=save';
+    $opts{'state'} ||= 'save';
+    unshift @args, "--state=$opts{'state'}";
+    if( $opts{'state'} eq 'save' ) {
         unlink '.prove';
         $saving_state = 1;
     }
-    if ( grep { $_ =~ qr{^-+errors?$} } @args ) {
-        push @args, load_error_tests();
-        @args = grep { $_ !~ qr{^-+errors?$} } @args;
-    }
+    push @args, load_error_tests() if $opts{'errors'};
+    push @args, load_new_error_tests() if $opts{'new'};
 
-    if ( grep { $_ =~ qr{^-+(git|new)$} } @args ) {
-        push @args, load_new_error_tests();
-        @args = grep { $_ !~ qr{^-+(git|new)$} } @args;
-    }
-
-    if ( grep { $_ eq '--all' } @args ) {
+    if ( $opts{'all'} ) {
         my $tv       = TEST_SUITE_VERSION;
         my @alltests = glob qq{t/$tv/C-COMPILED/*/*.t};
-        @args = grep { $_ ne '--all' } @args;
         push @args, '-j10' unless grep { $_ =~ qr{^-j} } @args;
         push @args, @alltests;
     }
-    my $call_restart = grep { $_ eq '--restart' || $_ eq '--rerun' } @args;
+    my $call_restart = $opts{'restart'};
+
+    if($opts{'debug'}) {
+        $ENV{'VERBOSE'} = 1;
+    }
 
     my $restart = sub {
         my $cwd        = cwd();
@@ -136,23 +146,20 @@ sub run {
         unshift @tests, $t;
     }
 
-    my @cmd = ( 'prove', @args, @tests );
-    if ( int( grep { $_ !~ qr{^-} } @cmd ) < 2 ) {    # should have at least one test to run
-        say "# Nothing to run";
-        return 1;
-    }
-
+    # Don't check whether we have any tests, as prove does this for you already.
+    my @cmd = ( @args, @tests );
     say "# Running: ", join( ' ', @cmd );
     if ( !$run_compile_version ) {
         chdir("t/$v/t");                              # core tests need to be run from t directory
     }
 
-    # allow glob...
-    system( join ' ', @cmd );
-    my $status = $?;
-    $restart->() if $run_compile_version && $call_restart && $status;
+    # Allow glob without using system by invoking App::Prove directly...
+    my $prove = App::Prove->new();
+    $prove->process_args(@cmd);
+    my $status = $prove->run();
+    $restart->() if $run_compile_version && $call_restart && !$status;
 
-    return $status == 0 ? 0 : 1;
+    return $status ? 0 : 1;
 }
 
 # cprove --new only run new errors detected on the file
