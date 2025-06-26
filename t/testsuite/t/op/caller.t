@@ -9,6 +9,7 @@ BEGIN {
 
 plan( tests => 112 ); # some tests are run in a BEGIN block
 
+my @tests;
 foreach my $t ( @tests ) {
     my $s = \&{'main::'.$t->{type}};
     $s->( @{$t->{args}}, $t->{txt} );
