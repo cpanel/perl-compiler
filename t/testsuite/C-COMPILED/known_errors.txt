@@ -39,7 +39,6 @@ op/caller.t                                     PLAN      v5.36 - needs investig
 op/closure.t                                    TESTS     BC issue #278 - destruction issue
 op/coreamp.t                                    COMPAT    unsupported experimental::lexical_topic
 op/coresubs.t                                   COMPAT    uses B::walkoptree
-op/defins.t                                     TESTS     Test results:
 op/exp.t                                        TESTS     Test results:
 op/glob.t                                       SKIP      Flaps because it's surprised to see perlcc files during its run.
 op/goto.t                                       PLAN      Plan was valid
@@ -51,7 +50,6 @@ op/int.t                                        TESTS     Test results:
 op/leaky-magic.t                                TESTS     Test results:
 op/lex.t                                        COMPAT    Tests trigger errors at compilation time
 op/lexsub.t                                     BC        GH #60 - SEGV at compile time from B
-op/magic-27839.t                                BC        op/magic-27839.c is generated ()
 op/override.t                                   COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
 op/refstack.t                                   PLAN      Plan was valid
 op/sprintf2.t                                   SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
@@ -99,7 +97,6 @@ xtestc/0248.t                                   TESTS     GH #51 - using variabl
 xtestc/0274.t                                   TESTS     GH #52 - smartmatch reset issue
 xtestc/0278.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
 xtestc/0293.t                                   TESTS     GH #53 - CORO need to reload and mark some SVs as readonly
-xtestc/0294.t                                   TESTS     Output is: "Constant subroutine ..." (len=174) expect "ok" (len=2)
 xtestc/0295.t                                   TESTS     GH #51 - using variable inside a regexp/substitute
 xtestc/0309.t                                   TESTS     GH #54 - cannot overwrite Regexp::DESTROY
 xtestc/0329.t                                   TESTS     GH #51 - using variable inside a regexp/substitute
