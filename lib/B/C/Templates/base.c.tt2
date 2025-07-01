@@ -278,7 +278,7 @@ struct my_padname_with_str {
 typedef struct my_padname_with_str MyPADNAME;
 
 /* Lexical warnings storage */
-struct lexwarn { STRLEN len; char warnings[[% longest_warnings_string %] + 2]; };
+struct lexwarn { STRLEN refcount; STRLEN len; char pv[[% longest_warnings_string %] + 2]; };
 typedef struct lexwarn LEXWARN;
 
 #define HVrhek_undef    0x00 /* Value is undef. */

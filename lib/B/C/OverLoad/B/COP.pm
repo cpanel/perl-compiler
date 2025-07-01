@@ -51,7 +51,7 @@ sub do_save ( $op, @ ) {
     }
 
     # add the cop at the end
-    copsect()->comment_for_op("line_t line, HV* stash, GV* filegv, U32 hints, U32 seq, STRLEN* warn_sv, COPHH* hints_hash");
+    copsect()->comment_for_op("line_t line, HV* cop_stash, GV* cop_filegv, U32 cop_hints, U32 cop_seq, char* cop_warnings, COPHH* hints_hash, struct cop_feature_t (U32 bits[1])");
     copsect()->supdatel(
         $ix,
         '%s'       => $op->save_baseop,                     # BASEOP list
@@ -62,7 +62,8 @@ sub do_save ( $op, @ ) {
         '%s'       => get_integer_value( $op->cop_seq ),    # U32     cop_seq;    /* parse sequence number */
         '%s'       => $op->save_warnings,                   # char *    cop_warnings;   /* lexical warnings bitmask */
         '%s'       => $op->save_hints,                      # COPHH * cop_hints_hash; /* compile time state of %^H. */
-        #'' => ...,                                          # struct cop_feature_t       cop_features;
+        # TODO cop_features is not used in the compiler, but it is used in the interpreter.
+        '%s'       => '0',                                  # struct cop_feature_t       cop_features; 
     );
 
     return $sym;
@@ -133,13 +134,15 @@ sub save_warnings ($op) {
 
     my $len = $warnings->CUR;
     B::C::longest_warnings_string($len);
+    lexwarnsect()->comment("STRLEN refcount, STRLEN len, char pv[[% longest_warnings_string %] + 2]");
     my $ix = lexwarnsect()->saddl(
+        '%ld' => $warnings->REFCNT + 1,    # STRLEN refcount; /* reference count but let's never delete it so add 1 */
         '%ld' => $len,
         '%s'  => cstring($pv),
     );
 
     # set cache
-    return $lexwarnsym_cache{$pv} = sprintf( "(char*) &lexwarn_list[%d]", $ix );
+    return $lexwarnsym_cache{$pv} = sprintf( "(char*) &(lexwarn_list[%d].pv)", $ix );
 }
 
 1;

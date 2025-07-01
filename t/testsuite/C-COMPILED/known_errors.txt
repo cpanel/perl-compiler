@@ -32,110 +32,48 @@ comp/hints.t                                    COMPAT    tests are using BEGIN 
 comp/parser.t                                   COMPAT    We're not going to support ' as a package separator until we need to: https://github.com/rurban/perl-compiler/issues/217
 comp/parser_run.t                               COMPAT    no need to check this in BC
 extra/xs-accessor-array.t                       BC        extra/xs-accessor-array.c is generated (-v,)
-io/argv.t                                       PLAN      Plan was valid
-io/binmode.t                                    PLAN      Plan was valid
 io/bom.t                                        COMPAT    BC issue 312 - BOM seems to be rejected by perlcc but really, who needs this?
-io/dup.t                                        PLAN      Plan was valid
-io/open.t                                       SIG       Exit signal is 139 
-io/openpid.t                                    PLAN      Plan was valid
-io/pipe.t                                       PLAN      Plan was valid
-io/read.t                                       PLAN      Plan was valid
-io/scalar.t                                     SIG       Exit signal is 139 
-io/tell.t                                       PLAN      Plan was valid
-io/utf8.t                                       SIG       Exit signal is 139 
-mro/basic_utf8.t                                PLAN      Plan was valid
-mro/method_caching_utf8.t                       SIG       Exit signal is 139 
-op/64bitint.t                                   SIG       Exit signal is 139 
-op/aassign.t                                    PLAN      Plan was valid
-op/anonconst.t                                  SIG       Exit signal is 139 
-op/any_all.t                                    SIG       Exit signal is 139 
-op/array.t                                      SIG       Exit signal is 139 
 op/attrhand.t                                   PLAN      GH #59 - Attribute::Handlers
-op/attrproto.t                                  SIG       Exit signal is 139 
-op/attrs.t                                      PLAN      Plan was valid
 op/blocks.t                                     COMPAT    check order of execution of special blocks ( BEGIN included )
-op/bop.t                                        PLAN      Plan was valid
 op/caller.t                                     PLAN      v5.36 - needs investigation
-op/chdir.t                                      PLAN      Plan was valid
 op/closure.t                                    TESTS     BC issue #278 - destruction issue
-op/cmpchain.t                                   SIG       Exit signal is 139 
-op/const-optree.t                               SIG       Exit signal is 139 
 op/coreamp.t                                    COMPAT    unsupported experimental::lexical_topic
 op/coresubs.t                                   COMPAT    uses B::walkoptree
-op/decl-refs.t                                  SIG       Exit signal is 139 
-op/defer.t                                      SIG       Exit signal is 139 
-op/defined.t                                    SIG       Exit signal is 139 
 op/defins.t                                     TESTS     Test results:
-op/die_keeperr.t                                PLAN      Plan was valid
-op/do.t                                         PLAN      Plan was valid
-op/each.t                                       SIG       Exit signal is 139 
 op/exp.t                                        TESTS     Test results:
-op/for.t                                        SIG       Exit signal is 139 
 op/glob.t                                       SKIP      Flaps because it's surprised to see perlcc files during its run.
-op/gmagic.t                                     PLAN      Plan was valid
 op/goto.t                                       PLAN      Plan was valid
 op/goto_xs.t                                    COMPAT    needs XS::APItest
-op/gv.t                                         PLAN      GH #67 - improper utf8 warnings emitted during bad sprintf
 op/hash.t                                       SIG       v5.36 - needs investigation
-op/hashassign.t                                 PLAN      Plan was valid
-op/hashwarn.t                                   SIG       Exit signal is 139 
 op/heredoc.t                                    SKIP      this test can be compiled with B::C but uses more than 100s subtest - 10 min to run
 op/hexfp.t                                      TESTS     Test results:
-op/inc.t                                        PLAN      Plan was valid
 op/int.t                                        TESTS     Test results:
-op/join.t                                       SIG       Exit signal is 139 
 op/leaky-magic.t                                TESTS     Test results:
 op/lex.t                                        COMPAT    Tests trigger errors at compilation time
 op/lexsub.t                                     BC        GH #60 - SEGV at compile time from B
 op/magic-27839.t                                BC        op/magic-27839.c is generated ()
-op/magic.t                                      SIG       Exit signal is 139 
-op/method.t                                     PLAN      Plan was valid
-op/multideref.t                                 SIG       Exit signal is 139 
-op/negate.t                                     PLAN      Plan was valid
-op/ord.t                                        PLAN      Plan was valid
 op/override.t                                   COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
-op/pack.t                                       PLAN      Plan was valid
-op/packagev.t                                   SIG       Exit signal is 139 
 op/refstack.t                                   PLAN      Plan was valid
-op/reset.t                                      PLAN      Plan was valid
-op/smartkve.t                                   SIG       Exit signal is 139 
 op/sprintf2.t                                   SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
-op/stat.t                                       PLAN      Plan was valid
-op/state.t                                      PLAN      Plan was valid
-op/sub.t                                        PLAN      Plan was valid
 op/sub_lval.t                                   TESTS     BC issue #277 - sub declaration with :lvalue should apply it to XSUBs
-op/substr.t                                     SIG       Exit signal is 139 
-op/substr_left.t                                SIG       Exit signal is 139 
 op/svleak.t                                     COMPAT    This test uses XS::APItest, which we don't install during perl install?
-op/switch.t                                     PLAN      Plan was valid
 op/threads-dirh.t                               COMPAT    We don't support threaded perl in this branch.
 op/threads.t                                    COMPAT    We don't support threaded perl in this branch.
-op/tie_fetch_count.t                            PLAN      Plan was valid
 op/time.t                                       TESTS     Test results:
-op/tr.t                                         PLAN      Plan was valid
-op/try.t                                        PLAN      Plan was valid
-op/universal.t                                  PLAN      Plan was valid
-op/vec.t                                        SIG       Exit signal is 139 
+op/tr.t                                         SIG       Exit signal is 134 
 op/yadayada.t                                   COMPAT    Unimplemented does not display the correct line number
 opbasic/magic_phase.t                           COMPAT    Testing BEGIN, INIT, ... phases order, not compatible with B::C
 re/anyof.t                                      SKIP      ignoring test for now - infinite loop - need to investigate
-re/charset.t                                    SIG       Exit signal is 139 
-re/opt.t                                        SIG       Exit signal is 139 
-re/overload.t                                   PLAN      Plan was valid
 re/pat.t                                        PLAN      BC issue #295
 re/pat_advanced.t                               PLAN      Recheck BC issue #317 - nested regexp
 re/pat_re_eval.t                                PLAN      GH #62 - Cannot compile eval group RegExp at runtime
 re/pat_rt_report.t                              PLAN      Plan was valid
-re/qr-72922.t                                   PLAN      Plan was valid
 re/qr_gc.t                                      TESTS     BC issue #309 - regexp destruction
 re/reg_eval_scope.t                             PLAN      BC issue #295 - (?{}) should have its own lexical scope
 re/reg_pmod.t                                   TESTS     BC issue #295 - (?{}) should have its own lexical scope
-re/regex_sets.t                                 PLAN      Plan was valid
-re/regexp.t                                     PLAN      Plan was valid
 re/regexp_nonull.t                              COMPAT    uses XS::APItest - for internal use only and hence no longer installed
 re/regexp_unicode_prop.t                        COMPAT    trigger some regexp errors at compile time
 re/rxcode.t                                     TESTS     BC issue #295 - (?{}) should have its own lexical scope
-re/subst.t                                      PLAN      Plan was valid
 re/subst_amp.t                                  TESTS     BC issue #295 - (?{}) should have its own lexical scope
 re/uniprops01.t                                 EXIT      Exit code is 255
 re/uniprops02.t                                 EXIT      Exit code is 255
@@ -144,16 +82,8 @@ re/uniprops04.t                                 EXIT      Exit code is 255
 re/uniprops07.t                                 TESTS     Test results:
 re/uniprops08.t                                 TESTS     Test results:
 re/uniprops09.t                                 TESTS     Test results:
-uni/attrs.t                                     PLAN      Plan was valid
-uni/fold.t                                      EXIT      Exit code is 255
 uni/greek.t                                     COMPAT    BC issue #283 - deprecated "encoding" pragma
-uni/gv.t                                        PLAN      Plan was valid
-uni/labels.t                                    PLAN      Plan was valid
 uni/latin2.t                                    COMPAT    BC issue #283 - deprecated "encoding" pragma
-uni/method.t                                    PLAN      Plan was valid
-uni/overload.t                                  PLAN      Plan was valid
-uni/package.t                                   SIG       Exit signal is 139 
-uni/parser.t                                    PLAN      Plan was valid
 uni/tr_utf8.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
 uni/variables.t                                 SKIP      Taking too long to run. something's really broken. need to get to the root of it.
 xtestc/0091.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
@@ -162,10 +92,8 @@ xtestc/0163.t                                   TESTS     GH #48 - DESTROY on up
 xtestc/0169.t                                   TESTS     GH #59 - Attribute::Handlers cannot be compiled
 xtestc/0179.t                                   TESTS     Output is: "" (len=0) expect "Smartmatch is experimental at (eval 1) line 1.\nmatch ? 0" (len=57)
 xtestc/0188.t                                   TESTS     GH #52 - smart match - reset issue
-xtestc/0192.t                                   TESTS     Output is: "not ok" (len=6) expect "ok" (len=2)
 xtestc/0195.t                                   TESTS     Output is: "Perl API version v5.38.0 of ..." (len=59) expect "ok" (len=2)
 xtestc/0222.t                                   TESTS     GH #49 - Cannot use "here-document" in RegExp
-xtestc/0232.t                                   TESTS     Output is: "panic: sv_setpvn_fresh called ..." (len=114) expect "ok" (len=2)
 xtestc/0247.t                                   TESTS     GH #50 - $^H when using arybase
 xtestc/0248.t                                   TESTS     GH #51 - using variable inside a regexp
 xtestc/0274.t                                   TESTS     GH #52 - smartmatch reset issue
@@ -174,7 +102,6 @@ xtestc/0293.t                                   TESTS     GH #53 - CORO need to 
 xtestc/0294.t                                   TESTS     Output is: "Constant subroutine ..." (len=174) expect "ok" (len=2)
 xtestc/0295.t                                   TESTS     GH #51 - using variable inside a regexp/substitute
 xtestc/0309.t                                   TESTS     GH #54 - cannot overwrite Regexp::DESTROY
-xtestc/0319.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
 xtestc/0329.t                                   TESTS     GH #51 - using variable inside a regexp/substitute
 xtestc/0350.t                                   SKIP      Moose - failed to compile Class::MOP::Method::Accessor
 xtestc/0365.t                                   TESTS     Encode XS issue  - duplicate of 3050
@@ -188,4 +115,3 @@ xtestc/2530.t                                   TESTS     Output is: "1..2\nok 1
 xtestc/2540.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
 xtestc/2900.t                                   TESTS     GH #57 - open qw(:std :utf8) STDOUT issue
 xtestc/3050.t                                   TESTS     Encode XS issue
-xtestc/3200.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
