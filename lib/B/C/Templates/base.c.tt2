@@ -94,6 +94,9 @@ typedef struct shared_he SHARED_HE;
 #define BODYLESS_UV_PTR(sv) \
     ((char*)sv)+STRUCT_OFFSET(struct STRUCT_SV, sv_u) - STRUCT_OFFSET(XPVUV, xuv_uv)
 
+#define xuv_nv xnv_u.xnv_nv
+#define BODYLESS_NV_PTR(sv) \
+    ((char*)sv)+STRUCT_OFFSET(struct STRUCT_SV, sv_u) - STRUCT_OFFSET(XPVNV, xuv_nv)
 
 #define IMMORTAL_PL_strtab 0x7ffffff
 

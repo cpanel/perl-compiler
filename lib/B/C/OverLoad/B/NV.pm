@@ -32,7 +32,7 @@ sub do_save ( $sv, $fullname, $custom = undef ) {
 
     svsect()->supdatel(
         $ix,
-        'BODYLESS_UV_PTR(%s)' => $sym,        # sv_any NOTE we're not pointing top NV_PTR 
+        'BODYLESS_NV_PTR(%s)' => $sym,        # sv_any NOTE we're not pointing top NV_PTR
         '%lu',                => $refcnt,     # sv_refcnt
         '0x%x'                => $svflags,    # sv_flags
         '{.svu_nv=%s}'        => $nv,         # sv_u.svu_nv
