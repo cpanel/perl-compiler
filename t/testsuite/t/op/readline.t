@@ -300,8 +300,12 @@ SKIP:
         if $^O eq 'solaris' && $layers[-1] eq 'stdio';
     ok(!$fh->error, "no error before we try to read");
     ok(!<$fh>, "fail to readline file opened for write");
-    ok($fh->error, "error after trying to readline file opened for write");
-    ok(!close($fh), "closing the file should fail");
+
+    # NOTE: We patched out the code which causes the error to be set here
+    # "properly", thus this behavior instead acts like it used to before
+    # commit 0b602161d2f4c5e6b22144e9f8b9f8128a35f440 by Tony :)
+    ok(!$fh->error, "No error after trying to readline file opened for write");
+    ok(close($fh), "closing the file should succeed");
 }
 
 __DATA__
