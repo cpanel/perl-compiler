@@ -917,8 +917,7 @@ SKIP:
 {
     skip "No XS::APItest in miniperl", 6 if is_miniperl();
     skip "No XS::APItest in static perl", 6 if not $Config{usedl};
-
-    require XS::APItest;
+    skip "No XS::APItest installed", 6 if !eval { require XS::APItest; };
 
     sub f_19188 { goto &XS::APItest::gimme }
     sub g_19188{ f_19188(); }
@@ -948,6 +947,7 @@ SKIP:
 {
     skip "No XS::APItest in miniperl", 2 if is_miniperl();
     skip "No XS::APItest in static perl", 2 if not $Config{usedl};
+    skip "No XS::APItest installed", 2 if !$INC{"XS/APItest.pm"};
 
     # utf8::is_utf8() is just an example of an XS sub
     sub foo_19936 { *foo_19936 = {}; goto &utf8::is_utf8 }
