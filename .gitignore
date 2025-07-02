@@ -98,4 +98,5 @@ src/inc-latest-*/
 src/App-cpanminus-*/
 src/Test-Simple-*/
 known_errors_delta.txt
-/9
+/fail
+/foo
