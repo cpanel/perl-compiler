@@ -56,7 +56,6 @@ op/sub_lval.t                                   TESTS     BC issue #277 - sub de
 op/svleak.t                                     COMPAT    This test uses XS::APItest, which we don't install during perl install?
 op/threads-dirh.t                               COMPAT    We don't support threaded perl in this branch.
 op/threads.t                                    COMPAT    We don't support threaded perl in this branch.
-op/try.t                                        TESTS     Test results:
 op/yadayada.t                                   COMPAT    Unimplemented does not display the correct line number
 opbasic/magic_phase.t                           COMPAT    Testing BEGIN, INIT, ... phases order, not compatible with B::C
 re/anyof.t                                      SKIP      ignoring test for now - infinite loop - need to investigate

@@ -15,8 +15,6 @@ use feature 'try';
 my $DOLLAR_0;
 BEGIN { $DOLLAR_0 = $0 }
 
-no warnings 'experimental::try';
-
 {
     my $x;
     try {
