@@ -22,15 +22,15 @@
 BEGIN {
     chdir 't' if -d 't';
     require './test.pl';
-    skip_all('not built with PERL_RC_STACK')
-        unless defined &Internals::stack_refcounted
-            && (Internals::stack_refcounted() & 1);
     set_up_inc( qw(. ../lib) );
 }
 
 use warnings;
 use strict;
 
+skip_all('not built with PERL_RC_STACK')
+    unless defined &Internals::stack_refcounted
+        && (Internals::stack_refcounted() & 1);
 
 # GH #2157: "coredump in map modifying input array"
 

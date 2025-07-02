@@ -49,7 +49,6 @@ op/lexsub.t                                     BC        GH #60 - SEGV at compi
 op/magic.t                                      TESTS     Test results:
 op/method.t                                     TESTS     Test results:
 op/override.t                                   COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
-op/refstack.t                                   PLAN      Plan was valid
 op/reset.t                                      TESTS     Test results:
 op/sprintf2.t                                   SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
 op/sub.t                                        TESTS     Test results:
