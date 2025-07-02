@@ -44,7 +44,6 @@ op/glob.t                                       SKIP      Flaps because it's sur
 op/goto_xs.t                                    COMPAT    needs XS::APItest
 op/hash.t                                       SIG       v5.36 - needs investigation
 op/heredoc.t                                    SKIP      this test can be compiled with B::C but uses more than 100s subtest - 10 min to run
-op/leaky-magic.t                                TESTS     Test results:
 op/lex.t                                        COMPAT    Tests trigger errors at compilation time
 op/lexsub.t                                     BC        GH #60 - SEGV at compile time from B
 op/magic.t                                      TESTS     Test results:
