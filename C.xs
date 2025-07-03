@@ -975,6 +975,6 @@ BOOT:
       specialsv_list[5] = (SV *) pWARN_ALL;
       specialsv_list[6] = (SV *) pWARN_NONE;
       specialsv_list[7] = (SV *) pWARN_STD;
-      specialsv_list[8] = &PL_padname_undef;
+      specialsv_list[8] = (SV *) &PL_padname_undef;
     }
 }
