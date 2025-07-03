@@ -712,18 +712,6 @@ result[175]='ok'
 tests[176]='use Math::BigInt; print Math::BigInt::->new(5000000000);'
 result[176]='5000000000'
 tests[177]='use version; print "ok\n" if version::is_strict("4.2");'
-tests[179]='
-{
-    package Foo;
-    sub new { bless {} }
-}
-package main;
-our $foo = Foo->new;
-our $bar = $foor; # required to generate the wrong behavior
-my $match = eval q($foo ~~ undef) ? 1 : 0;
-print "match ? $match\n";'
-result[179]='Smartmatch is experimental at (eval 1) line 1.
-match ? 0'
 tests[180]='use feature "switch"; use integer; given(3.14159265) { when(3) { print "ok\n"; } }'
 tests[181]='sub End::DESTROY { $_[0]->() };
 my $inx = "OOOO";

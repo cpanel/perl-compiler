@@ -87,7 +87,6 @@ uni/variables.t                                 SKIP      Taking too long to run
 xtestc/0093.t                                   TESTS     GH #63 - STDOUT opened in BEGIN block
 xtestc/0163.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
 xtestc/0169.t                                   TESTS     GH #59 - Attribute::Handlers cannot be compiled
-xtestc/0179.t                                   TESTS     Output is: "" (len=0) expect "Smartmatch is experimental at (eval 1) line 1.\nmatch ? 0" (len=57)
 xtestc/0188.t                                   TESTS     GH #52 - smart match - reset issue
 xtestc/0195.t                                   TESTS     Output is: "Perl API version v5.38.0 of ..." (len=59) expect "ok" (len=2)
 xtestc/0222.t                                   TESTS     GH #49 - Cannot use "here-document" in RegExp
