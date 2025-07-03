@@ -46,12 +46,12 @@ op/hash.t                                       SIG       v5.36 - needs investig
 op/heredoc.t                                    SKIP      this test can be compiled with B::C but uses more than 100s subtest - 10 min to run
 op/lex.t                                        COMPAT    Tests trigger errors at compilation time
 op/lexsub.t                                     BC        GH #60 - SEGV at compile time from B
-op/magic.t                                      TESTS     Test results:
-op/method.t                                     TESTS     Test results:
+op/magic.t                                      TESTS     v5.36 - needs investigation
+op/method.t                                     TESTS     HV_STATIC: plan no longer fails in statch branch. Need to determine the cause of the tests now.
 op/override.t                                   COMPAT    crazy test which override CORE::GLOBAL::require @BEGIN
-op/reset.t                                      TESTS     Test results:
+op/reset.t                                      TESTS     GH #52 - smartmatch ?...?
 op/sprintf2.t                                   SKIP      Tests are in sequence - https://github.com/CpanelInc/perl-compiler/issues/45
-op/sub.t                                        TESTS     Test results:
+op/sub.t                                        TESTS     GH #56 - state variable
 op/sub_lval.t                                   TESTS     BC issue #277 - sub declaration with :lvalue should apply it to XSUBs
 op/svleak.t                                     COMPAT    This test uses XS::APItest, which we don't install during perl install?
 op/threads-dirh.t                               COMPAT    We don't support threaded perl in this branch.
@@ -59,11 +59,11 @@ op/threads.t                                    COMPAT    We don't support threa
 op/yadayada.t                                   COMPAT    Unimplemented does not display the correct line number
 opbasic/magic_phase.t                           COMPAT    Testing BEGIN, INIT, ... phases order, not compatible with B::C
 re/anyof.t                                      SKIP      ignoring test for now - infinite loop - need to investigate
-re/overload.t                                   TESTS     Test results:
+re/overload.t                                   TESTS     GH #61 - Overloading regexp issue with lexical scope
 re/pat.t                                        PLAN      BC issue #295
 re/pat_advanced.t                               PLAN      Recheck BC issue #317 - nested regexp
 re/pat_re_eval.t                                PLAN      GH #62 - Cannot compile eval group RegExp at runtime
-re/pat_rt_report.t                              PLAN      Plan was valid
+re/pat_rt_report.t                              PLAN      BC issue #317 - nested Regex also Eval-group not allowed at runtime, use re 'eval' in regex m/(.*)(*{ $count++ })[bc]/.
 re/qr_gc.t                                      TESTS     BC issue #309 - regexp destruction
 re/reg_eval_scope.t                             PLAN      BC issue #295 - (?{}) should have its own lexical scope
 re/reg_pmod.t                                   TESTS     BC issue #295 - (?{}) should have its own lexical scope
@@ -79,7 +79,7 @@ re/uniprops07.t                                 TESTS     Test results:
 re/uniprops08.t                                 TESTS     Test results:
 re/uniprops09.t                                 TESTS     Test results:
 uni/greek.t                                     COMPAT    BC issue #283 - deprecated "encoding" pragma
-uni/gv.t                                        TESTS     Test results:
+uni/gv.t                                        TESTS     GH #67 - improper utf8 warnings emitted during bad sprintf
 uni/latin2.t                                    COMPAT    BC issue #283 - deprecated "encoding" pragma
 uni/package.t                                   TESTS     Test results:
 uni/tr_utf8.t                                   COMPAT    BC issue #283 - unsupported deprecated "encoding" pragma
