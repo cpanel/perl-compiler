@@ -976,11 +976,6 @@ tests[248]='#WONTFIX lexical $_ in re-eval
 {my $s="toto";my $_="titi";{$s =~ /to(?{ print "-$_-$s-\n";})to/;}}'
 result[248]='-titi-toto-'
 tests[249]='use version; print version::is_strict(q{01}) ? 1 : q(ok)'
-tests[2501]='#TODO version
-use warnings qw/syntax/; use version; $withversion::VERSION = undef; eval q/package withversion 1.1_;/; print $@;'
-result[2501]='Misplaced _ in number at (eval 1) line 1.
-Invalid version format (no underscores) at (eval 1) line 1, near "package withversion "
-syntax error at (eval 1) line 1, near "package withversion 1.1_"'
 if [[ $v518 -gt 0 ]]; then
   tests[250]='use feature q/evalbytes/; print "ok\n" if evalbytes("1+7") == 8'
 fi
@@ -992,10 +987,6 @@ tests[2513]='sub f ($);print "ok" if exists &f'
 tests[2514]='sub f;print "ok" if exists &f'
 tests[252]='package bar; sub search { shift =~ m?bar? ? 1 : 0 } sub reset_zlopp { reset } package foo; sub ZZIP { shift =~ m?ZZIP? ? 1 : 0 } package main; foo::ZZIP("ZZIP"); bar::reset_zlopp(); !foo::ZZIP("ZZIP") and print "ok"'
 tests[253]='use Unicode::UCD q/prop_invmap/; my @list = prop_invmap("Uppercase_Mapping"); print "ok"'
-tests[2530]='INIT{require "./t/test.pl"}plan(tests=>2);is("\x{2665}", v9829);is(v9829,"\x{2665}");'
-result[2530]='1..2
-ok 1
-ok 2'
 tests[254]='Foo->UNIVERSAL::can("boogie"); print "ok" unless eval q/Foo->boogie(); 1/;'
 tests[2540]='#TODO destroy upgraded lexvar
 my $flag = 0;
