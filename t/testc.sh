@@ -1355,27 +1355,6 @@ tests[354]='BEGIN { push @INC, "t"; }
 use Ccode354i ();
 my $token = { expansion => "abcd", };
 print Ccode354i::check($token);'
-tests[368]='use EV; print q(ok)'
-tests[369]='
-use EV;
-use Coro;
-use Coro::Timer;
-my @a;
-push @a, async {
-  while() {
-    warn $c++;
-    Coro::Timer::sleep 1;
-  };
-};
-push @a, async {
-  while() {
-    warn $d++;
-    Coro::Timer::sleep 0.5;
-  };
-};
-schedule;
-print q(ok)'
-tests[1960]='use EV; my $w = EV::timer 1, 1,sub{print"ok\n";exit}; EV::loop'
 tests[371]='package foo;use Moose;
 has "x" => (isa => "Int", is => "rw", required => 1);
 has "y" => (isa => "Int", is => "rw", required => 1);

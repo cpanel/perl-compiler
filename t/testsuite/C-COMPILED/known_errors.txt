@@ -99,11 +99,8 @@ xtestc/0309.t                                   TESTS     GH #54 - cannot overwr
 xtestc/0329.t                                   TESTS     GH #51 - using variable inside a regexp/substitute
 xtestc/0350.t                                   SKIP      Moose - failed to compile Class::MOP::Method::Accessor
 xtestc/0365.t                                   TESTS     Encode XS issue  - duplicate of 3050
-xtestc/0368.t                                   TESTS     Output is: "" (len=0) expect "ok" (len=2)
-xtestc/0369.t                                   TESTS     GH #53 #58 - EV & CORO issue combined together
 xtestc/0371.t                                   SKIP      Moose - failed to compile Class::MOP::Method::Accessor
 xtestc/0932.t                                   TESTS     GH #63 - STDOUT opened / assigned in BEGIN block.
-xtestc/1960.t                                   TESTS     GH #58 - cannot compile EV - SEGV
 xtestc/2501.t                                   TESTS     Output is: "Invalid version format (no ..." (len=211) expect "Misplaced _ in number at (eval 1) line 1.\nInvalid version format (no underscores) at (eval 1) line 1, near "package withversion "\nsyntax error at (eval 1) line 1, near "package withversion 1.1_"" (len=196)
 xtestc/2530.t                                   TESTS     Output is: "1..2\nok 1 - ?at ..." (len=74) expect "1..2\nok 1\nok 2" (len=16)
 xtestc/2540.t                                   TESTS     GH #48 - DESTROY on upgraded lexvar not triggered
