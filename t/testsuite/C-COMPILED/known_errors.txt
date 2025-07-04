@@ -33,8 +33,6 @@ comp/parser.t                                   COMPAT    We're not going to sup
 comp/parser_run.t                               COMPAT    no need to check this in BC
 extra/xs-accessor-array.t                       BC        extra/xs-accessor-array.c is generated (-v,)
 io/bom.t                                        COMPAT    BC issue 312 - BOM seems to be rejected by perlcc but really, who needs this?
-mro/method_caching.t                            PLAN      Plan was valid
-mro/method_caching_utf8.t                       PLAN      Plan was valid
 op/attrhand.t                                   PLAN      GH #59 - Attribute::Handlers
 op/blocks.t                                     COMPAT    check order of execution of special blocks ( BEGIN included )
 op/closure.t                                    TESTS     BC issue #278 - destruction issue

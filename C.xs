@@ -241,6 +241,27 @@ make_sv_object(pTHX_ SV *sv)
 }
 
 static SV *
+make_temp_object(pTHX_ SV *temp)
+{
+    SV *target;
+    SV *arg = sv_newmortal();
+    const char *const type = svclassnames[SvTYPE(temp)];
+    const IV iv = PTR2IV(temp);
+
+    target = newSVrv(arg, type);
+    sv_setiv(target, iv);
+
+    /* Need to keep our "temp" around as long as the target exists.
+       Simplest way seems to be to hang it from magic, and let that clear
+       it up.  No vtable, so won't actually get in the way of anything.  */
+    sv_magicext(target, temp, PERL_MAGIC_sv, NULL, NULL, 0);
+    /* magic object has had its reference count increased, so we must drop
+       our reference.  */
+    SvREFCNT_dec(temp);
+    return arg;
+}
+
+static SV *
 make_op_object(pTHX_ const OP *o)
 {
     SV *opsv = sv_newmortal();
@@ -958,6 +979,49 @@ sv_can_downgrade_to_iv(sv)
         RETVAL
 
 #/* ************************************************************ */
+MODULE = B__COP	PACKAGE = B::COP  PREFIX = cop_
+#/* ************************************************************ */
+
+
+void
+cop_refcounted_warnings (cop)
+      B::COP cop;
+    PPCODE:
+        char *warnings;
+        const char *type = 0;
+        dMY_CXT;
+        IV iv;
+
+        iv = sizeof(specialsv_list)/sizeof(SV*);
+        warnings = cop->cop_warnings;
+
+        /* Counting down is deliberate. Before the split between make_sv_object
+        and make_warnings_obj there appeared to be a bug - Nullsv and pWARN_STD
+        were both 0, so you could never get a B::SPECIAL for pWARN_STD  */
+
+        while (iv--) {
+            if ((SV*)warnings == specialsv_list[iv]) {
+                type = "B::SPECIAL";
+                break;
+            }
+        }
+        if (type) {
+            SV *arg = sv_newmortal();
+            sv_setiv(newSVrv(arg, type), iv);
+            XPUSHs(arg);
+        } else {
+            /* Create SV with warnings data and store refcount separately */
+            SV *temp_sv = newSVpvn(warnings, RCPV_LEN(warnings));
+            /* Upgrade to PVIV so it can hold both string and integer */
+            SvUPGRADE(temp_sv, SVt_PVIV);
+            /* Store refcount in IVX field */
+            SvIV_set(temp_sv, RCPV_REFCOUNT(warnings));
+            SvIOK_on(temp_sv);  /* Mark that IV is valid */
+            XPUSHs(make_temp_object(aTHX_ temp_sv));
+        }
+
+
+#/* ************************************************************ */
 MODULE = B__C          PACKAGE = B::C
 #/* ************************************************************ */
 
@@ -971,10 +1035,10 @@ BOOT:
       specialsv_list[1] = &PL_sv_undef;
       specialsv_list[2] = &PL_sv_yes;
       specialsv_list[3] = &PL_sv_no;
-      specialsv_list[4] = &PL_sv_zero;
-      specialsv_list[5] = (SV *) pWARN_ALL;
-      specialsv_list[6] = (SV *) pWARN_NONE;
-      specialsv_list[7] = (SV *) pWARN_STD;
+      specialsv_list[4] = (SV *) pWARN_ALL;
+      specialsv_list[5] = (SV *) pWARN_NONE;
+      specialsv_list[6] = (SV *) pWARN_STD;
+      specialsv_list[7] = &PL_sv_zero;
       specialsv_list[8] = (SV *) &PL_padname_undef;
     }
 }

@@ -117,7 +117,10 @@ my %lexwarnsym_cache;
 sub save_warnings ($op) {
     die unless $op;
 
-    my $warnings = $op->warnings;
+    # WARNING This is return 2 distinct values in a PVIV. The refcount is in the IVX and
+    # the warnings string is in the PV slot. DO NOT call PV or IV or you'll coerce and corrupt the data.
+    my $warnings = $op->refcounted_warnings;
+
     if ( ref($warnings) eq 'B::SPECIAL' ) {
         return 'pWARN_ALL'  if $$warnings == 4;    #define pWARN_ALL  0x2 /* use warnings 'all' */
         return 'pWARN_NONE' if $$warnings == 5;    #define pWARN_NONE 0x1 /* no warnings */
@@ -125,18 +128,20 @@ sub save_warnings ($op) {
 
         die("Unknown special warnings $warnings $$warnings\n");
     }
-    ref $warnings eq 'B::PV' or die("Warnings isn't a PV like we thought it was?? $warnings");
+    ref $warnings eq 'B::PVIV' or die("Warnings isn't a PVIV like we thought it was?? $warnings");
 
-    my $pv = $warnings->PV;
+    my $pv = $warnings->PVX;
     return $lexwarnsym_cache{$pv} if $lexwarnsym_cache{$pv};
 
     #print STDERR sprintf("XXXX WARN length=%s len=%s cur=%s\n", length($pv), $warnings->LEN, $warnings->CUR);
 
+    my $refcount = $warnings->IVX;
     my $len = $warnings->CUR;
     B::C::longest_warnings_string($len);
+
     lexwarnsect()->comment("STRLEN refcount, STRLEN len, char pv[[% longest_warnings_string %] + 2]");
     my $ix = lexwarnsect()->saddl(
-        '%ld' => $warnings->REFCNT + 1,    # STRLEN refcount; /* reference count but let's never delete it so add 1 */
+        '%ld' => $refcount,
         '%ld' => $len,
         '%s'  => cstring($pv),
     );
