@@ -338,6 +338,11 @@ sub save_gv_cv ( $gv, $fullname, $gp_ix ) {
         if ( $origname && !$is_exception ) {
             debug( gv => "bootstrap CV $fullname using $origname\n" );
 
+            # Ensure the original XS GV is saved/memorized so it can be found later
+            # In Perl 5.42.0, XS GVs may not be automatically saved during compilation
+            my $orig_gv = eval { B::svref_2object(\*{$origname}) };
+            $orig_gv->save($origname) if $orig_gv;  # This will memorize the GV
+
             init_bootstraplink()->sadd(
                 'gp_list[%d].gp_cv = GvCV( %s ); /* XS CV %s */',
                 $gp_ix,
