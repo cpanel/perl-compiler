@@ -108,6 +108,9 @@ static int bc_perl_parse(pTHXx_ int argc, char **argv, char **env);
 static void bc_parse_body(char **env);
 static void bc_init_postdump_symbols(pTHX_ int argc, char **argv, char **env);
 static void bc_init_predump_symbols(pTHX);
+/* We are assuming perl is compiled with USE_ENVIRON_ARRAY, new since v5.36.0..v5.42.0 */
+extern char **environ;
+static void dup_environ(pTHX);
 
 /* BC memory optimization around Newxz: currently no command line args to disable it */
 #define USE_BC_NEWXZ 1
@@ -874,6 +877,48 @@ my_curse( pTHX_ SV* const sv ) {
     }
 }
 
+static void
+dup_environ(pTHX)
+{
+    if (!environ)
+        return;
+
+    size_t n_entries = 0, vars_size = 0;
+
+    ENV_READ_LOCK;
+    for (char **ep = environ; *ep; ++ep) {
+        ++n_entries;
+        vars_size += strlen(*ep) + 1;
+    }
+
+    /* To save memory, we store both the environ array and its values in a
+     * single memory block. */
+    char **new_environ = (char**)PerlMemShared_malloc(
+        (sizeof(char*) * (n_entries + 1)) + vars_size
+    );
+    char *vars = (char*)(new_environ + n_entries + 1);
+
+    for (size_t i = 0, copied = 0; n_entries > i; ++i) {
+        size_t len = strlen(environ[i]) + 1;
+        new_environ[i] = (char *) CopyD(environ[i], vars + copied, len, char);
+        copied += len;
+    }
+
+    ENV_READ_UNLOCK;
+
+    new_environ[n_entries] = NULL;
+
+    ENV_LOCK;
+    environ = new_environ;
+    ENV_UNLOCK;
+    /* Store a pointer in a global variable to ensure it's always reachable so
+     * LeakSanitizer/Valgrind won't complain about it. We can't ever free it.
+     * Even if libc allocates a new environ, it's possible that some of its
+     * values will still be pointing to the old environ.
+     */
+    PL_my_environ = new_environ;
+}
+
 static int fast_perl_destruct( PerlInterpreter *my_perl ) {
     dVAR;
 
@@ -1337,8 +1382,9 @@ static int bc_perl_parse(pTHXx_ int argc, char **argv, char **env)
         if ((PL_origenviron[0] == s + 1) || (aligned && (PL_origenviron[0] > s && PL_origenviron[0] <= INT2PTR(char *, PTR2UV(s + PTRSIZE) & mask))) ) {
             s = PL_origenviron[0];
             while (*s) s++;
-            my_setenv("NoNe  SuCh", NULL);
             /* Force copy of environment. */
+            if (PL_origenviron == environ)
+                dup_environ(aTHX);
             for (i = 1; PL_origenviron[i]; i++) {
                 if (PL_origenviron[i] == s + 1 || (aligned && (PL_origenviron[i] >  s && PL_origenviron[i] <= INT2PTR(char *, PTR2UV(s + PTRSIZE) & mask))) ) {
                     s = PL_origenviron[i];
