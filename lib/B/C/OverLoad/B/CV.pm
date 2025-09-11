@@ -30,7 +30,7 @@ sub do_save ( $cv, $origname = undef ) {
     # do not save BEGIN and CHECK functions
     return 'NULL' if $fullname =~ qr{::(?:BEGIN|CHECK|UNITCHECK)$};
 
-    $cv->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $cv );
+    $cv->FLAGS & 2048 and die sprintf( "In B::CV, unexpected SVf_ROK found in %s\n", ref $cv );
 
     my $is_xs_accessor_constructor = $cv->is_xs_accessor_constructor;
     my ( $xsaccessor_list, $xsaccessor_function, $xsaccessor_key, $xsaccessor_key_len ) = $cv->save_xs_accessor($is_xs_accessor_constructor);

@@ -73,7 +73,7 @@ sub do_save ( $av, $fullname = undef, $cv = undef, $is_backref = 0 ) {
 
     # Skip FLAGS check for PAD modules that use AV as parent since calling flags for those is meaningless
     unless ( ref($av) =~ /^B::PAD(?:LIST|NAMELIST)$/ ) {
-        $av->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $av );
+        $av->FLAGS & 2048 and die sprintf( "In B::AV, unexpected SVf_ROK found in %s\n", ref $av );
     }
     $fullname ||= '';
 

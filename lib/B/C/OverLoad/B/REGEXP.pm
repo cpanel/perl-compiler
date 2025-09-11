@@ -11,7 +11,7 @@ use B::C::Save  qw/savecowpv/;
 # post 5.11: When called from B::RV::save not from PMOP::save precomp
 sub do_save ( $sv, $fullname = undef ) {
 
-    $sv->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $sv );
+    $sv->FLAGS & 2048 and die sprintf( "In B::REGEXP, unexpected SVf_ROK found in %s\n", ref $sv );
 
     my ( $ix, $sym ) = svsect()->reserve($sv);
     svsect()->debug( $sv->name, $sv );

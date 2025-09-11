@@ -23,7 +23,7 @@ sub save_io_and_data ( $io, $globname, $is_utf8, $data ) {
 
 sub do_save ( $io, $fullname = undef ) {
 
-    $io->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $io );
+    $io->FLAGS & 2048 and die sprintf( "In B::IO, unexpected SVf_ROK found in %s\n", ref $io );
     my ( $ix, $sym ) = svsect()->reserve($io);
     svsect()->debug( $fullname, $io );
 

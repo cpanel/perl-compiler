@@ -14,7 +14,7 @@ sub do_save ( $sv, $fullname, $custom = undef ) {
 
     my $svflags = $sv->FLAGS;
     my $refcnt  = $sv->REFCNT;
-    $sv->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $sv );
+    $sv->FLAGS & 2048 and die sprintf( "In B::NV, unexpected SVf_ROK found in %s\n", ref $sv );
 
     if ( ref $custom ) {    # used when downgrading a PVIV / PVNV to IV
         $svflags = $custom->{flags}  if defined $custom->{flags};

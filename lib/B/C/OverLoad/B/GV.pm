@@ -23,7 +23,7 @@ our @under = ();
 
 sub do_save ( $gv, $name = undef ) {
 
-    $gv->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $gv );
+    $gv->FLAGS & 2048 and die sprintf( "In B::GV, unexpected SVf_ROK found in %s\n", ref $gv );
 
     if ( $gv->get_fullname =~ qr{::(?:BEGIN|CHECK|UNITCHECK)$} ) {
 

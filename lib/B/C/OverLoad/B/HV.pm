@@ -85,7 +85,7 @@ sub do_save ( $hv, $fullname = undef ) {
 
     $fullname ||= '';
     my $stash_name = $hv->NAME;
-    $hv->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $hv );
+    $hv->FLAGS & 2048 and die sprintf( "In B::HV, unexpected SVf_ROK found in %s\n", ref $hv );
 
     #debug( hv => "XXXX HV fullname %s // name %s", $fullname, $stash_name );
     if ($stash_name) {
