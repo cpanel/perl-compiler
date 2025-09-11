@@ -1,5 +1,5 @@
-package # do not index it
-	B::AV;
+package    # do not index it
+  B::AV;
 
 use B::C::Std;
 
@@ -33,6 +33,7 @@ sub section_sv ($av) {
     return svsect();
 }
 
+# While PADLIST and PADNAMELIST inherit from AV, they use their own save logic.
 sub update_sv ( $av, $ix, $fullname, $args ) {
 
     my $fill = $args->{fill};
@@ -70,7 +71,10 @@ sub skip_backref_sv ($sv) {
 
 sub do_save ( $av, $fullname = undef, $cv = undef, $is_backref = 0 ) {
 
-    $av->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $av );
+    # Skip FLAGS check for PAD modules that use AV as parent since calling flags for those is meaningless
+    unless ( ref($av) =~ /^B::PAD(?:LIST|NAMELIST)$/ ) {
+        $av->FLAGS & 2048 and die sprintf( "Unexpected SVf_ROK found in %s\n", ref $av );
+    }
     $fullname ||= '';
 
     my $fill = $av->fill();
@@ -164,7 +168,7 @@ sub do_save ( $av, $fullname = undef, $cv = undef, $is_backref = 0 ) {
                 $acc .= "for (gcount=" . $1 . "; gcount<" . ( $1 + $count + 1 ) . "; gcount++) { *svp++ = $svpcast&sv_list[gcount]; };\n";
                 $i += $count;
             }
-            elsif ($use_av_undef_speedup
+            elsif ( $use_av_undef_speedup
                 && defined $values[$i]
                 && defined $values[ $i + 1 ]
                 && defined $values[ $i + 2 ]
