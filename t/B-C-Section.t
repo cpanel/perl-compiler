@@ -10,6 +10,7 @@ use Test::Trap;
 use Test::Deep;
 
 use FileHandle;
+use B qw(SVf_FAKE);
 use B::C::Section;
 
 BEGIN {
@@ -28,12 +29,13 @@ is( $aaasect->typename,   'AAA',              "Typename for aaasect is upper cas
 is( $svsect->typename,    'SV',               "Typename for svsect is upper cased as expected" );
 is( $xpvcvsect->typename, 'XPVCV', "Typename for xpvcvsect" );
 
-my $expect = "NULL, 1, SVTYPEMASK|0x01000000, {0}\n";
+my $svf_fake = B::SVf_FAKE();
+my $expect = "NULL, 1, SVTYPEMASK|${svf_fake}, {0}\n";
 is( $svsect->output("%s\n"), $expect, "svsect initializes with something automatically?" );
 is( $svsect->index(),        0,       "Indext for svsect is right" );
 
 {
-	eval { $svsect->output(); 1 }, undef, "cannot call output twice";
+	is eval { $svsect->output("%s\n"); 1 }, undef, "cannot call output twice";
 	like $@, qr{B::C::Section output should only be called once}, 'B::C::Section output should only be called once';		
 	ok $svsect->{_output_called}, "_output_called is set";
 	$svsect->{_output_called} = undef; # disable the protection for the test
@@ -47,7 +49,7 @@ is( $svsect->index(),        1,       "Index for svsect is right" );
 $svsect->{_output_called} = undef; # disable the protection for the test
 
 $svsect->remove;
-$expect = "NULL, 1, SVTYPEMASK|0x01000000, {0}\n";
+$expect = "NULL, 1, SVTYPEMASK|${svf_fake}, {0}\n";
 is( $svsect->output("%s\n"), $expect, "svsect retains what was added. with something automatically?" );
 is( $svsect->index(),        0,       "Index for svsect is right after remove" );
 
