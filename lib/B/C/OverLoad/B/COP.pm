@@ -62,8 +62,7 @@ sub do_save ( $op, @ ) {
         '%s'       => get_integer_value( $op->cop_seq ),    # U32     cop_seq;    /* parse sequence number */
         '%s'       => $op->save_warnings,                   # char *    cop_warnings;   /* lexical warnings bitmask */
         '%s'       => $op->save_hints,                      # COPHH * cop_hints_hash; /* compile time state of %^H. */
-        # TODO cop_features is not used in the compiler, but it is used in the interpreter.
-        '%s'       => '0',                                  # struct cop_feature_t       cop_features; 
+        '%s'       => $op->save_cop_features,               # struct cop_feature_t       cop_features;
     );
 
     return $sym;
@@ -148,6 +147,11 @@ sub save_warnings ($op) {
 
     # set cache
     return $lexwarnsym_cache{$pv} = sprintf( "(char*) &(lexwarn_list[%d].pv)", $ix );
+}
+
+sub save_cop_features ($op) {
+    my $bits = $op->features_bits;
+    return sprintf( '{.bits={0x%x}}', $bits );
 }
 
 1;
