@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Todd Rinaldo <todd.rinaldo@webpros.com>
+Date: Tue, 1 Jul 2025 23:05:45 +0000
+Subject: [PATCH] Support B::PADNAME::GEN in core
+
+---
+ SOURCES/perl/ext/B/B.xs | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/SOURCES/perl/ext/B/B.xs b/SOURCES/perl/ext/B/B.xs
+index 0b8ef47cf2..609082ec8d 100644
+--- a/SOURCES/perl/ext/B/B.xs
++++ b/SOURCES/perl/ext/B/B.xs
+@@ -2298,6 +2298,9 @@ PadnameTYPE(pn)
+ 	case (U8)(sv_U32p >> 16):
+ 	    ret = sv_2mortal(newSVuv(*((U32 *)ptr)));
+ 	    break;
++	case (U8)(sv_I32p >> 16):
++	    ret = sv_2mortal(newSViv(*((I32 *)ptr)));
++	    break;
+ 	case (U8)(sv_U8p >> 16):
+ 	    ret = sv_2mortal(newSVuv(*((U8 *)ptr)));
+ 	    break;

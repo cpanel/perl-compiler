@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Todd Rinaldo <toddr@cpanel.net>
+Date: Wed, 11 Dec 2024 00:05:52 +0000
+Subject: [PATCH] DO NOT set HASATTRIBUTE_VISIBILITY
+
+---
+ SOURCES/perl/perl.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/SOURCES/perl/perl.h b/SOURCES/perl/perl.h
+index aa95ce70f2..ff65ebee6f 100644
+--- a/SOURCES/perl/perl.h
++++ b/SOURCES/perl/perl.h
+@@ -420,9 +420,6 @@ Now a no-op.
+ #  if PERL_GCC_VERSION_GE(4,7,0)
+ #    define HASATTRIBUTE_ALWAYS_INLINE
+ #  endif
+-#  if PERL_GCC_VERSION_GE(3,3,0)
+-#    define HASATTRIBUTE_VISIBILITY
+-#  endif
+ #endif
+ 
+ #ifdef HASATTRIBUTE_DEPRECATED

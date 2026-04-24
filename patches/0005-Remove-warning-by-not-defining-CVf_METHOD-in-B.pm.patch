@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Todd Rinaldo <todd.rinaldo@webpros.com>
+Date: Tue, 1 Jul 2025 23:04:17 +0000
+Subject: [PATCH] Remove warning by not defining CVf_METHOD in B.pm
+
+---
+ SOURCES/perl/ext/B/B.pm | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/SOURCES/perl/ext/B/B.pm b/SOURCES/perl/ext/B/B.pm
+index b39385b35e..e413324c14 100644
+--- a/SOURCES/perl/ext/B/B.pm
++++ b/SOURCES/perl/ext/B/B.pm
+@@ -89,12 +89,6 @@ our @specialsv_name = qw(Nullsv &PL_sv_undef &PL_sv_yes &PL_sv_no
+ 			(SV*)pWARN_ALL (SV*)pWARN_NONE (SV*)pWARN_STD
+                         &PL_sv_zero);
+ 
+-# Back-compat
+-{
+-    no warnings 'once';
+-    *CVf_METHOD = \&CVf_NOWARN_AMBIGUOUS;
+-}
+-
+ {
+     # Stop "-w" from complaining about the lack of a real B::OBJECT class
+     package B::OBJECT;

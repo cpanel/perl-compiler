@@ -43,7 +43,6 @@ nytprof/
 nytprof.out
 *.o
 /parse*
-*.patch
 pcc*
 pm_to_blib
 .prove
