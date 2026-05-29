@@ -1021,6 +1021,14 @@ cop_refcounted_warnings (cop)
         }
 
 
+U32
+cop_features_bits (cop)
+      B::COP cop;
+    CODE:
+        RETVAL = cop->cop_features.bits[0];
+    OUTPUT:
+        RETVAL
+
 #/* ************************************************************ */
 MODULE = B__C          PACKAGE = B::C
 #/* ************************************************************ */
